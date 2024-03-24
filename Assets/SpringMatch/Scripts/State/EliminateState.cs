@@ -12,10 +12,10 @@ namespace SpringMatch {
 			if (spring.EliminateIndex == 0) {
 				await spring.TweenToSlot(slotMgr.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			} else if (spring.EliminateIndex == 1) {
-				await UniTask.WaitForSeconds(0.5f);
+				await UniTask.WaitForSeconds(1f);
 				await spring.TweenToSlot(slotMgr.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			} else {
-				await UniTask.WaitForSeconds(1f);
+				await UniTask.WaitForSeconds(1.5f);
 				// Play Eliminate Effect
 			}
 			// release spring

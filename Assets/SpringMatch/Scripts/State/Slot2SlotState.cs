@@ -7,7 +7,13 @@ using Cysharp.Threading.Tasks;
 namespace SpringMatch {
 	
 	public class Slot2SlotState : BaseState
-	{		
+	{
+		// This function is called when the object becomes enabled and active.
+		protected new void OnEnable()
+		{
+			base.OnEnable();
+		}
+		
 		protected override async UniTaskVoid _Update()
 		{
 			spring.SlotIndex = spring.TargetSlotIndex;

@@ -13,7 +13,6 @@ namespace SpringMatch {
 					|| (spring.EliminateIndex >= 0)
 					|| _cts.IsCancellationRequested;
 			});
-			
 			if (_cts.IsCancellationRequested) {
 				return;
 			}

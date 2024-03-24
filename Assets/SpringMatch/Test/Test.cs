@@ -9,42 +9,20 @@ using System;
 
 public class Test : MonoBehaviour
 {
-	public Transform target;
-	private CancellationTokenSource _cts;
+	public LifeTest lifeTest;
 	
     // Start is called before the first frame update
     void Start()
     {
 
     }
-    
-	[Button]
-	void Cancel() {
-		_cts.Cancel();
-	}
-	
+   
 	[Button]
 	void DoTest() {
-		_cts = new	CancellationTokenSource();
-		Move(_cts.Token);
+		Debug.Log($"test {Time.frameCount}");
+		lifeTest.enabled = true;
 	}
-
 	
-	async UniTask Move(CancellationToken token) {
-		while (!token.IsCancellationRequested) {
-			Debug.Log($"Hello {Time.frameCount}");
-			await UniTask.Delay(1000 * 2);
-		}
-		
-		try {
-			
-		} finally {
-			
-		}
-		
-		Debug.Log($"async function exit");
-	}
-
     // Update is called once per frame
     void Update()
     {

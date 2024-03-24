@@ -21,14 +21,16 @@ namespace SpringMatch {
 	    {
 		    if (Input.touchCount > 0) {
 		    	var touch = Input.GetTouch(0);
-		    	Ray ray = Camera.main.ScreenPointToRay(touch.position);
-		    	if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask("Pickup"))) {
-		    		var spring = hitInfo.collider.GetComponentInParent<Spring>();
-		    		if (spring != null) {
-		    			Debug.Log($"pickup {spring.gameObject.name} {spring.IsTop}");
-			    		_onPickupSpring.Invoke(spring);
-		    		}
+		    	if (touch.phase ==	TouchPhase.Ended) {
+		    		Ray ray = Camera.main.ScreenPointToRay(touch.position);
+			    	if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask("Pickup"))) {
+				    	var spring = hitInfo.collider.GetComponentInParent<Spring>();
+				    	if (spring != null) {
+					    	Debug.Log($"pickup {spring.gameObject.name} {spring.IsTop}");
+					    	_onPickupSpring.Invoke(spring);
+				    	}
 		    		
+			    	}
 		    	}
 		    }
 	    }

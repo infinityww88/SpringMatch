@@ -36,7 +36,7 @@ namespace SpringMatch {
 				}
 				Utils.RunNextFrame(() => {
 					CalcOverlay();
-				});
+				}, 2);
 			}
 			catch (Exception e) {
 				Debug.LogError(e);
@@ -81,6 +81,10 @@ namespace SpringMatch {
 		void Awake()
 		{
 			
+		}
+		
+		public void OnPickupSpring(Spring spring) {
+			SlotManager.Inst.AddSpring(spring);
 		}
 	
 		public void ReloadScene() {

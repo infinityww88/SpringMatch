@@ -14,8 +14,8 @@ public class Utils
 		collider.transform.rotation = Quaternion.FromToRotation(Vector3.right, pos0 - pos1);
 	}
 	
-	public static async UniTaskVoid RunNextFrame(Action action) {
-		await UniTask.DelayFrame(2);
+	public static async UniTaskVoid RunNextFrame(Action action, int frameCount = 1) {
+		await UniTask.DelayFrame(frameCount);
 		action?.Invoke();
 	}
 	

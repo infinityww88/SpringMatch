@@ -30,22 +30,27 @@ namespace SpringMatch {
 		}
 		
 		public void AddSpring(Spring spring) {
-			Assert.IsTrue(!IsFull(), "slot is full, cannot add new spring");
+			if (IsFull()) {
+				Debug.Log("slot is full, cannot add new spring");
+				return;
+			}
+			
 			int index = SearchSlotInsertIndex(spring.Type);
 			MoveSlots(index, 1);
 			slots[index].Spring = spring;
 			spring.TargetSlotIndex = index;
 			usedSlotsNum++;
-			/*
 			if (HasTriple(index)) {
-				EliminateTriple(index);
-				usedSlotsNum -= 3;
+				Debug.Log($"eliminate ready {Time.frameCount}");
+				Utils.RunNextFrame(() => {
+					Debug.Log($"eliminate start {Time.frameCount}");
+					EliminateTriple(index);
+					usedSlotsNum -= 3;
+				}, 2);
 			}
-			*/
 		}
 		
 		void EliminateTriple(int index) {
-			
 			slots[index-2].InEliminateTween = true;
 			slots[index-1].InEliminateTween = true;
 			slots[index].InEliminateTween = true;
@@ -54,13 +59,13 @@ namespace SpringMatch {
 				slots[index-2].InEliminateTween = false;
 				slots[index-1].InEliminateTween = false;
 				slots[index].InEliminateTween = false;
-			}, 1f);
+			}, 1.5f);
 			
 			slots[index-2].Spring.EliminateIndex = 1;
 			slots[index-1].Spring.EliminateIndex = 2;
 			slots[index].Spring.EliminateIndex = 0;
 			slots[index-2].Spring.TargetSlotIndex = index-1;
-			slots[index].Spring.EliminateIndex = index-1;
+			slots[index].Spring.TargetSlotIndex = index-1;
 			
 			MoveSlots(index + 1, -3);
 		}
