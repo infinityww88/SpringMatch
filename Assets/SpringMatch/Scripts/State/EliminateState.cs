@@ -21,6 +21,7 @@ namespace SpringMatch {
 				await spring.TweenToSlot(slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			} else {
 				await UniTask.WaitForSeconds(1f);
+				Debug.Log($"state unlock {spring.EliminateTargetSlotIndex}");
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
 				Destroy(spring.gameObject);
 				Destroy(spring.EliminateCompanySpring0.gameObject);

@@ -19,7 +19,7 @@ namespace SpringMatch {
 			}
 		}
 		
-		public bool InEliminateTween = false;
+		public int InEliminateTween = 0;
 	}
 
 }

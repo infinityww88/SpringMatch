@@ -57,16 +57,19 @@ namespace SpringMatch {
 		}
 		
 		public void UnlockTweenSlot(int middleIndex) {
-			slots[middleIndex-1].InEliminateTween = false;
-			slots[middleIndex].InEliminateTween = false;
-			slots[middleIndex+1].InEliminateTween = false;
+			Debug.Log($"unlock tween slot {middleIndex-1} {middleIndex} {middleIndex+1}");
+			slots[middleIndex-1].InEliminateTween--;
+			slots[middleIndex].InEliminateTween--;
+			slots[middleIndex+1].InEliminateTween--;
 		}
 	
 		void EliminateTriple(int index) {
 			
-			slots[index-2].InEliminateTween = true;
-			slots[index-1].InEliminateTween = true;
-			slots[index].InEliminateTween = true;
+			slots[index-2].InEliminateTween++;
+			slots[index-1].InEliminateTween++;
+			slots[index].InEliminateTween++;
+			
+			Debug.Log($"EliminateTriple tween {index-2} {index-1} {index}");
 			
 			slots[index-2].Spring.EliminateCompanySpring0 = slots[index-1].Spring;
 			slots[index-2].Spring.EliminateCompanySpring1 = slots[index].Spring;

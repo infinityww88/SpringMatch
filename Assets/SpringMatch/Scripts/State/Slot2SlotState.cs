@@ -18,8 +18,8 @@ namespace SpringMatch {
 		{
 			Debug.Log($"slot2slot {gameObject.name} target {spring.TargetSlotIndex} curr {spring.SlotIndex}");
 			
-			if (SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween) {
-				await UniTask.WaitUntil(() => !SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween || _cts.IsCancellationRequested);
+			if (SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween > 0 && spring.EliminateIndex < 0) {
+				await UniTask.WaitUntil(() => SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween == 0 || _cts.IsCancellationRequested);
 				if (_cts.IsCancellationRequested) {
 					return;
 				}
