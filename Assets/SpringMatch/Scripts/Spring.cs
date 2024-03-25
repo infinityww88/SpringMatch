@@ -71,8 +71,13 @@ public class Spring : MonoBehaviour
 	public int TargetSlotIndex { get; set; }
 	[ShowInInspector]
 	public int SlotIndex { get; set; }
+	public bool IsReachSlot => SlotIndex == TargetSlotIndex;
+	
 	[ShowInInspector]
 	public int EliminateIndex { get; set; }
+	public int EliminateTargetSlotIndex { get; set; }
+	public Spring EliminateCompanySpring0 { get; set; }
+	public Spring EliminateCompanySpring1 { get; set; }
 	
 	public void AddOverlaySpring(Spring spring) {
 		_overlaySpring.Add(spring);

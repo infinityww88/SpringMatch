@@ -16,8 +16,21 @@ namespace SpringMatch {
 		
 		protected override async UniTaskVoid _Update()
 		{
-			spring.SlotIndex = spring.TargetSlotIndex;
+			Debug.Log($"slot2slot {gameObject.name} target {spring.TargetSlotIndex} curr {spring.SlotIndex}");
+			
+			if (SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween) {
+				await UniTask.WaitUntil(() => !SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween || _cts.IsCancellationRequested);
+				if (_cts.IsCancellationRequested) {
+					return;
+				}
+			}
+			
+			int index = spring.TargetSlotIndex;
+			
 			await spring.TweenToSlot(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
+			
+			spring.SlotIndex = index;
+			
 			this.enabled = false;
 			GetComponent<SlotState>().enabled = true;
 		}

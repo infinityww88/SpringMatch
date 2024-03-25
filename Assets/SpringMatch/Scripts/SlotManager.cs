@@ -50,22 +50,41 @@ namespace SpringMatch {
 			}
 		}
 		
+		public void UnlockTweenSlot(int middleIndex) {
+			slots[middleIndex-1].InEliminateTween = false;
+			slots[middleIndex].InEliminateTween = false;
+			slots[middleIndex+1].InEliminateTween = false;
+		}
+	
 		void EliminateTriple(int index) {
+			
 			slots[index-2].InEliminateTween = true;
 			slots[index-1].InEliminateTween = true;
 			slots[index].InEliminateTween = true;
 			
+			slots[index-2].Spring.EliminateCompanySpring0 = slots[index-1].Spring;
+			slots[index-2].Spring.EliminateCompanySpring1 = slots[index].Spring;
+			
+			slots[index-1].Spring.EliminateCompanySpring0 = slots[index-2].Spring;
+			slots[index-1].Spring.EliminateCompanySpring1 = slots[index].Spring;
+			
+			slots[index].Spring.EliminateCompanySpring0 = slots[index-2].Spring;
+			slots[index].Spring.EliminateCompanySpring1 = slots[index-1].Spring;
+			
+			/*
 			Utils.CallDelay(() => {
 				slots[index-2].InEliminateTween = false;
 				slots[index-1].InEliminateTween = false;
 				slots[index].InEliminateTween = false;
 			}, 1.5f);
+			*/
 			
 			slots[index-2].Spring.EliminateIndex = 1;
 			slots[index-1].Spring.EliminateIndex = 2;
 			slots[index].Spring.EliminateIndex = 0;
-			slots[index-2].Spring.TargetSlotIndex = index-1;
-			slots[index].Spring.TargetSlotIndex = index-1;
+			slots[index-2].Spring.EliminateTargetSlotIndex = index-1;
+			slots[index-1].Spring.EliminateTargetSlotIndex = index-1;
+			slots[index].Spring.EliminateTargetSlotIndex = index-1;
 			
 			MoveSlots(index + 1, -3);
 		}

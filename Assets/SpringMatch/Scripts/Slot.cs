@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace SpringMatch {
 	
@@ -18,7 +19,7 @@ namespace SpringMatch {
 			}
 		}
 		
-		public bool InEliminateTween { get; set; }
+		public bool InEliminateTween = false;
 	}
 
 }
