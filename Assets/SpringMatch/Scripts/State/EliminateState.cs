@@ -22,10 +22,11 @@ namespace SpringMatch {
 			} else {
 				await UniTask.WaitForSeconds(1f);
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
+				Destroy(spring.gameObject);
+				Destroy(spring.EliminateCompanySpring0.gameObject);
+				Destroy(spring.EliminateCompanySpring1.gameObject);
 				// Play Eliminate Effect
 			}
-			// release spring
-			Destroy(spring.gameObject);
 		}
 	}
 
