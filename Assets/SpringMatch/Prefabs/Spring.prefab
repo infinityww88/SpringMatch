@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -8244241134301363452}
   - component: {fileID: -8041489434803431297}
   - component: {fileID: 4346063790756889421}
+  - component: {fileID: 8255635715847329680}
   m_Layer: 0
   m_Name: Spring
   m_TagString: Untagged
@@ -117,6 +118,18 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eea0dbd73e0dacb40b6dc03e4111478b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8255635715847329680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245051030443960163}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9d87bf8ac75cc42931eb5a3ae1d80b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2526839296336334218

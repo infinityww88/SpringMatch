@@ -79,17 +79,27 @@ public class Spring : MonoBehaviour
 	public Spring EliminateCompanySpring0 { get; set; }
 	public Spring EliminateCompanySpring1 { get; set; }
 	
+	public void RemoveOverlaySpring(Spring spring) {
+		_overlaySpring.Remove(spring);
+		if (IsTop) {
+			_SetColor(_color);
+		}
+	}
+	
 	public void AddOverlaySpring(Spring spring) {
 		_overlaySpring.Add(spring);
 	}
 	
-	public void RemoveOverlaySpring(Spring spring) {
-		_overlaySpring.Remove(spring);
-	}
+	public Vector3 Foot0Pos { get; private set; }
+	public Vector3 Foot1Pos { get; private set; }
+	public float Height { get; private set; }
 	
 	public void Init(Vector3 pos0, Vector3 pos1, float height, int type) {
 		_type = type;
 		_springCurve.SetFrame(pos0, pos1, height);
+		Foot0Pos = pos0;
+		Foot1Pos = pos1;
+		Height = height;
 		TargetSlotIndex = SlotIndex = EliminateIndex = -1;
 		_pickupSlotCollider.transform.position = _springCurve.head.position;
 		Utils.AlignCollider(_springCollider, pos0, pos1, height);
@@ -161,6 +171,13 @@ public class Spring : MonoBehaviour
 		_pickupSlotCollider.SetActive(true);
 		_pickupSlotCollider.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", _color);
 		await _pickupSlotCollider.transform.DOMove(pos, 0.5f).WithCancellation(ct);
+	}
+	
+	public async UniTask TweenToGrid(Vector3 pos0, Vector3 pos1, float height, CancellationToken ct) {
+		_springCollider.gameObject.SetActive(true);
+		await _pickupSlotCollider.transform.DOMove((pos0 + pos1)/2 + Vector3.up * height, 0.5f).WithCancellation(ct);
+		_pickupColliderRoot.gameObject.SetActive(true);
+		_pickupSlotCollider.SetActive(false);
 	}
 	
 	// This function is called when the MonoBehaviour will be destroyed.

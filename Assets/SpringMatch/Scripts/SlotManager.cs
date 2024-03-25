@@ -41,6 +41,7 @@ namespace SpringMatch {
 			spring.TargetSlotIndex = index;
 			usedSlotsNum++;
 			if (HasTriple(index)) {
+				Level.Inst.ClearLastPickupSpring();
 				Debug.Log($"eliminate ready {Time.frameCount}");
 				Utils.RunNextFrame(() => {
 					Debug.Log($"eliminate start {Time.frameCount}");
@@ -48,6 +49,11 @@ namespace SpringMatch {
 					usedSlotsNum -= 3;
 				}, 2);
 			}
+		}
+		
+		public void RemoveSpring(int index) {
+			MoveSlots(index + 1, -1);
+			usedSlotsNum--;
 		}
 		
 		public void UnlockTweenSlot(int middleIndex) {
@@ -70,14 +76,6 @@ namespace SpringMatch {
 			
 			slots[index].Spring.EliminateCompanySpring0 = slots[index-2].Spring;
 			slots[index].Spring.EliminateCompanySpring1 = slots[index-1].Spring;
-			
-			/*
-			Utils.CallDelay(() => {
-				slots[index-2].InEliminateTween = false;
-				slots[index-1].InEliminateTween = false;
-				slots[index].InEliminateTween = false;
-			}, 1.5f);
-			*/
 			
 			slots[index-2].Spring.EliminateIndex = 1;
 			slots[index-1].Spring.EliminateIndex = 2;

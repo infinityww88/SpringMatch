@@ -4,6 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System;
 using UnityEngine.SceneManagement;
@@ -16,9 +17,11 @@ namespace SpringMatch {
 		public GameObject springCurveFramePrefab;
 		public Grid grid;
 		
-		private Dictionary<int, Color> colorPattle = new	Dictionary<int, Color>();
+		private Dictionary<int, Color> colorPattle = new Dictionary<int, Color>();
 		
-		private List<Spring> _springs = new List<Spring>();
+		public static Level Inst { get; private set; }
+		
+		private HashSet<Spring> _springs = new HashSet<Spring>();
 		[Button]
 		void Load() {
 			try {
@@ -45,16 +48,16 @@ namespace SpringMatch {
 		
 		[Button]
 		void CalcOverlay() {
-			_springs.ForEach(s => {
+			foreach (var s in _springs) {
 				s.CalcSpringOverlay();
-			});
-			_springs.ForEach(s => {
+			}
+
+			foreach (var s in _springs) {
 				if (!s.IsTop) {
 					s.Darker(0.6f);
 				}
 				s.EnableRender(true);
-			});
-			
+			}
 		}
 		
 		[Button]
@@ -80,11 +83,48 @@ namespace SpringMatch {
 		// Start is called before the first frame update
 		void Awake()
 		{
-			
+			Inst = this;
+		}
+		
+		//private Vector3 lastPickupSpringFoot0Pos;
+		//private Vector3 lastPickupSpringFoot1Pos;
+		//private Vector3 lastPickupSpringHeight;
+		private Spring lastPickupSpring = null;
+		
+		public void ClearLastPickupSpring() {
+			lastPickupSpring = null;
 		}
 		
 		public void OnPickupSpring(Spring spring) {
+			
+			if (!spring.IsTop) {
+				// Tween
+				return;
+			}
+			
+			lastPickupSpring = spring;
+			
+			RemoveSpring(spring);
 			SlotManager.Inst.AddSpring(spring);
+		}
+		
+		[Button]
+		public void RestoreLastPickupSpring() {
+			if (lastPickupSpring == null) {
+				return;
+			}
+			_springs.Add(lastPickupSpring);
+			CalcOverlay();
+			SlotManager.Inst.RemoveSpring(lastPickupSpring.TargetSlotIndex);
+			lastPickupSpring.TargetSlotIndex = -1;
+			lastPickupSpring = null;
+		}
+		
+		public void RemoveSpring(Spring spring) {
+			foreach (var s in _springs) {
+				s.RemoveOverlaySpring(spring);
+			}
+			_springs.Remove(spring);
 		}
 	
 		public void ReloadScene() {
