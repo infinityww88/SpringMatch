@@ -80,6 +80,7 @@ public class Spring : MonoBehaviour
 	public Spring EliminateCompanySpring1 { get; set; }
 	
 	public int ExtraSlotIndex { get; set; }
+	public int LastExtraSlotIndex { get; set; }
 	
 	public void RemoveOverlaySpring(Spring spring) {
 		_overlaySpring.Remove(spring);
@@ -102,7 +103,7 @@ public class Spring : MonoBehaviour
 		Foot0Pos = pos0;
 		Foot1Pos = pos1;
 		Height = height;
-		TargetSlotIndex = SlotIndex = EliminateIndex = ExtraSlotIndex = EliminateTargetSlotIndex = -1;
+		TargetSlotIndex = SlotIndex = EliminateIndex = ExtraSlotIndex = LastExtraSlotIndex = EliminateTargetSlotIndex = -1;
 		_pickupSlotCollider.transform.position = _springCurve.head.position;
 		Utils.AlignCollider(_springCollider, pos0, pos1, height);
 	}
@@ -203,6 +204,7 @@ public class Spring : MonoBehaviour
 		//GeneratePickupColliders(0.35f);
 		
 		ExtraSlotIndex = extraIndex;
+		LastExtraSlotIndex = extraIndex;
 	}
 	
 	// This function is called when the MonoBehaviour will be destroyed.

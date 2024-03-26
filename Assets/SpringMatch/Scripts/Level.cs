@@ -114,16 +114,25 @@ namespace SpringMatch {
 				return;
 			}
 			_springs.Add(lastPickupSpring);
-			CalcOverlay();
+			
+			if (lastPickupSpring.LastExtraSlotIndex < 0) {
+				CalcOverlay();
+			} else {
+				lastPickupSpring.ExtraSlotIndex = lastPickupSpring.LastExtraSlotIndex;
+			}
+			
 			SlotManager.Inst.RemoveSpring(lastPickupSpring.TargetSlotIndex);
 			lastPickupSpring.TargetSlotIndex = -1;
-			// lastPickupSpring.ExtraSlotIndex = originSlotIndex;
-			// ExtraSlotManager.Inst.AddString(extraSlotIndex, lastPickupSpring)
+			
 			lastPickupSpring = null;
 		}
 		
 		[Button]
 		public void Shift3ToExtra() {
+			if (SlotManager.Inst.UsedSlotsNum == 0) {
+				return;
+			}
+			lastPickupSpring = null;
 			var springs = SlotManager.Inst.ShiftOutString(3);
 			ExtraSlotManager.Inst.AddSprings(springs);
 		}
