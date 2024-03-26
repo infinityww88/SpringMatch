@@ -16,6 +16,7 @@ public class SpringCurveFrame : MonoBehaviour
 	[SerializeField]
 	private float handHeightN = 0.3f;
 	
+	[Button]
 	public void SetFrame(Vector3 pos0, Vector3 pos1, float height) {
 		foot0.position = pos0;
 		foot1.position = pos1;
