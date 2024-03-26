@@ -16,6 +16,9 @@ GameObject:
   - component: {fileID: -8041489434803431297}
   - component: {fileID: 4346063790756889421}
   - component: {fileID: 8255635715847329680}
+  - component: {fileID: 2506680166687801828}
+  - component: {fileID: 7216487597055330040}
+  - component: {fileID: -2927636349923117542}
   m_Layer: 0
   m_Name: Spring
   m_TagString: Untagged
@@ -130,6 +133,42 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca9d87bf8ac75cc42931eb5a3ae1d80b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2506680166687801828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245051030443960163}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 583a3a7eb52197f4fa5caa7af5fcd9bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7216487597055330040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245051030443960163}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3f6082a503b0f647a9ed07b25ec17c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2927636349923117542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245051030443960163}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcbebb8a917f0ac4daf9a1bc726ceced, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2526839296336334218

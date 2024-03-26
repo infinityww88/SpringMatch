@@ -4,6 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Assertions;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Assertions;
 
 namespace SpringMatch {
 	
@@ -16,6 +17,8 @@ namespace SpringMatch {
 		private int usedSlotsNum = 0;
 		
 		public static SlotManager Inst { get; private set; }
+		
+		public int UsedSlotsNum => usedSlotsNum;
 		
 		public bool IsFull() {
 			return false;
@@ -56,6 +59,21 @@ namespace SpringMatch {
 			usedSlotsNum--;
 		}
 		
+		public Spring[] ShiftOutString(int n) {
+			n = Mathf.Min(3, usedSlotsNum);
+			Spring[] ret = new	Spring[n];
+			for (int i = 0; i < n; i++) {
+				var s = slots[i].Spring;
+				Assert.IsTrue(s.EliminateIndex < 0);
+				ret[i] = s;
+				ret[i].SlotIndex = -1;
+				ret[i].TargetSlotIndex = -1;
+			}
+			MoveSlots(n, -n);
+			usedSlotsNum -= n;
+			return ret;
+		}
+		
 		public void UnlockTweenSlot(int middleIndex) {
 			Debug.Log($"unlock tween slot {middleIndex-1} {middleIndex} {middleIndex+1}");
 			slots[middleIndex-1].InEliminateTween--;
@@ -90,7 +108,7 @@ namespace SpringMatch {
 			MoveSlots(index + 1, -3);
 		}
 		
-		void MoveSlots(int startIndex, int indexOffset) {
+		public void MoveSlots(int startIndex, int indexOffset) {
 			if (indexOffset > 0) {
 				for (int i = usedSlotsNum - 1; i >= startIndex; i--) {
 					slots[i].Spring.TargetSlotIndex = i+indexOffset;

@@ -2912,11 +2912,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 342147636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfb9ff69906a7b943a19118445674af9, type: 3}
+  m_Script: {fileID: 11500000, guid: ab928593ffbe6434faf43ad59498dacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spring: {fileID: 0}
-  InEliminateTween: 0
 --- !u!1001 &352762335
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5678,6 +5676,7 @@ GameObject:
   m_Component:
   - component: {fileID: 696318887}
   - component: {fileID: 696318888}
+  - component: {fileID: 696318889}
   m_Layer: 0
   m_Name: ExtraSlotManager
   m_TagString: Untagged
@@ -5720,6 +5719,20 @@ MonoBehaviour:
   width: 7
   height: 0
   cellPrefab: {fileID: 5420190146959797419, guid: 2388624d9200a8d449d9d50e5d4aba48, type: 3}
+--- !u!114 &696318889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696318886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3ff97339c9b6d449b9874d78e11cc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _footWidth: 2
+  _height: 2
 --- !u!1 &700189544
 GameObject:
   m_ObjectHideFlags: 0
@@ -7369,11 +7382,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 953080424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfb9ff69906a7b943a19118445674af9, type: 3}
+  m_Script: {fileID: 11500000, guid: ab928593ffbe6434faf43ad59498dacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spring: {fileID: 0}
-  InEliminateTween: 0
 --- !u!1 &955673355
 GameObject:
   m_ObjectHideFlags: 0
@@ -10482,11 +10493,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1339961406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfb9ff69906a7b943a19118445674af9, type: 3}
+  m_Script: {fileID: 11500000, guid: ab928593ffbe6434faf43ad59498dacd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spring: {fileID: 0}
-  InEliminateTween: 0
 --- !u!1 &1354369510
 GameObject:
   m_ObjectHideFlags: 0

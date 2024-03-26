@@ -117,7 +117,15 @@ namespace SpringMatch {
 			CalcOverlay();
 			SlotManager.Inst.RemoveSpring(lastPickupSpring.TargetSlotIndex);
 			lastPickupSpring.TargetSlotIndex = -1;
+			// lastPickupSpring.ExtraSlotIndex = originSlotIndex;
+			// ExtraSlotManager.Inst.AddString(extraSlotIndex, lastPickupSpring)
 			lastPickupSpring = null;
+		}
+		
+		[Button]
+		public void Shift3ToExtra() {
+			var springs = SlotManager.Inst.ShiftOutString(3);
+			ExtraSlotManager.Inst.AddSprings(springs);
 		}
 		
 		public void RemoveSpring(Spring spring) {

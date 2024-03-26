@@ -79,6 +79,8 @@ public class Spring : MonoBehaviour
 	public Spring EliminateCompanySpring0 { get; set; }
 	public Spring EliminateCompanySpring1 { get; set; }
 	
+	public int ExtraSlotIndex { get; set; }
+	
 	public void RemoveOverlaySpring(Spring spring) {
 		_overlaySpring.Remove(spring);
 		if (IsTop) {
@@ -100,7 +102,7 @@ public class Spring : MonoBehaviour
 		Foot0Pos = pos0;
 		Foot1Pos = pos1;
 		Height = height;
-		TargetSlotIndex = SlotIndex = EliminateIndex = -1;
+		TargetSlotIndex = SlotIndex = EliminateIndex = ExtraSlotIndex = EliminateTargetSlotIndex = -1;
 		_pickupSlotCollider.transform.position = _springCurve.head.position;
 		Utils.AlignCollider(_springCollider, pos0, pos1, height);
 	}
@@ -152,6 +154,12 @@ public class Spring : MonoBehaviour
 	[Button]
 	public void GeneratePickupColliders(float radius) {
 		_spline.Refresh();
+		
+		while (_pickupColliderRoot.childCount > 0) {
+			var c = _pickupColliderRoot.GetChild(0);
+			GlobalManager.Inst.sphereColliderPool.Release(c.gameObject);
+		}
+		
 		var len = _spline.Length;
 		var n = Mathf.Ceil(len / radius);
 		for (int i = 0; i < n; i++) {
@@ -180,9 +188,27 @@ public class Spring : MonoBehaviour
 		_pickupSlotCollider.SetActive(false);
 	}
 	
+	public async UniTask TweenToExtra(Vector3 pos0, Vector3 pos1, float height, CancellationToken ct) {
+		await _pickupSlotCollider.transform.DOMove((pos0 + pos1)/2, 0.5f).WithCancellation(ct);
+		_pickupSlotCollider.SetActive(true);
+	}
+	
+	public void SetExtra(int extraIndex, Vector3 foot0Pos, Vector3 foot1Pos, float height) {
+		Foot0Pos = foot0Pos;
+		Foot1Pos = foot1Pos;
+		Height = height;
+		_springCurve.SetFrame(foot0Pos, foot1Pos, height);
+		//Init(Foot0Pos, Foot1Pos, Height, Type);
+		//_springCollider.gameObject.SetActive(false);
+		//GeneratePickupColliders(0.35f);
+		
+		ExtraSlotIndex = extraIndex;
+	}
+	
 	// This function is called when the MonoBehaviour will be destroyed.
 	protected void OnDestroy()
 	{
+		
 	}
 	
     // Start is called before the first frame update
