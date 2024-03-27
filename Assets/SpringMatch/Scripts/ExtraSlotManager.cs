@@ -29,6 +29,14 @@ namespace SpringMatch {
 				springs[i].SetExtra(i, GetSlotFoot0Pos(i), GetSlotFoot1Pos(i), _height);
 			}
 		}
+		
+		public void RemoveSpring(int index) {
+			_extraSlot[index].Spring = null;
+		}
+		
+		public bool Available() {
+			return _extraSlot[0].Spring == null && _extraSlot[1].Spring == null && _extraSlot[2].Spring == null;
+		}
     
 		public Vector3 GetSlotPos(int index) {
 			return _extraSlot[index].transform.position;

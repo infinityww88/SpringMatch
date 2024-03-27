@@ -10,6 +10,7 @@ namespace SpringMatch {
 	{
 		protected override async UniTaskVoid _Update() {
 			int index = spring.TargetSlotIndex;
+			ExtraSlotManager.Inst.RemoveSpring(spring.LastExtraSlotIndex);
 			await spring.TweenToSlot(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			spring.SlotIndex = index;
 			this.enabled = false;

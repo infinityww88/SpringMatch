@@ -28,8 +28,6 @@ namespace SpringMatch {
 		public Transform testBegin;
 		public Transform testEnd;
 		public Transform testTarget;
-		//public float testHeight = 4;
-		public bool _fixTail = true;
 		
 		[Button]
 		void TestStretch2Shrink() {
@@ -56,11 +54,6 @@ namespace SpringMatch {
 		private Transform footCp, handCp, fixHandCp, headCp;
 		private Vector3 fixHandCpInitPos;
 		
-		[SerializeField]
-		[OnValueChanged("LerpCPTweenCurve")]
-		[Range(0, 1)]
-		private float _lertTf = 0;
-		
 		public float headHeightFactor = 1;
 		public float headHeightOffset = 0;
 		
@@ -71,8 +64,6 @@ namespace SpringMatch {
 		public float handHeightOffset = 0;
 		
 		public float duration = 1f;
-		
-		public float shrink2ShrinkHeight = 2;
 		
 		private SpringBinder _springBinder;
 		

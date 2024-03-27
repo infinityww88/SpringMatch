@@ -129,7 +129,7 @@ namespace SpringMatch {
 		
 		[Button]
 		public void Shift3ToExtra() {
-			if (SlotManager.Inst.UsedSlotsNum == 0) {
+			if (SlotManager.Inst.UsedSlotsNum == 0 || !ExtraSlotManager.Inst.Available()) {
 				return;
 			}
 			lastPickupSpring = null;
