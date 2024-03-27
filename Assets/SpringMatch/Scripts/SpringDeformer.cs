@@ -28,11 +28,33 @@ namespace SpringMatch {
 		public Transform testBegin;
 		public Transform testEnd;
 		public Transform testTarget;
-		public float testHeight = 4;
+		//public float testHeight = 4;
 		public bool _fixTail = true;
+		
+		[Button]
+		void TestStretch2Shrink() {
+			Stretch2Shrink(testTarget.position);
+		} 
+		
+		[Button]
+		void TestShrink2Shrink() {
+			Shrink2Shrink(testBegin.position, testEnd.position);
+		}
+		
+		[Button]
+		void TestShrink2Stretch() {
+			Shrink2Stretch(testBegin.position, testEnd.position);
+		}
+		
+		[Button]
+		void TestShrink2Stretch2() {
+			Shrink2Stretch(testBegin.position, testEnd.position, testTarget.position, (testEnd.position - testTarget.position).magnitude/2);
+		}
+		
 		#endregion
 		
-		private Transform footCp, handCp, headCp;
+		private Transform footCp, handCp, fixHandCp, headCp;
+		private Vector3 fixHandCpInitPos;
 		
 		[SerializeField]
 		[OnValueChanged("LerpCPTweenCurve")]
@@ -50,46 +72,73 @@ namespace SpringMatch {
 		
 		public float duration = 1f;
 		
-		private SpringBinder springBinder;
+		public float shrink2ShrinkHeight = 2;
+		
+		private SpringBinder _springBinder;
+		
+		public void SetPose(Vector3 pos0, Vector3 pos1, float height) {
+			_springCurve.SetFrame(pos0, pos1, height);
+		}
+		
+		#region tween interface
+		public async UniTask Stretch2Shrink(Vector3 pos) {
+			var mag0 = (_springCurve.foot0.position - pos).magnitude;
+			var mag1 = (_springCurve.foot1.position - pos).magnitude;
+			bool fixTail = false;
+			if (mag0 > mag1) {
+				fixTail = true;
+			}
+			await MoveToTarget(pos, _springCurve.height, fixTail, duration);
+			await TweenSpringLen(1, 0.03f, duration, !fixTail);
+		}
+		
+		public async UniTask Shrink2Shrink(Vector3 pos0, Vector3 pos1) {
+			_springBinder.NormalLength = 0.03f;
+			SetPose(pos0, pos1, (pos0 - pos1).magnitude/2);
+			float t = 0.03f;
+			await TweenSpringLen(0.03f, 1, duration, false);
+			await TweenSpringLen(1, 0.03f, duration, true);
+		}
+		
+		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1) {
+			_springBinder.NormalLength = 0.03f;
+			_springBinder.Inverse = false;
+			SetPose(pos0, pos1, (pos0 - pos1).magnitude/2);
+			await TweenSpringLen(0.03f, 1, duration, false);
+		}
+		
+		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, Vector3 pos2, float height) {
+			await Shrink2Stretch(pos0, pos1);
+			await MoveToTarget(pos2, height, true, duration);
+		}
+		#endregion
+		
+		private Tweener TweenSpringLen(float beginT, float endT, float duration, bool inverse) {
+			float t = beginT;
+			_springBinder.NormalLength = beginT;
+			_springBinder.Inverse = inverse;
+			Debug.Log("Tween spring len");
+			return DOTween.To(() => t, v => {
+				t = v;
+				_springBinder.NormalLength = t;
+			}, endT, duration).SetEase(Ease.Linear);
+		}
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Awake()
 		{
-			SetPose(testBegin.position, testEnd.position, testHeight);
-			springBinder = GetComponent<SpringBinder>();
+			SetPose(testBegin.position, testEnd.position, (testBegin.position - testEnd.position).magnitude/2);
+			_springBinder = GetComponent<SpringBinder>();
 		}
-		
-		[Button]
-		async UniTask TweenTarget() {
-			springBinder.Inverse = false;
-			springBinder.NormalLength = 0;
-			SetPose(testBegin.position, testEnd.position, testHeight);
-			float t = 0.03f;
-			await DOTween.To(() => t, v => {
-				t = v;
-				springBinder.NormalLength = t;
-			}, 1, duration);
-		}
-		
-		[Button]
-		async UniTask SetTarget() {
-			SetTargetPose(testTarget.position, testHeight, _fixTail);
+
+		async UniTask MoveToTarget(Vector3 pos, float height, bool fixTail, float duration) {
+			SetTargetPose(pos, height, fixTail);
 			await UniTask.NextFrame();
 			float t = 0;
 			await DOTween.To(() => t, v => {
 				t = v;
 				LerpCPTweenCurve(t);
 			}, 1, duration).SetEase(Ease.Linear);
-			t = 1;
-			springBinder.Inverse = !_fixTail;
-			await DOTween.To(() => t, v => {
-				t = v;
-				springBinder.NormalLength = t;
-			}, 0.03f, duration).SetEase(Ease.Linear);
-		}
-		
-		void SetPose(Vector3 pos0, Vector3 pos1, float height) {
-			_springCurve.SetFrame(pos0, pos1, height);
 		}
 		
 		void SetTargetPose(Vector3 targetPos, float height, bool fixTail) {
@@ -110,6 +159,8 @@ namespace SpringMatch {
 			
 			pos = _headTweenCurve.Interpolate(lertTf, Space.World);
 			headCp.position = pos;
+			
+			fixHandCp.position = Vector3.Lerp(fixHandCpInitPos, _destCurveFrame.hand0.position, lertTf);
 		}
 		
 		void SetCPTweenCurves(bool fixTail) {
@@ -119,11 +170,15 @@ namespace SpringMatch {
 			if (fixTail) {
 				footCp = _springCurve.foot0;
 				handCp = _springCurve.hand0;
+				fixHandCp = _springCurve.hand1;
 			}
 			else {
 				footCp = _springCurve.foot1;
 				handCp = _springCurve.hand1;
+				fixHandCp = _springCurve.hand0;
 			}
+			
+			fixHandCpInitPos = fixHandCp.position;
 				
 			_handTweenCurve.transform.GetChild(0).position = handCp.position;
 			_handTweenCurve.transform.GetChild(2).position = _destCurveFrame.hand1.position;

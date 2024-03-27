@@ -12,6 +12,7 @@ public class SpringCurveFrame : MonoBehaviour
 	public Transform head;
 	public Transform hand1;
 	public Transform foot1;
+	public float height;
 	
 	[SerializeField]
 	private float handHeightN = 0.3f;
@@ -20,6 +21,7 @@ public class SpringCurveFrame : MonoBehaviour
 	public void SetFrame(Vector3 pos0, Vector3 pos1, float height) {
 		foot0.position = pos0;
 		foot1.position = pos1;
+		this.height = height;
 		Vector3 center = (pos0 + pos1) / 2;
 		head.position = center + Vector3.up * height;
 		hand0.position = foot0.position + Vector3.up * height * handHeightN;
