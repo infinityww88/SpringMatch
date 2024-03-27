@@ -19,11 +19,30 @@ namespace SpringMatch {
 		[Range(0, 1)]
 		public float scaleFactor = 0.03f;
 		
+		[SerializeField]
 		[Range(0, 1)]
-		public float normalLength = 1;
+		private float _normalLength = 1;
 
 		[SerializeField]
 		private bool _inverse = false;
+		
+		public float NormalLength {
+			get {
+				return _normalLength;
+			}
+			set {
+				_normalLength = value;
+			}
+		}
+		
+		public bool Inverse {
+			get {
+				return _inverse;
+			}
+			set {
+				_inverse = value;
+			}
+		}
 	
 		// Start is called before the first frame update
 		void Awake()
@@ -38,12 +57,12 @@ namespace SpringMatch {
 		void Update()
 		{
 			var len = spline.Length;
-			float step = normalLength / (points.Length - 1);
+			float step = _normalLength / (points.Length - 1);
 			for (int i = 0; i < points.Length; i++) {
 				//float distance = step * i;
 				float tf = step * i;
 				if (_inverse) {
-					tf = 1 - normalLength + tf;
+					tf = 1 - _normalLength + tf;
 				}
 				spline.InterpolateAndGetTangent(tf,
 					out Vector3 pos,
@@ -53,7 +72,7 @@ namespace SpringMatch {
 				var forward = tangent;
 				points[i].rotation = Quaternion.LookRotation(forward, up) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 				points[i].position = pos;
-				points[i].localScale = new Vector3(1, len * scaleFactor * normalLength, 1);
+				points[i].localScale = new Vector3(1, len * scaleFactor * _normalLength, 1);
 			}
 		}
 	}
