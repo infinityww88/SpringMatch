@@ -41,22 +41,22 @@ namespace SpringMatch {
 		
 		[Button]
 		void TestStretch2Shrink() {
-			Stretch2Shrink(testTarget.position);
+			Stretch2Shrink(testTarget.position, CancellationToken.None);
 		} 
 		
 		[Button]
 		void TestShrink2Shrink() {
-			Shrink2Shrink(testBegin.position, testEnd.position);
+			Shrink2Shrink(testBegin.position, testEnd.position, CancellationToken.None);
 		}
 		
 		[Button]
 		void TestShrink2Stretch() {
-			Shrink2Stretch(testBegin.position, testEnd.position);
+			Shrink2Stretch(testBegin.position, testEnd.position, CancellationToken.None);
 		}
 		
 		[Button]
 		void TestShrink2Stretch2() {
-			Shrink2Stretch(testBegin.position, testEnd.position, testTarget.position, (testEnd.position - testTarget.position).magnitude/2);
+			Shrink2Stretch(testBegin.position, testEnd.position, testTarget.position, (testEnd.position - testTarget.position).magnitude/2, CancellationToken.None);
 		}
 		
 		#endregion
@@ -96,7 +96,7 @@ namespace SpringMatch {
 			_spline.Refresh();
 		}
 		
-		public async UniTask Stretch2Shrink(Vector3 pos) {
+		public async UniTask Stretch2Shrink(Vector3 pos, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			var mag0 = (_springCurve.foot0.position - pos).magnitude;
 			var mag1 = (_springCurve.foot1.position - pos).magnitude;
@@ -105,31 +105,31 @@ namespace SpringMatch {
 				fixTail = true;
 			}
 			_springBinder.NormalLength = 1;
-			await MoveToTarget(pos, _springCurve.height, fixTail, duration);
-			await TweenSpringLen(1, 0.03f, duration, !fixTail);
+			await MoveToTarget(pos, _springCurve.height, fixTail, duration, ct);
+			await TweenSpringLen(1, 0.03f, duration, !fixTail).WithCancellation(ct);
 		}
 		
-		public async UniTask Shrink2Shrink(Vector3 pos0, Vector3 pos1) {
+		public async UniTask Shrink2Shrink(Vector3 pos0, Vector3 pos1, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
 			SetPose(pos0, pos1, (pos0 - pos1).magnitude * 2f);
 			float t = 0.03f;
-			await TweenSpringLen(0.03f, 1, shrinkToShrinkDuration, false);
-			await TweenSpringLen(1, 0.03f, shrinkToShrinkDuration, true);
+			await TweenSpringLen(0.03f, 1, shrinkToShrinkDuration, false).WithCancellation(ct);
+			await TweenSpringLen(1, 0.03f, shrinkToShrinkDuration, true).WithCancellation(ct);
 		}
 		
-		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1) {
+		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
 			_springBinder.Inverse = false;
 			SetPose(pos0, pos1, (pos0 - pos1).magnitude/2);
-			await TweenSpringLen(0.03f, 1, duration, false);
+			await TweenSpringLen(0.03f, 1, duration, false).WithCancellation(ct);
 		}
 		
-		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, Vector3 pos2, float height) {
+		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, Vector3 pos2, float height, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
-			await Shrink2Stretch(pos0, pos1);
-			await MoveToTarget(pos2, height, true, duration);
+			await Shrink2Stretch(pos0, pos1, ct);
+			await MoveToTarget(pos2, height, true, duration, ct);
 		}
 		#endregion
 		
@@ -150,14 +150,16 @@ namespace SpringMatch {
 			_springBinder = GetComponent<SpringBinder>();
 		}
 
-		async UniTask MoveToTarget(Vector3 pos, float height, bool fixTail, float duration) {
+		async UniTask MoveToTarget(Vector3 pos, float height, bool fixTail, float duration, CancellationToken ct) {
 			SetTargetPose(pos, height, fixTail);
 			await UniTask.NextFrame();
 			float t = 0;
 			await DOTween.To(() => t, v => {
 				t = v;
 				LerpCPTweenCurve(t);
-			}, 1, duration).SetEase(Ease.Linear);
+			}, 1, duration)
+				.SetEase(Ease.Linear)
+				.WithCancellation(ct);
 		}
 		
 		void SetTargetPose(Vector3 targetPos, float height, bool fixTail) {
@@ -212,20 +214,6 @@ namespace SpringMatch {
 			_headTweenCurve.transform.GetChild(2).position = _destCurveFrame.head.position;
 			_headTweenCurve.transform.GetChild(1).position =
 			(headCp.position + _destCurveFrame.head.position) / 2 + Vector3.up * (headHeightFactor * (headCp.position - _destCurveFrame.head.position).magnitude + headHeightOffset);
-		}
-		
-		// Implement OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn.
-		protected void OnDrawGizmos()
-		{
-			if (_destCurveFrame == null) {
-				return;
-			}
-			Gizmos.color = Color.green;
-			Gizmos.DrawSphere(_destCurveFrame.foot0.position, 0.2f);
-			Gizmos.DrawSphere(_destCurveFrame.hand0.position, 0.2f);
-			Gizmos.DrawSphere(_destCurveFrame.head.position, 0.2f);
-			Gizmos.DrawSphere(_destCurveFrame.hand1.position, 0.2f);
-			Gizmos.DrawSphere(_destCurveFrame.foot1.position, 0.2f);
 		}
 	}
 }

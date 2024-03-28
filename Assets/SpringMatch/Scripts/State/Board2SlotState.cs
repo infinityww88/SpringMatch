@@ -11,7 +11,7 @@ namespace SpringMatch {
 		protected override async UniTaskVoid _Update() {
 			spring.EnablePickupCollider(false);
 			int index = spring.TargetSlotIndex;
-			await spring.Deformer.Stretch2Shrink(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex)).SuppressCancellationThrow();
+			await spring.Deformer.Stretch2Shrink(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token);
 			//await spring.TweenToSlot(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			spring.SlotIndex = index;
 			this.enabled = false;
