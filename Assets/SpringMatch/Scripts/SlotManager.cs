@@ -66,8 +66,6 @@ namespace SpringMatch {
 				var s = slots[i].Spring;
 				Assert.IsTrue(s.EliminateIndex < 0);
 				ret[i] = s;
-				ret[i].SlotIndex = -1;
-				ret[i].TargetSlotIndex = -1;
 			}
 			MoveSlots(n, -n);
 			usedSlotsNum -= n;

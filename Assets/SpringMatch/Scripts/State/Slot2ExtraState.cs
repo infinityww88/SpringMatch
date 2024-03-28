@@ -9,8 +9,13 @@ namespace SpringMatch {
 	public class Slot2ExtraState : BaseState
 	{
 		protected override async UniTaskVoid _Update() {
-			await spring.TweenToExtra(spring.Foot0Pos, spring.Foot1Pos, spring.Height, _cts.Token)
-				.SuppressCancellationThrow();
+			spring.EnablePickupCollider(false);
+			await spring.Deformer.Shrink2Stretch(
+				SlotManager.Inst.GetSlotPos(spring.SlotIndex),
+				spring.Foot0Pos, spring.Foot1Pos, spring.Height
+			).SuppressCancellationThrow();
+			//await spring.TweenToExtra(spring.Foot0Pos, spring.Foot1Pos, spring.Height, _cts.Token)
+			//	.SuppressCancellationThrow();
 			spring.SlotIndex = spring.TargetSlotIndex = -1;
 			this.enabled = false;
 			GetComponent<ExtraState>().enabled = true;

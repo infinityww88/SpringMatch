@@ -16,8 +16,7 @@ namespace SpringMatch {
 		
 		protected override async UniTaskVoid _Update()
 		{
-			Debug.Log($"slot2slot {gameObject.name} target {spring.TargetSlotIndex} curr {spring.SlotIndex}");
-			
+			spring.EnablePickupCollider(false);
 			if (SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween > 0 && spring.EliminateIndex < 0) {
 				await UniTask.WaitUntil(() => SlotManager.Inst.GetSlot(spring.TargetSlotIndex).InEliminateTween == 0 || spring.EliminateIndex >= 0 || _cts.IsCancellationRequested);
 				if (_cts.IsCancellationRequested) {
@@ -27,7 +26,11 @@ namespace SpringMatch {
 			
 			int index = spring.TargetSlotIndex;
 			
-			await spring.TweenToSlot(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
+			await spring.Deformer.Shrink2Shrink(
+				SlotManager.Inst.GetSlotPos(spring.SlotIndex),
+				SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex))
+				.SuppressCancellationThrow();
+			//await spring.TweenToSlot(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			
 			spring.SlotIndex = index;
 			

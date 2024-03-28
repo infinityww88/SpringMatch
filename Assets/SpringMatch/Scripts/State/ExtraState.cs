@@ -9,6 +9,8 @@ namespace SpringMatch {
 	public class ExtraState : BaseState
 	{
 		protected override async UniTaskVoid _Update() {
+			spring.EnablePickupCollider(true);
+			spring.GeneratePickupColliders(0.35f);
 			await UniTask.WaitUntil(() => spring.TargetSlotIndex >= 0 || _cts.IsCancellationRequested);
 			if (_cts.IsCancellationRequested) {
 				return;

@@ -8,6 +8,7 @@ namespace SpringMatch {
 	public class EliminateState : BaseState
 	{
 		protected override async UniTaskVoid _Update() {
+			spring.EnablePickupCollider(false);
 			await UniTask.WaitUntil(() => spring.EliminateCompanySpring0.IsReachSlot && spring.EliminateCompanySpring1.IsReachSlot || _cts.IsCancellationRequested);
 			if (_cts.IsCancellationRequested) {
 				return;
@@ -15,12 +16,17 @@ namespace SpringMatch {
 			
 			var slotMgr = SlotManager.Inst;
 			if (spring.EliminateIndex == 0) {
-				await spring.TweenToSlot(slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex), _cts.Token).SuppressCancellationThrow();
+				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
+					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex))
+					.SuppressCancellationThrow();
+				//await spring.TweenToSlot(slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			} else if (spring.EliminateIndex == 1) {
-				await UniTask.WaitForSeconds(0.5f);
-				await spring.TweenToSlot(slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex), _cts.Token).SuppressCancellationThrow();
+				await UniTask.WaitUntil(() => spring.EliminateCompanySpring0.End || spring.EliminateCompanySpring1.End);
+				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
+					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex)).SuppressCancellationThrow();
+				//await spring.TweenToSlot(slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			} else {
-				await UniTask.WaitForSeconds(1f);
+				await UniTask.WaitUntil(() => spring.EliminateCompanySpring0.End && spring.EliminateCompanySpring1.End);
 				Debug.Log($"state unlock {spring.EliminateTargetSlotIndex}");
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
 				Destroy(spring.gameObject);
@@ -28,6 +34,8 @@ namespace SpringMatch {
 				Destroy(spring.EliminateCompanySpring1.gameObject);
 				// Play Eliminate Effect
 			}
+			
+			spring.End = true;
 		}
 	}
 

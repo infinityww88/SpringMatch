@@ -18,16 +18,26 @@ namespace SpringMatch {
 		private SpringCurveFrame _springCurve;
 		
 		[SerializeField]
+		private CurvySpline _spline;
+		
+		[SerializeField]
 		private CurvySpline _footTweenCurve;
 		[SerializeField]
 		private CurvySpline _handTweenCurve;
 		[SerializeField]
 		private CurvySpline _headTweenCurve;
 		
+		private SpringBinder _springBinder;
+		
 		#region test
 		public Transform testBegin;
 		public Transform testEnd;
 		public Transform testTarget;
+		
+		[Button]
+		void TestShrink() {
+			Shrink(testBegin.position);
+		} 
 		
 		[Button]
 		void TestStretch2Shrink() {
@@ -64,34 +74,52 @@ namespace SpringMatch {
 		public float handHeightOffset = 0;
 		
 		public float duration = 1f;
+		public float shrinkToShrinkDuration = 0.3f;
 		
-		private SpringBinder _springBinder;
-		
+		public float shrinkHeight = 0.4f;
+
 		public void SetPose(Vector3 pos0, Vector3 pos1, float height) {
 			_springCurve.SetFrame(pos0, pos1, height);
 		}
 		
 		#region tween interface
+		
+		public void Shrink(Vector3 pos) {
+			_spline.Interpolation = CurvyInterpolation.Linear;
+			float step = shrinkHeight / 4;
+			_springBinder.NormalLength = 1;
+			_springCurve.foot0.position = pos + Vector3.up * step * 0;
+			_springCurve.hand0.position  = pos + Vector3.up * step * 1;
+			_springCurve.head.position = pos + Vector3.up * step * 2;
+			_springCurve.hand1.position = pos + Vector3.up * step * 3;
+			_springCurve.foot1.position = pos + Vector3.up * step * 4;
+			_spline.Refresh();
+		}
+		
 		public async UniTask Stretch2Shrink(Vector3 pos) {
+			_spline.Interpolation = CurvyInterpolation.BSpline;
 			var mag0 = (_springCurve.foot0.position - pos).magnitude;
 			var mag1 = (_springCurve.foot1.position - pos).magnitude;
 			bool fixTail = false;
 			if (mag0 > mag1) {
 				fixTail = true;
 			}
+			_springBinder.NormalLength = 1;
 			await MoveToTarget(pos, _springCurve.height, fixTail, duration);
 			await TweenSpringLen(1, 0.03f, duration, !fixTail);
 		}
 		
 		public async UniTask Shrink2Shrink(Vector3 pos0, Vector3 pos1) {
+			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
-			SetPose(pos0, pos1, (pos0 - pos1).magnitude/2);
+			SetPose(pos0, pos1, (pos0 - pos1).magnitude * 2f);
 			float t = 0.03f;
-			await TweenSpringLen(0.03f, 1, duration, false);
-			await TweenSpringLen(1, 0.03f, duration, true);
+			await TweenSpringLen(0.03f, 1, shrinkToShrinkDuration, false);
+			await TweenSpringLen(1, 0.03f, shrinkToShrinkDuration, true);
 		}
 		
 		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1) {
+			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
 			_springBinder.Inverse = false;
 			SetPose(pos0, pos1, (pos0 - pos1).magnitude/2);
@@ -99,6 +127,7 @@ namespace SpringMatch {
 		}
 		
 		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, Vector3 pos2, float height) {
+			_spline.Interpolation = CurvyInterpolation.BSpline;
 			await Shrink2Stretch(pos0, pos1);
 			await MoveToTarget(pos2, height, true, duration);
 		}
@@ -108,7 +137,6 @@ namespace SpringMatch {
 			float t = beginT;
 			_springBinder.NormalLength = beginT;
 			_springBinder.Inverse = inverse;
-			Debug.Log("Tween spring len");
 			return DOTween.To(() => t, v => {
 				t = v;
 				_springBinder.NormalLength = t;
@@ -118,7 +146,7 @@ namespace SpringMatch {
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Awake()
 		{
-			SetPose(testBegin.position, testEnd.position, (testBegin.position - testEnd.position).magnitude/2);
+			//SetPose(testBegin.position, testEnd.position, (testBegin.position - testEnd.position).magnitude/2);
 			_springBinder = GetComponent<SpringBinder>();
 		}
 

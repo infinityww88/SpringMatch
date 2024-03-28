@@ -26,6 +26,8 @@ namespace SpringMatch {
 		[SerializeField]
 		private bool _inverse = false;
 		
+		public Transform BonesRoot => root;
+		
 		public float NormalLength {
 			get {
 				return _normalLength;

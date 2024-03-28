@@ -10,8 +10,6 @@ namespace SpringMatch {
 	
 		[SerializeField]
 		private float _footWidth = 2;
-		[SerializeField]
-		private float _height = 2;
 		
 		private ExtraSlot[] _extraSlot;
 	
@@ -26,7 +24,7 @@ namespace SpringMatch {
 			int n = Mathf.Min(springs.Length, 3);
 			for (int i = 0; i < n; i++) {
 				_extraSlot[i].Spring = springs[i];
-				springs[i].SetExtra(i, GetSlotFoot0Pos(i), GetSlotFoot1Pos(i), _height);
+				springs[i].ToExtra(i, GetSlotFoot0Pos(i), GetSlotFoot1Pos(i));
 			}
 		}
 		
@@ -49,8 +47,6 @@ namespace SpringMatch {
 		public Vector3 GetSlotFoot1Pos(int index) {
 			return GetSlotPos(index) + Vector3.right * _footWidth / 2;
 		}
-	
-		public float Height => _height;
 	}
 
 }

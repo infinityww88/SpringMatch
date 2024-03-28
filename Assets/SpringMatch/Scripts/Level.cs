@@ -35,6 +35,7 @@ namespace SpringMatch {
 				int i = 0;
 				foreach (var sd in levelData.springs) {
 					var s = NewSpring(sd.x0, sd.y0, sd.x1, sd.y1, sd.height, $"spring {i++}", sd.type, colorPattle[sd.type]);
+					s.EnableRender(false);
 					_springs.Add(s);
 				}
 				Utils.RunNextFrame(() => {
@@ -68,9 +69,8 @@ namespace SpringMatch {
 			var pos1 = grid.GetCell(x1, y1).position;
 			Spring spring = springCurve.GetComponent<Spring>();
 			spring.Init(pos0, pos1, height, type);
-			spring.GeneratePickupColliders(0.35f);
 			spring.SetColor(color);
-			spring.EnableRender(false);
+			spring.GetComponent<BoardState>().enabled = true;
 			return spring;
 		}
 		
@@ -86,9 +86,6 @@ namespace SpringMatch {
 			Inst = this;
 		}
 		
-		//private Vector3 lastPickupSpringFoot0Pos;
-		//private Vector3 lastPickupSpringFoot1Pos;
-		//private Vector3 lastPickupSpringHeight;
 		private Spring lastPickupSpring = null;
 		
 		public void ClearLastPickupSpring() {
@@ -96,11 +93,11 @@ namespace SpringMatch {
 		}
 		
 		public void OnPickupSpring(Spring spring) {
-			
 			if (!spring.IsTop) {
-				// Tween
+				spring.Shake();
 				return;
 			}
+			spring.EnablePickupCollider(false);
 			
 			lastPickupSpring = spring;
 			
@@ -152,12 +149,6 @@ namespace SpringMatch {
 		protected void Start()
 		{
 			Load();
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-        
 		}
 	}
 }

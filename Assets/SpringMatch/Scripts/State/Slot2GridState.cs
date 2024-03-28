@@ -9,8 +9,17 @@ namespace SpringMatch {
 	public class Slot2GridState : BaseState
 	{
 		protected override async UniTaskVoid _Update() {
-			await spring.TweenToGrid(spring.Foot0Pos, spring.Foot1Pos, spring.Height, _cts.Token)
-				.SuppressCancellationThrow();
+			spring.EnablePickupCollider(false);
+			Vector3 slotPos = SlotManager.Inst.GetSlotPos(spring.SlotIndex);
+			if ((spring.Foot0Pos - slotPos).magnitude > (spring.Foot1Pos - slotPos).magnitude) {
+				spring.SwapFoots();
+			}
+			await spring.Deformer.Shrink2Stretch(
+				SlotManager.Inst.GetSlotPos(spring.SlotIndex),
+				spring.Foot0Pos, spring.Foot1Pos, spring.Height
+			).SuppressCancellationThrow();
+			//await spring.TweenToGrid(spring.Foot0Pos, spring.Foot1Pos, spring.Height, _cts.Token)
+			//.SuppressCancellationThrow();
 			spring.SlotIndex = spring.TargetSlotIndex = -1;
 			this.enabled = false;
 			GetComponent<BoardState>().enabled = true;
