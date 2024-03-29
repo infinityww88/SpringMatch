@@ -4851,7 +4851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   springPrefab: {fileID: 245051030443960163, guid: 219840e9067914a4cb349309759b682b, type: 3}
-  springCurveFramePrefab: {fileID: 7707418988455127000, guid: cf5bf31a6fdd9874181922222dc18034, type: 3}
+  holeSpringPrefab: {fileID: 839084693850096933, guid: d8e36753c7be2ff4f922f9644191f061, type: 3}
   grid: {fileID: 1719313890}
 --- !u!4 &700189546
 Transform:

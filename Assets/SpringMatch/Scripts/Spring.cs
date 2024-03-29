@@ -59,7 +59,9 @@ namespace SpringMatch {
 				return _overlaySpring.Count == 0;
 			}
 		}
-	
+		
+		public HoleSpring HoleSpring { get; set; }
+		
 		[ShowInInspector]
 		public int TargetSlotIndex { get; set; }
 		[ShowInInspector]
@@ -82,6 +84,10 @@ namespace SpringMatch {
 			if (IsTop) {
 				_SetColor(_color);
 			}
+		}
+		
+		public void ClearOverlaySpring() {
+			_overlaySpring.Clear();
 		}
 	
 		public void AddOverlaySpring(Spring spring) {
@@ -157,6 +163,10 @@ namespace SpringMatch {
 		
 		public void EnablePickupCollider(bool enabled) {
 			_pickupColliderRoot.gameObject.SetActive(enabled);
+		}
+		
+		public void EnableDetectCollider(bool enabled) {
+			_springCollider.gameObject.SetActive(enabled);
 		}
 	
 		[Button]

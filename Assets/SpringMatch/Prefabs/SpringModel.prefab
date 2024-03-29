@@ -95,7 +95,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   strengthFactor: 0.3
-  duration: 0.5
+  duration: 0.3
   vibrato: 25
   elasticity: 1
 --- !u!114 &1988754795530048253
@@ -126,6 +126,8 @@ MonoBehaviour:
   handHeightFactor: 0.2
   handHeightOffset: 0
   duration: 0.5
+  shrinkToShrinkDuration: 0.3
+  shrinkToShrinkMaxHeight: 2
   shrinkHeight: 0.4
 --- !u!1001 &549688722184456185
 PrefabInstance:

@@ -10,6 +10,11 @@ namespace SpringMatch {
 	{
 		protected override async UniTaskVoid _Update() {
 			spring.EnablePickupCollider(false);
+			
+			if (spring.HoleSpring != null && spring.HoleSpring.NextHoleSpring != null) {
+				await UniTask.WaitForSeconds(0.5f, cancellationToken: _cts.Token);
+			}
+			
 			Vector3 slotPos = SlotManager.Inst.GetSlotPos(spring.SlotIndex);
 			if ((spring.Foot0Pos - slotPos).magnitude > (spring.Foot1Pos - slotPos).magnitude) {
 				spring.SwapFoots();
@@ -21,8 +26,6 @@ namespace SpringMatch {
 				spring.Height,
 				_cts.Token
 			);
-			//await spring.TweenToGrid(spring.Foot0Pos, spring.Foot1Pos, spring.Height, _cts.Token)
-			//.SuppressCancellationThrow();
 			spring.SlotIndex = spring.TargetSlotIndex = -1;
 			this.enabled = false;
 			GetComponent<BoardState>().enabled = true;

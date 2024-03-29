@@ -12,12 +12,21 @@ namespace SpringMatch {
 		protected override async UniTaskVoid _Update() {
 			spring.EnablePickupCollider(true);
 			spring.GeneratePickupColliders(0.35f);
-			await UniTask.WaitUntil(() => spring.TargetSlotIndex >= 0 || _cts.IsCancellationRequested);
+			await UniTask.WaitUntil(() => spring.TargetSlotIndex >= 0
+				|| (spring.HoleSpring != null && spring.HoleSpring.GoBack) 
+				|| _cts.IsCancellationRequested);
 			if (_cts.IsCancellationRequested) {
 				return;
 			}
-			this.enabled = false;
-			GetComponent<Board2SlotState>().enabled = true;
+			if (spring.HoleSpring != null && spring.HoleSpring.GoBack) {
+				this.enabled = false;
+				GetComponent<Board2HoleState>().enabled = true;
+			}
+			else {
+				this.enabled = false;
+				GetComponent<Board2SlotState>().enabled = true;
+			}
+			
 		}
 	}
 

@@ -12,7 +12,7 @@ namespace SpringMatch {
 			spring.EnablePickupCollider(false);
 			int index = spring.TargetSlotIndex;
 			ExtraSlotManager.Inst.RemoveSpring(spring.LastExtraSlotIndex);
-			await spring.Deformer.Stretch2Shrink(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token);
+			await spring.Deformer.Shrink2Target(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token);
 			//await spring.TweenToSlot(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			spring.SlotIndex = index;
 			this.enabled = false;

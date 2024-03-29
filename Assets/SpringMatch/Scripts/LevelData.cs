@@ -35,5 +35,6 @@ namespace SpringMatch {
 	public class LevelData
 	{
 		public List<SpringData> springs;
+		public List<List<SpringData>> holes;
 	}
 }

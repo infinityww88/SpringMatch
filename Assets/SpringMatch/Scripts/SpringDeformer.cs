@@ -40,8 +40,8 @@ namespace SpringMatch {
 		} 
 		
 		[Button]
-		void TestStretch2Shrink() {
-			Stretch2Shrink(testTarget.position, CancellationToken.None);
+		void TestShrink2Target() {
+			Shrink2Target(testTarget.position, CancellationToken.None);
 		} 
 		
 		[Button]
@@ -75,6 +75,7 @@ namespace SpringMatch {
 		
 		public float duration = 1f;
 		public float shrinkToShrinkDuration = 0.3f;
+		public float shrinkToShrinkMaxHeight = 2f;
 		
 		public float shrinkHeight = 0.4f;
 
@@ -96,7 +97,7 @@ namespace SpringMatch {
 			_spline.Refresh();
 		}
 		
-		public async UniTask Stretch2Shrink(Vector3 pos, CancellationToken ct) {
+		public async UniTask Shrink2Target(Vector3 pos, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			var mag0 = (_springCurve.foot0.position - pos).magnitude;
 			var mag1 = (_springCurve.foot1.position - pos).magnitude;
@@ -112,18 +113,31 @@ namespace SpringMatch {
 		public async UniTask Shrink2Shrink(Vector3 pos0, Vector3 pos1, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
-			SetPose(pos0, pos1, (pos0 - pos1).magnitude * 2f);
+			float height = (pos0 - pos1).magnitude * 1.5f;
+			SetPose(pos0, pos1, Mathf.Min(height, shrinkToShrinkMaxHeight));
 			float t = 0.03f;
 			await TweenSpringLen(0.03f, 1, shrinkToShrinkDuration, false).WithCancellation(ct);
 			await TweenSpringLen(1, 0.03f, shrinkToShrinkDuration, true).WithCancellation(ct);
 		}
 		
-		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, CancellationToken ct) {
+		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, float height, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
 			_springBinder.Inverse = false;
-			SetPose(pos0, pos1, (pos0 - pos1).magnitude/2);
+			SetPose(pos0, pos1, height);
 			await TweenSpringLen(0.03f, 1, duration, false).WithCancellation(ct);
+		}
+		
+		public async UniTask Stretch2Strink(Vector3 pos0, Vector3 pos1, float height, CancellationToken ct) {
+			_spline.Interpolation = CurvyInterpolation.BSpline;
+			_springBinder.NormalLength = 1f;
+			_springBinder.Inverse = false;
+			SetPose(pos0, pos1, height);
+			await TweenSpringLen(1, 0.03f, duration, false).WithCancellation(ct);
+		}
+		
+		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, CancellationToken ct) {
+			await Shrink2Stretch(pos0, pos1, (pos0 - pos1).magnitude/2, ct);
 		}
 		
 		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, Vector3 pos2, float height, CancellationToken ct) {
