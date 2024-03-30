@@ -21,7 +21,7 @@ namespace SpringMatch {
 		public int UsedSlotsNum => usedSlotsNum;
 		
 		public bool IsFull() {
-			return false;
+			return UsedSlotsNum >= 7;
 		}
 		
 		public Slot GetSlot(int index) {
@@ -45,9 +45,7 @@ namespace SpringMatch {
 			usedSlotsNum++;
 			if (HasTriple(index)) {
 				Level.Inst.ClearLastPickupSpring();
-				Debug.Log($"eliminate ready {Time.frameCount}");
 				Utils.RunNextFrame(() => {
-					Debug.Log($"eliminate start {Time.frameCount}");
 					EliminateTriple(index);
 					usedSlotsNum -= 3;
 				}, 2);
