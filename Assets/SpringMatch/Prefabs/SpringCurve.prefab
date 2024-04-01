@@ -335,7 +335,7 @@ MonoBehaviour:
   restricted2DPlane: 0
   m_Closed: 0
   m_AutoEndTangents: 1
-  m_Orientation: 0
+  m_Orientation: 2
   m_AutoHandleDistance: 0.39
   m_Tension: 0
   m_Continuity: 0
@@ -385,6 +385,7 @@ MonoBehaviour:
   head: {fileID: 513632811142162688}
   hand1: {fileID: 7277313200977455242}
   foot1: {fileID: 4403906075155024115}
+  height: 0
   handHeightN: 0.6
 --- !u!1 &6845623950907145599
 GameObject:
