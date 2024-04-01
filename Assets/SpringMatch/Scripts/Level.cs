@@ -47,19 +47,20 @@ namespace SpringMatch {
 					_springs.Add(s);
 				}
 				for (i = 0; i < levelData.holes.Count; i++) {
-					if (levelData.holes[i].Count == 0) {
+					if (levelData.holes[i].types.Count == 0) {
 						continue;
 					}
+					HoleData holeData = levelData.holes[i];
 					SpringHole hole = new SpringHole();
 					hole.ID = i;
 					int j = 0;
-					foreach (var sd in levelData.holes[i]) {
-						var s = NewSpring(sd.x0, sd.y0,
-							sd.x1, sd.y1,
-							sd.height,
+					foreach (var t in holeData.types) {
+						var s = NewSpring(holeData.x0, holeData.y0,
+							holeData.x1, holeData.y1,
+							holeData.height,
 							$"hole {i} spring {j++}",
-							sd.type,
-							colorPattle[sd.type],
+							t,
+							colorPattle[t],
 							i);
 						s.gameObject.SetActive(false);
 						hole.AddSpring(s);
@@ -189,6 +190,7 @@ namespace SpringMatch {
 				CalcOverlay(lastPickupSpring);
 			} else {
 				lastPickupSpring.ExtraSlotIndex = lastPickupSpring.LastExtraSlotIndex;
+				ExtraSlotManager.Inst.RestoreSpring(lastPickupSpring);
 			}
 			
 			SlotManager.Inst.RemoveSpring(lastPickupSpring.TargetSlotIndex);

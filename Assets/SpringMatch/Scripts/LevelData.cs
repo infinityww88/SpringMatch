@@ -17,16 +17,23 @@ namespace SpringMatch {
 		}
 	}
 	
-	public struct SpringData {
+	public class SpringPose {
 		public int x0;
 		public int y0;
 		public int x1;
 		public int y1;
 		public float height;
+	}
+	
+	public class SpringData : SpringPose {
 		public int type;
 	}
 	
-	public struct SpringColorPattle {
+	public class HoleData : SpringPose {
+		public List<int> types;
+	}
+	
+	public class SpringColorPattle {
 		public int type;
 		[JsonConverter(typeof(ColorConvert))]
 		public Color color;
@@ -35,6 +42,6 @@ namespace SpringMatch {
 	public class LevelData
 	{
 		public List<SpringData> springs;
-		public List<List<SpringData>> holes;
+		public List<HoleData> holes;
 	}
 }

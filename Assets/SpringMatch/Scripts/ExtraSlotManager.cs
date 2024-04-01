@@ -28,6 +28,12 @@ namespace SpringMatch {
 			}
 		}
 		
+		public void RestoreSpring(Spring spring) {
+			int i = spring.LastExtraSlotIndex;
+			_extraSlot[i].Spring = spring;
+			spring.ToExtra(i, GetSlotFoot0Pos(i), GetSlotFoot1Pos(i));
+		}
+		
 		public void RemoveSpring(int index) {
 			_extraSlot[index].Spring = null;
 		}
