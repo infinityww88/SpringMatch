@@ -51,6 +51,7 @@ namespace SpringMatch {
 						continue;
 					}
 					HoleData holeData = levelData.holes[i];
+					grid.MakeHole(holeData.x0, holeData.y0);
 					SpringHole hole = new SpringHole();
 					hole.ID = i;
 					int j = 0;
@@ -137,7 +138,7 @@ namespace SpringMatch {
 		}
 		
 		public void OnPickupSpring(Spring spring) {
-			if (!spring.IsTop) {
+			if (SlotManager.Inst.IsFull() || !spring.IsTop) {
 				spring.Shake();
 				return;
 			}

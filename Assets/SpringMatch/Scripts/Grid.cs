@@ -15,11 +15,21 @@ namespace SpringMatch {
 		public float height = 10;
 		
 		public GameObject cellPrefab;
+		public GameObject holePrefab;
 		
 		public Transform GetCell(int x, int y) {
 			Assert.IsTrue(x >= 0 && x < col && y >= 0 && y < row);
 			int index = y * col + x;
 			return transform.GetChild(index);
+		}
+		
+		[Button]
+		public void MakeHole(int x, int y) {
+			var cell = GetCell(x, y);
+			int index = cell.transform.GetSiblingIndex();
+			var hole = Instantiate(holePrefab, cell.position, cell.rotation, transform);
+			Destroy(cell.gameObject);
+			hole.transform.SetSiblingIndex(index);
 		}
 		
 		[Button]
@@ -38,18 +48,6 @@ namespace SpringMatch {
 					o.transform.localPosition = new Vector3(left + hstep * i, 0, top - vstep * j);
 				}
 			}
-		}
-		
-		// Start is called before the first frame update
-		void Start()
-		{
-        
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-        
 		}
 	}
 }
