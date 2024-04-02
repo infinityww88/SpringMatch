@@ -103,9 +103,12 @@ namespace SpringMatch {
 			(Foot0Pos, Foot1Pos) = (Foot1Pos, Foot0Pos);
 		}
 		
+		[Button]
 		public void SetHeight(float height) {
 			Height = height;
 			_springDeformer.SetPose(Foot0Pos, Foot1Pos, height);
+			GeneratePickupColliders(0.35f);
+			Debug.Break();
 		}
 	
 		public void Init(Vector3 pos0, Vector3 pos1, float height, int type) {

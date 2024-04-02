@@ -1,0 +1,77 @@
+.Inspector {
+    right: 0;
+    position: absolute;
+    height: 100%;
+    width: 307px;
+    background-color: rgba(108, 108, 108, 0.57);
+}
+
+.type-group {
+    flex-grow: 0;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.type-button-group {
+    flex-grow: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+
+.type-button {
+    background-color: rgb(250, 0, 0);
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.height-input-field > .unity-base-text-field__label {
+    color: rgb(255, 255, 255);
+}
+
+.add-hole-spring-button {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(255, 255, 255);
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.button-select {
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    border-left-width: 4px;
+}
+
+.button {
+}
+
+.button:hover {
+    border-left-color: rgb(149, 149, 149);
+    border-right-color: rgb(149, 149, 149);
+    border-top-color: rgb(149, 149, 149);
+    border-bottom-color: rgb(149, 149, 149);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+.hole-inspector-header {
+    white-space: normal;
+    flex-direction: row;
+    flex-grow: 0;
+}

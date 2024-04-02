@@ -125,7 +125,13 @@ namespace SpringMatchEditor {
 				}
 			}
 			if (Input.mouseScrollDelta.y != 0 && _editedSpring != null) {
-				_editedSpring.SetHeight(_editedSpring.Height + Input.mouseScrollDelta.y * scrollHeightFactor);
+				_editedSpring.Init(_editedSpring.Foot0Pos,
+					_editedSpring.Foot1Pos,
+					_editedSpring.Height + Input.mouseScrollDelta.y * scrollHeightFactor,
+					_editedSpring.Type);
+				Utils.RunNextFrame(() => {
+					_editedSpring.GeneratePickupColliders(0.35f);
+				}, 2);
 			}
 		}
 	}

@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/SpringMatch/LevelEditor/UI/NewUXMLTemplate.uss?fileID=7433441132597879392&amp;guid=a26177683e18734429c83f2b7473328f&amp;type=3#NewUXMLTemplate" />
+    <ui:VisualElement name="TypeButtonTemplate" class="type-button button" style="display: flex;" />
+</ui:UXML>

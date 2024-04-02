@@ -345,7 +345,7 @@ MonoBehaviour:
   m_GizmoColor: {r: 0.70980394, g: 0.70980394, b: 0.70980394, a: 1}
   m_GizmoSelectionColor: {r: 0.14901961, g: 0.34901962, b: 0.6784314, a: 1}
   m_CacheDensity: 50
-  m_MaxPointsPerUnit: 8
+  m_MaxPointsPerUnit: 4
   m_UsePooling: 1
   m_UseThreading: 0
   m_CheckTransform: 1
