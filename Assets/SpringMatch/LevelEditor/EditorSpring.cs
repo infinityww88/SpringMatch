@@ -11,6 +11,8 @@ namespace SpringMatchEditor {
 		public Vector2Int pos1;
 		private List<int> holeSpringTypes = new List<int>();
 		
+		public bool IsValid { get; set; }
+		
 		public bool IsHole {
 			get {
 				return holeSpringTypes != null && holeSpringTypes.Count > 0;

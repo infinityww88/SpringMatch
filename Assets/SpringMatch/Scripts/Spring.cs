@@ -48,10 +48,9 @@ namespace SpringMatch {
 		private float _darkFactor = 0.6f;
 		private bool _isDark = false;
 	
-		private int _type;
 		private Color _color;
 	
-		public int Type => _type;
+		public int Type { get; set; }
 	
 		public bool InTween { get; private set; }
 	
@@ -118,7 +117,7 @@ namespace SpringMatch {
 	
 		public void Init(Vector3 pos0, Vector3 pos1, float height, int type) {
 			End = false;
-			_type = type;
+			Type = type;
 			Foot0Pos = pos0;
 			Foot1Pos = pos1;
 			Height = height;
@@ -137,6 +136,10 @@ namespace SpringMatch {
 			_springShake.Shake(() => {
 				_springBinder.enabled = true;
 			});
+		}
+		
+		public bool CoverdBy(Spring other) {
+			return _overlaySpring.Contains(other);
 		}
 	
 		public void CalcSpringOverlay() {

@@ -37,6 +37,9 @@ namespace SpringMatchEditor {
 		private float scrollHeightFactor = 1;
 		
 		[SerializeField]
+		private float drawSpringHeightFactor = 0.5f;
+		
+		[SerializeField]
 		private LevelEditorUI editorUI;
 		
 		private Dictionary<int, Color> _typeColorPattle = new Dictionary<int, Color>();
@@ -50,6 +53,9 @@ namespace SpringMatchEditor {
 				editorUI.Inspector(_editedSpring);
 			}
 		}
+		
+		[SerializeField]
+		private Color InvalidColor = Color.white;
 		
 		private LevelData _leveData;
 		
@@ -93,7 +99,7 @@ namespace SpringMatchEditor {
 			string json = File.ReadAllText(Path.Join(Application.persistentDataPath, "color.json"));
 			LoadPattle(json);
 			json = File.ReadAllText(Path.Join(Application.persistentDataPath, "level.json"));
-			Load(json);
+			//Load(json);
 		}
 		
 		void LoadPattle(string json) {
@@ -132,10 +138,25 @@ namespace SpringMatchEditor {
 				spring.CalcSpringOverlay();
 			}
 			foreach (Spring spring in _springs) {
+				spring.SetColor(_typeColorPattle[spring.Type]);
+				spring.GetComponent<EditorSpring>().IsValid = true;
 				if (!spring.IsTop) {
 					spring.Darker();
 				} else {
 					spring.Lighter();
+				}
+			}
+			foreach (Spring s0 in _springs) {
+				foreach (Spring s1 in _springs) {
+					if (s0 == s1) {
+						continue;
+					}
+					if (s0.CoverdBy(s1) && s1.CoverdBy(s0)) {
+						s0.SetColor(InvalidColor);
+						s1.SetColor(InvalidColor);
+						s0.GetComponent<EditorSpring>().IsValid = false;
+						s1.GetComponent<EditorSpring>().IsValid = false;
+					}
 				}
 			}
 			pendingCalcOverlay = false;
@@ -196,7 +217,7 @@ namespace SpringMatchEditor {
 			Transform startCell = grid.GetCell(x0, y0);
 			Transform currCell = grid.GetCell(x1, y1);
 			var spring = Instantiate(springPrefab);
-			float height = (startCell.position - currCell.position).magnitude / 1.5f;
+			float height = (startCell.position - currCell.position).magnitude * drawSpringHeightFactor;
 			if (heightStep >= 0) {
 				height = heightStep * scrollHeightFactor;
 			} else {
@@ -224,11 +245,31 @@ namespace SpringMatchEditor {
 		}
 		
 		Transform Pickup(Vector2 mousePos, string layer) {
-			var hit = Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask(layer));
+			var hit = Physics.Raycast(Camera.main.ScreenPointToRay(mousePos),
+				out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask(layer));
 			if (!hit) {
 				return null;
 			}
 			return hitInfo.collider.transform;
+		}
+		
+		private EditorSpring ES(Spring s) => s.GetComponent<EditorSpring>();
+		
+		public void ChangeSpringType(int type) {
+			if (_editedSpring == null) {
+				return;
+			}
+			_editedSpring.Type = type;
+			if (ES(_editedSpring).IsValid) {
+				_editedSpring.SetColor(_typeColorPattle[type]);
+			}
+		}
+		
+		public void ChangeHoleSpringType(int index, int type) {
+			if (_editedSpring == null || !ES(_editedSpring).IsHole) {
+				return;
+			}
+			ES(_editedSpring).Set(index, type);
 		}
 		
 		public void MakeHole() {
@@ -244,6 +285,7 @@ namespace SpringMatchEditor {
 				return;
 			}
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
+			editorSpring.Clear();
 			grid.ClearHole(editorSpring.pos0.x, editorSpring.pos0.y);
 		}
 		
@@ -272,18 +314,26 @@ namespace SpringMatchEditor {
 			}
 			SetHeightStep(_editedSpring.GetComponent<EditorSpring>().heightStep + stepDelta);
 		}
+		
+		async UniTaskVoid RotateView() {
+			Vector3 pos = Input.mousePosition;
+		}
 
 		// Update is called once per frame
 		void Update()
 		{
 			if (Input.GetMouseButtonDown(0)) {
 				var spring = PickupSpring(Input.mousePosition);
-				if (spring == null) {
-					DrawSpring();
-				}
-				else {
+				if (spring != null) {
 					OnPickupSpring(spring);
+					return;
 				}
+				var cell = PickupCell(Input.mousePosition);
+				if (cell != null) {
+					DrawSpring();
+					return;
+				}
+				RotateView();
 			}
 			if (Input.mouseScrollDelta.y != 0 && _editedSpring != null) {
 				SetHeightStepDelta((int)Input.mouseScrollDelta.y);

@@ -122,6 +122,7 @@ namespace SpringMatchEditor {
 				levelEditor.MakeHole();
 			} else {
 				levelEditor.ClearHole();
+				holeSpringGroup.Clear();
 			}
 		}
 		
@@ -129,20 +130,30 @@ namespace SpringMatchEditor {
 			VisualElement e = (VisualElement)evt.target;
 			SelectTypeButton(e);
 			Debug.Log($"type button {e.userData} click");
+			if (levelEditor.SelectedSpring == null) {
+				return;
+			}
+			int type = (int)e.userData;
 			if (selectedHoleSpringButton != null) {
 				selectedHoleSpringButton.style.backgroundColor = e.style.backgroundColor;
+				int index = selectedHoleSpringButton.parent.IndexOf(selectedHoleSpringButton);
+				Debug.Log($"set hole spring button {index} => {type}");
+				levelEditor.ChangeHoleSpringType(index, type);
 			}
-			else if (levelEditor.SelectedSpring != null) {
-				levelEditor.SelectedSpring.SetColor(e.style.backgroundColor.value);
+			else {
+				levelEditor.ChangeSpringType(type);
 			}
 		}
 		
 		void OnAddHoleSpringButtonClick(ClickEvent evt) {
 			AddHoleSpringButton(1);
+			levelEditor.SelectedSpring.GetComponent<EditorSpring>().Add(1);
 		}
 		
 		void OnRemoveHoleSpringButtonClick(ClickEvent evt) {
 			if (selectedHoleSpringButton != null) {
+				int index = selectedHoleSpringButton.parent.IndexOf(selectedHoleSpringButton);
+				levelEditor.SelectedSpring.GetComponent<EditorSpring>().Remove(index);
 				holeSpringGroup.Remove(selectedHoleSpringButton);
 				selectedHoleSpringButton = null;
 				return;
@@ -150,6 +161,7 @@ namespace SpringMatchEditor {
 			if (holeSpringGroup.childCount == 0) {
 				return;
 			}
+			levelEditor.SelectedSpring.GetComponent<EditorSpring>().Remove(holeSpringGroup.childCount-1);
 			holeSpringGroup.Remove(holeSpringGroup.Children().Last());
 		}
 		
