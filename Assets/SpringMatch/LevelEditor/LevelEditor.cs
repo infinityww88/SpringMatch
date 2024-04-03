@@ -42,6 +42,19 @@ namespace SpringMatchEditor {
 		[SerializeField]
 		private LevelEditorUI editorUI;
 		
+		[SerializeField]
+		[FoldoutGroup("RoateView")]
+		private Transform _cameraHPivot;
+		[SerializeField]
+		[FoldoutGroup("RoateView")]
+		private Transform _cameraVPivot;
+		[SerializeField]
+		[FoldoutGroup("RoateView")]
+		private float _cameraRotateHFactor;
+		[SerializeField]
+		[FoldoutGroup("RoateView")]
+		private float _cameraRotateVFactor;
+		
 		private Dictionary<int, Color> _typeColorPattle = new Dictionary<int, Color>();
 		
 		public Spring SelectedSpring {
@@ -316,7 +329,16 @@ namespace SpringMatchEditor {
 		}
 		
 		async UniTaskVoid RotateView() {
-			Vector3 pos = Input.mousePosition;
+			Debug.Log("Start Rotate View");
+			Vector3 startPos = Input.mousePosition;
+			while (!Input.GetMouseButtonUp(0)) {
+				await UniTask.NextFrame();
+				Vector2 diff = Input.mousePosition - startPos;
+				startPos = Input.mousePosition;
+				Debug.Log($"diff {diff.x * _cameraRotateHFactor} {diff.y * _cameraRotateVFactor}");
+				_cameraHPivot.localRotation *= Quaternion.Euler(0, diff.x * _cameraRotateHFactor, 0);
+				_cameraVPivot.localRotation *= Quaternion.Euler(-diff.y * _cameraRotateVFactor, 0, 0);
+			}
 		}
 
 		// Update is called once per frame
@@ -348,6 +370,11 @@ namespace SpringMatchEditor {
 				}
 				SelectedSpring = null;
 				editorUI.Inspector(null);
+			}
+			
+			if (Input.GetKeyDown(KeyCode.Escape)) {
+				_cameraHPivot.localRotation = Quaternion.identity;
+				_cameraVPivot.localRotation = Quaternion.identity;
 			}
 		}
 	}
