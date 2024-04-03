@@ -82,6 +82,7 @@ namespace SpringMatch {
 		public void RemoveOverlaySpring(Spring spring) {
 			_overlaySpring.Remove(spring);
 			if (IsTop) {
+				Lighter();
 				_SetColor(_color * DarkFactor());
 			}
 		}
