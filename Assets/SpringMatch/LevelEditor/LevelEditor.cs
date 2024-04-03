@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 using Grid = SpringMatch.Grid;
 
@@ -55,6 +56,36 @@ namespace SpringMatchEditor {
 		private HashSet<Spring> _springs = new HashSet<Spring>();
 		
 		public Dictionary<int, Color> TypeColorPattle => _typeColorPattle;
+		
+		[Button]
+		private LevelData ToLevelData() {
+			LevelData ld = new LevelData();
+			foreach (var spring in _springs) {
+				var es = spring.GetComponent<EditorSpring>();
+				if (es.IsHole) {
+					HoleData hd = new HoleData();
+					hd.x0 = es.pos0.x;
+					hd.y0 = es.pos0.y;
+					hd.x1 = es.pos1.x;
+					hd.y1 = es.pos1.y;
+					hd.heightStep = es.heightStep;
+					hd.types.Add(spring.Type);
+					hd.types.AddRange(es.HoleSpringTypes);
+					ld.holes.Add(hd);
+				} else {
+					SpringData sd = new SpringData();
+					sd.x0 = es.pos0.x;
+					sd.y0 = es.pos0.y;
+					sd.x1 = es.pos1.x;
+					sd.y1 = es.pos1.y;
+					sd.type = spring.Type;
+					sd.heightStep = es.heightStep;
+					ld.springs.Add(sd);
+				}
+			}
+			Debug.Log(JsonConvert.SerializeObject(ld));
+			return ld;
+		}
 		
 		// Start is called before the first frame update
 		void Awake()
@@ -176,7 +207,8 @@ namespace SpringMatchEditor {
 			spring.SetColor(TypeColorPattle[type]);
 			spring.GeneratePickupColliders(0.35f);
 			var editorSpring = spring.gameObject.AddComponent<EditorSpring>();
-			editorSpring.pos = new Vector2Int(x0, y0);
+			editorSpring.pos0 = new Vector2Int(x0, y0);
+			editorSpring.pos1 = new Vector2Int(x1, y1);
 			editorSpring.heightStep = heightStep;
 			_springs.Add(spring);
 			return spring;
@@ -204,7 +236,7 @@ namespace SpringMatchEditor {
 				return;
 			}
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
-			grid.MakeHole(editorSpring.pos.x, editorSpring.pos.y);
+			grid.MakeHole(editorSpring.pos0.x, editorSpring.pos0.y);
 		}
 		
 		public void ClearHole() {
@@ -212,7 +244,7 @@ namespace SpringMatchEditor {
 				return;
 			}
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
-			grid.ClearHole(editorSpring.pos.x, editorSpring.pos.y);
+			grid.ClearHole(editorSpring.pos0.x, editorSpring.pos0.y);
 		}
 		
 		public void OnPickupSpring(Spring spring) {
@@ -221,12 +253,9 @@ namespace SpringMatchEditor {
 			spring.Shake();
 		}
 		
-		public void SetHeightStep(int stepDelta) {
-			if (_editedSpring == null) {
-				return;
-			}
+		public void SetHeightStep(int stepSteps) {
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
-			editorSpring.heightStep += stepDelta;
+			editorSpring.heightStep = stepSteps;
 			_editedSpring.Init(_editedSpring.Foot0Pos,
 				_editedSpring.Foot1Pos,
 				editorSpring.heightStep * scrollHeightFactor,
@@ -235,6 +264,13 @@ namespace SpringMatchEditor {
 				_editedSpring.GeneratePickupColliders(0.35f);
 			}, 2);
 			CalcOverlay();
+		}
+		
+		public void SetHeightStepDelta(int stepDelta) {
+			if (_editedSpring == null) {
+				return;
+			}
+			SetHeightStep(_editedSpring.GetComponent<EditorSpring>().heightStep + stepDelta);
 		}
 
 		// Update is called once per frame
@@ -250,7 +286,8 @@ namespace SpringMatchEditor {
 				}
 			}
 			if (Input.mouseScrollDelta.y != 0 && _editedSpring != null) {
-				SetHeightStep((int)Input.mouseScrollDelta.y);
+				SetHeightStepDelta((int)Input.mouseScrollDelta.y);
+				editorUI.UpdateHeight();
 			}
 			
 			if (Input.GetKeyDown(KeyCode.Backspace)) {

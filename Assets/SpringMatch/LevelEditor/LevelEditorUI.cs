@@ -86,7 +86,7 @@ namespace SpringMatchEditor {
 		}
 		
 		void SetupHeightInputField() {
-			
+			heightInputField.RegisterCallback<ChangeEvent<int>>(OnHeightChange);
 		}
 		
 		void SetupHoleToggle() {
@@ -107,6 +107,10 @@ namespace SpringMatchEditor {
 		#endregion
 	
 		#region callback
+		
+		void OnHeightChange(ChangeEvent<int> evt) {
+			levelEditor.SetHeightStep(evt.newValue);
+		}
 		
 		void OnHoleToggleChange(ChangeEvent<bool> evt) {
 			DisplayStyle display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
@@ -183,6 +187,14 @@ namespace SpringMatchEditor {
 			holeSpringGroup.Clear();
 			holeToggle.SetValueWithoutNotify(false);
 			holeInspector.style.display = DisplayStyle.None;
+		}
+		
+		public void UpdateHeight() {
+			if (levelEditor.SelectedSpring == null) {
+				return;
+			}
+			heightInputField.SetValueWithoutNotify(
+				levelEditor.SelectedSpring.GetComponent<EditorSpring>().heightStep);
 		}
 		
 		public void Inspector(Spring spring) {

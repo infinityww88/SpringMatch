@@ -30,7 +30,7 @@ namespace SpringMatch {
 	}
 	
 	public class HoleData : SpringPose {
-		public List<int> types;
+		public List<int> types = new	List<int>();
 	}
 	
 	public class SpringColorPattle {
@@ -41,7 +41,7 @@ namespace SpringMatch {
 
 	public class LevelData
 	{
-		public List<SpringData> springs;
-		public List<HoleData> holes;
+		public List<SpringData> springs = new List<SpringData>();
+		public List<HoleData> holes = new List<HoleData>();
 	}
 }

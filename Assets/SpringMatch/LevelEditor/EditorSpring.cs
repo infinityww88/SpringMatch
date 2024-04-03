@@ -7,7 +7,8 @@ namespace SpringMatchEditor {
 	public class EditorSpring : MonoBehaviour
 	{
 		public int heightStep = 0;
-		public Vector2Int pos;
+		public Vector2Int pos0;
+		public Vector2Int pos1;
 		private List<int> holeSpringTypes = new List<int>();
 		
 		public bool IsHole {
