@@ -45,7 +45,8 @@ namespace SpringMatch {
 		private Renderer _renderer;
 
 		[SerializeField]
-		private float _darkFactor = 0.8f;
+		private float _darkFactor = 0.6f;
+		private bool _isDark = false;
 	
 		private int _type;
 		private Color _color;
@@ -82,8 +83,12 @@ namespace SpringMatch {
 		public void RemoveOverlaySpring(Spring spring) {
 			_overlaySpring.Remove(spring);
 			if (IsTop) {
-				_SetColor(_color);
+				_SetColor(_color * DarkFactor());
 			}
+		}
+		
+		private float DarkFactor() {
+			return _isDark ? _darkFactor : 1f;
 		}
 		
 		public void ClearOverlaySpring() {
@@ -158,15 +163,21 @@ namespace SpringMatch {
 	
 		public void SetColor(Color color) {
 			_color = color;
-			_SetColor(_color);
+			_SetColor(_color * DarkFactor());
 		}
 	
 		void _SetColor(Color c) {
 			_renderer.material.SetColor("_BaseColor", c);
 		}
 	
-		public void Darker(float f) {
-			_SetColor(_color * f);
+		public void Darker() {
+			_isDark = true;
+			_SetColor(_color * DarkFactor());
+		}
+		
+		public void Lighter() {
+			_isDark = false;
+			_SetColor(_color * DarkFactor());
 		}
 		
 		public void EnablePickupCollider(bool enabled) {

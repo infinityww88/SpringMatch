@@ -23,6 +23,11 @@ namespace SpringMatch {
 			return transform.GetChild(index);
 		}
 		
+		public Vector2Int GetCellCoord(Transform cell) {
+			int index = cell.GetSiblingIndex();
+			return new Vector2Int(index % col, index / col);
+		}
+		
 		[Button]
 		public void MakeHole(int x, int y) {
 			var cell = GetCell(x, y);
@@ -30,6 +35,14 @@ namespace SpringMatch {
 			var hole = Instantiate(holePrefab, cell.position, cell.rotation, transform);
 			Destroy(cell.gameObject);
 			hole.transform.SetSiblingIndex(index);
+		}
+		
+		public void ClearHole(int x, int y) {
+			var cell = GetCell(x, y);
+			int index = cell.transform.GetSiblingIndex();
+			var newCell = Instantiate(cellPrefab, cell.position, cell.rotation, transform);
+			Destroy(cell.gameObject);
+			newCell.transform.SetSiblingIndex(index);
 		}
 		
 		[Button]

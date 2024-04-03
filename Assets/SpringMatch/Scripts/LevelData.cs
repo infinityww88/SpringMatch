@@ -22,7 +22,7 @@ namespace SpringMatch {
 		public int y0;
 		public int x1;
 		public int y1;
-		public float height;
+		public int heightStep;
 	}
 	
 	public class SpringData : SpringPose {

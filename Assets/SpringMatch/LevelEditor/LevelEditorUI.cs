@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 using UnityEngine.Assertions;
 using Sirenix.OdinInspector;
 using System.Linq;
+using SpringMatch;
 
 namespace SpringMatchEditor {
 	
@@ -32,11 +33,11 @@ namespace SpringMatchEditor {
 		
 		private const string CSS_BUTTON_SELECT = "button-select";
 		
-		[SerializeField]
-		private List<Color> types = new List<Color>();
-		
 		private VisualElement selectedHoleSpringButton = null;
 		private VisualElement selectedTypeButton = null;
+		
+		[SerializeField]
+		private LevelEditor levelEditor;
 		
 		#region start
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
@@ -71,15 +72,17 @@ namespace SpringMatchEditor {
 		
 		#region setup
 		void SetupTypeButtonGroup() {
-			int t = 0;
-			types.ForEach(c => {
+			foreach (var i in levelEditor.TypeColorPattle) {
+				var t = i.Key;
+				var color = i.Value;
+				
 				var temp = typeButtonTemplate.Instantiate();
 				VisualElement typeButton = temp[0];
-				typeButton.userData = t++;
-				typeButton.style.backgroundColor = c;
+				typeButton.userData = t;
+				typeButton.style.backgroundColor = color;
 				typeButtonGroup.Add(typeButton);
 				typeButton.RegisterCallback<ClickEvent>(OnTypeButtonClick);
-			});
+			}
 		}
 		
 		void SetupHeightInputField() {
@@ -111,6 +114,11 @@ namespace SpringMatchEditor {
 			if (evt.newValue == false) {
 				selectedHoleSpringButton = null;
 			}
+			if (evt.newValue == true) {
+				levelEditor.MakeHole();
+			} else {
+				levelEditor.ClearHole();
+			}
 		}
 		
 		void OnTypeButtonClick(ClickEvent evt) {
@@ -120,13 +128,13 @@ namespace SpringMatchEditor {
 			if (selectedHoleSpringButton != null) {
 				selectedHoleSpringButton.style.backgroundColor = e.style.backgroundColor;
 			}
+			else if (levelEditor.SelectedSpring != null) {
+				levelEditor.SelectedSpring.SetColor(e.style.backgroundColor.value);
+			}
 		}
 		
 		void OnAddHoleSpringButtonClick(ClickEvent evt) {
-			var temp = typeButtonTemplate.Instantiate();
-			VisualElement typeButton = temp[0];
-			typeButton.RegisterCallback<ClickEvent>(OnHoleSpringButtonClick);
-			holeSpringGroup.Add(typeButton);
+			AddHoleSpringButton(1);
 		}
 		
 		void OnRemoveHoleSpringButtonClick(ClickEvent evt) {
@@ -158,7 +166,42 @@ namespace SpringMatchEditor {
 			selectedHoleSpringButton = button;
 			button?.AddToClassList(CSS_BUTTON_SELECT);
 		}
-	
+		
+		VisualElement AddHoleSpringButton(int type) {
+			var temp = typeButtonTemplate.Instantiate();
+			VisualElement typeButton = temp[0];
+			typeButton.RegisterCallback<ClickEvent>(OnHoleSpringButtonClick);
+			holeSpringGroup.Add(typeButton);
+			typeButton.style.backgroundColor = levelEditor.TypeColorPattle[type];
+			return typeButton;
+		}
+		
+		[Button]
+		void ResetUI() {
+			SelectTypeButton(null);
+			SelectHoleSpringButton(null);
+			holeSpringGroup.Clear();
+			holeToggle.SetValueWithoutNotify(false);
+			holeInspector.style.display = DisplayStyle.None;
+		}
+		
+		public void Inspector(Spring spring) {
+			ResetUI();
+			if (spring == null) {
+				return;
+			}
+			heightInputField.SetValueWithoutNotify(spring.GetComponent<EditorSpring>().heightStep);
+			var editorSpring = spring.GetComponent<EditorSpring>();
+			if (editorSpring.IsHole) {
+				holeInspector.style.display = DisplayStyle.Flex;
+				holeToggle.SetValueWithoutNotify(true);
+				foreach (var t in editorSpring.HoleSpringTypes) {
+					AddHoleSpringButton(t);
+				}
+			} else {
+				holeToggle.SetValueWithoutNotify(false);
+			}
+		}
 	}
 
 }

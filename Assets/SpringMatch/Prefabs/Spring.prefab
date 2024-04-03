@@ -62,7 +62,7 @@ MonoBehaviour:
   _springBinder: {fileID: 1729957802384001014}
   _pickupColliderRoot: {fileID: 7667047006698008097}
   _spline: {fileID: 7539541982620228913}
-  _darkFactor: 0.8
+  _darkFactor: 0.6
 --- !u!114 &2120286159490310181
 MonoBehaviour:
   m_ObjectHideFlags: 0

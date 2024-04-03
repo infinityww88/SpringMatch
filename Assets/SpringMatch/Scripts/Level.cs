@@ -20,6 +20,7 @@ namespace SpringMatch {
 		private Dictionary<int, Color> colorPattle = new Dictionary<int, Color>();
 		
 		public static Level Inst { get; private set; }
+		public float stepHeight = 0.2f;
 		
 		private HashSet<Spring> _springs = new HashSet<Spring>();
 		private Dictionary<int, SpringHole> _holes = new Dictionary<int, SpringHole>();
@@ -37,7 +38,7 @@ namespace SpringMatch {
 				foreach (var sd in levelData.springs) {
 					var s = NewSpring(sd.x0, sd.y0,
 						sd.x1, sd.y1,
-						sd.height,
+						sd.heightStep * stepHeight,
 						$"spring {i++}",
 						sd.type,
 						colorPattle[sd.type],
@@ -58,7 +59,7 @@ namespace SpringMatch {
 					foreach (var t in holeData.types) {
 						var s = NewSpring(holeData.x0, holeData.y0,
 							holeData.x1, holeData.y1,
-							holeData.height,
+							holeData.heightStep * stepHeight,
 							$"hole {i} spring {j++}",
 							t,
 							colorPattle[t],
@@ -96,7 +97,9 @@ namespace SpringMatch {
 
 			foreach (var s in _springs) {
 				if (!s.IsTop) {
-					s.Darker(0.6f);
+					s.Darker();
+				} else {
+					s.Lighter();
 				}
 				s.EnableRender(true);
 			}
