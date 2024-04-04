@@ -70,8 +70,6 @@ namespace SpringMatchEditor {
 		[SerializeField]
 		private Color InvalidColor = Color.white;
 		
-		private LevelData _leveData;
-		
 		private HashSet<Spring> _springs = new HashSet<Spring>();
 		
 		public Dictionary<int, Color> TypeColorPattle => _typeColorPattle;
@@ -102,7 +100,6 @@ namespace SpringMatchEditor {
 					ld.springs.Add(sd);
 				}
 			}
-			Debug.Log(JsonConvert.SerializeObject(ld));
 			return ld;
 		}
 		
@@ -111,8 +108,19 @@ namespace SpringMatchEditor {
 		{
 			string json = File.ReadAllText(Path.Join(Application.persistentDataPath, "color.json"));
 			LoadPattle(json);
-			json = File.ReadAllText(Path.Join(Application.persistentDataPath, "level.json"));
-			//Load(json);
+		}
+		
+		public void LoadLevel(string fn) {
+			if (string.IsNullOrEmpty(fn)) {
+				return;
+			}
+			var path = Path.Join(Application.persistentDataPath, "Levels", $"{fn}.json");
+			if (!File.Exists(path)) {
+				return;
+			}
+			var json = File.ReadAllText(path);
+			ClearLevel();
+			Load(json);
 		}
 		
 		void LoadPattle(string json) {
@@ -124,16 +132,38 @@ namespace SpringMatchEditor {
 		
 		void Load(string json) {
 			_springs.Clear();
-			_leveData = JsonConvert.DeserializeObject<LevelData>(json);
-			_leveData.springs.ForEach(data => {
+			var leveData = JsonConvert.DeserializeObject<LevelData>(json);
+			leveData.springs.ForEach(data => {
 				PutSpring(data.x0, data.y0, data.x1, data.y1, data.type, data.heightStep);
 			});
-			_leveData.holes.ForEach(data => {
+			leveData.holes.ForEach(data => {
 				grid.MakeHole(data.x0, data.y0);
 				Spring spring = PutSpring(data.x0, data.y0, data.x1, data.y1, data.types[0], data.heightStep);
-				spring.GetComponent<EditorSpring>().Add(data.types.Skip(1).ToList());
+				var es = ES(spring);
+				es.IsHole = true;
+				es.Add(data.types.Skip(1).ToList());
 			});
 			CalcOverlay();
+		}
+		
+		[Button]
+		public void ClearLevel() {
+			_editedSpring = null;
+			editorUI.Inspector(null);
+			_editorState =	EditorState.DrawSpring;
+			foreach (var s in _springs) {
+				var es = ES(s);
+				if (es.IsHole) {
+					grid.ClearHole(es.pos0.x, es.pos0.y);
+				}
+				Destroy(s.gameObject);
+			}
+			_springs.Clear();
+		}
+		
+		[Button]
+		public string ExportLevel() {
+			return JsonConvert.SerializeObject(ToLevelData());
 		}
 		
 		bool pendingCalcOverlay = false;
@@ -290,6 +320,7 @@ namespace SpringMatchEditor {
 				return;
 			}
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
+			editorSpring.IsHole = true;
 			grid.MakeHole(editorSpring.pos0.x, editorSpring.pos0.y);
 		}
 		
@@ -298,7 +329,7 @@ namespace SpringMatchEditor {
 				return;
 			}
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
-			editorSpring.Clear();
+			editorSpring.IsHole = false;
 			grid.ClearHole(editorSpring.pos0.x, editorSpring.pos0.y);
 		}
 		

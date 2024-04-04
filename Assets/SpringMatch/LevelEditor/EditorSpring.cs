@@ -10,12 +10,17 @@ namespace SpringMatchEditor {
 		public Vector2Int pos0;
 		public Vector2Int pos1;
 		private List<int> holeSpringTypes = new List<int>();
+		private bool _isHole = false;
 		
 		public bool IsValid { get; set; }
 		
 		public bool IsHole {
 			get {
-				return holeSpringTypes != null && holeSpringTypes.Count > 0;
+				return _isHole;
+			}
+			set {
+				_isHole = value;
+				Clear();
 			}
 		}
 		

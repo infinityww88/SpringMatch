@@ -202,6 +202,7 @@ namespace SpringMatchEditor {
 			holeSpringGroup.Clear();
 			holeToggle.SetValueWithoutNotify(false);
 			holeInspector.style.display = DisplayStyle.None;
+			heightInputField.SetValueWithoutNotify(0);
 		}
 		
 		public void UpdateHeight() {
