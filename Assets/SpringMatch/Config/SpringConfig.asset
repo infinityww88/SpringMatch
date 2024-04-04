@@ -12,8 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ac0672a599eef409bad9cf5466addb, type: 3}
   m_Name: SpringConfig
   m_EditorClassIdentifier: 
-  girdSlotDuration: 0.4
-  slotSlotDuration: 0.2
-  slotExtraDuration: 0.3
+  gridSlotMoveDuration: 0.3
+  girdSlotShrinkDuration: 0.3
+  slotSlotDuration: 0.3
+  slotExtraMoveDuration: 0.3
+  slotExtraShrinkDuration: 0.3
   holeGridDuration: 0.3
   colliderRadius: 0.35
+  headHeightFactor: 0.2
+  headHeightOffset: 0
+  footHeightFactor: 0
+  footHeightOffset: 1
+  handHeightFactor: 0.2
+  handHeightOffset: 0
+  shrinkToShrinkMaxHeight: 2
+  shrinkHeight: 0.4
+  gridSlotAutoHeightFactor: 0.5
+  extraSlotAutoHeightFactor: 1
+  slotSlotAutoHeightFactor: 1.5
+  maxAutoHeight: 3
