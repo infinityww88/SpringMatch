@@ -8,10 +8,10 @@
 
 .type-group {
     flex-grow: 0;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
 }
 
 .type-button-group {
@@ -23,8 +23,8 @@
 
 .type-button {
     background-color: rgb(250, 0, 0);
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     margin-top: 5px;
     margin-right: 5px;
     margin-bottom: 5px;
@@ -36,13 +36,17 @@
 }
 
 .add-hole-spring-button {
-    width: 40px;
-    height: 40px;
-    background-color: rgb(255, 255, 255);
+    width: 20px;
+    height: 20px;
     margin-top: 5px;
     margin-right: 5px;
     margin-bottom: 5px;
     margin-left: 5px;
+    background-color: rgb(255, 255, 255);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 .button-select {
@@ -50,20 +54,20 @@
     border-right-color: rgb(255, 255, 255);
     border-top-color: rgb(255, 255, 255);
     border-bottom-color: rgb(255, 255, 255);
-    border-top-width: 4px;
-    border-right-width: 4px;
-    border-bottom-width: 4px;
-    border-left-width: 4px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
 }
 
 .button {
 }
 
 .button:hover {
-    border-left-color: rgb(149, 149, 149);
-    border-right-color: rgb(149, 149, 149);
-    border-top-color: rgb(149, 149, 149);
-    border-bottom-color: rgb(149, 149, 149);
+    border-left-color: rgb(146, 146, 146);
+    border-right-color: rgb(146, 146, 146);
+    border-top-color: rgb(146, 146, 146);
+    border-bottom-color: rgb(146, 146, 146);
     border-top-width: 2px;
     border-right-width: 2px;
     border-bottom-width: 2px;
@@ -74,4 +78,29 @@
     white-space: normal;
     flex-direction: row;
     flex-grow: 0;
+}
+
+.file-explorer {
+    background-color: rgba(161, 161, 161, 0.47);
+}
+
+.file-name {
+    border-left-color: rgba(141, 141, 141, 0.59);
+    border-right-color: rgba(141, 141, 141, 0.59);
+    border-top-color: rgba(141, 141, 141, 0.59);
+    border-bottom-color: rgba(141, 141, 141, 0.59);
+    margin-top: 21px;
+}
+
+.file-name > .unity-base-field__label {
+    display: none;
+}
+
+.file-list-item {
+    -unity-text-align: middle-left;
+}
+
+.inspector-op-area {
+    flex-grow: 1;
+    flex-direction: column-reverse;
 }

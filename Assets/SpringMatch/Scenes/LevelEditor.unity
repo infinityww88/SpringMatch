@@ -3975,6 +3975,7 @@ GameObject:
   - component: {fileID: 699565661}
   - component: {fileID: 699565660}
   - component: {fileID: 699565662}
+  - component: {fileID: 699565663}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -4027,6 +4028,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typeButtonTemplate: {fileID: 9197481963319205126, guid: c2a68af6b90683b4c941587a7fd576de, type: 3}
   levelEditor: {fileID: 700189547}
+--- !u!114 &699565663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699565659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f53cd7eca0ed0c44aa4a3a1b6ca64c54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &700189544
 GameObject:
   m_ObjectHideFlags: 0
@@ -7932,9 +7945,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.12
     y: 0
-    width: 0.76
+    width: 0.69
     height: 1
   near clip plane: 0.3
   far clip plane: 1000

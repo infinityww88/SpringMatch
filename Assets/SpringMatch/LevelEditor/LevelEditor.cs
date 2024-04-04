@@ -329,13 +329,15 @@ namespace SpringMatchEditor {
 		}
 		
 		async UniTaskVoid RotateView() {
-			Debug.Log("Start Rotate View");
 			Vector3 startPos = Input.mousePosition;
+			Vector3 vpos = Camera.main.ScreenToViewportPoint(startPos);
+			if (vpos.x < 0 || vpos.x > 1 || vpos.y < 0 || vpos.y > 1) {
+				return;
+			}
 			while (!Input.GetMouseButtonUp(0)) {
 				await UniTask.NextFrame();
 				Vector2 diff = Input.mousePosition - startPos;
 				startPos = Input.mousePosition;
-				Debug.Log($"diff {diff.x * _cameraRotateHFactor} {diff.y * _cameraRotateVFactor}");
 				_cameraHPivot.localRotation *= Quaternion.Euler(0, diff.x * _cameraRotateHFactor, 0);
 				_cameraVPivot.localRotation *= Quaternion.Euler(-diff.y * _cameraRotateVFactor, 0, 0);
 			}

@@ -1,23 +1,37 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/SpringMatch/LevelEditor/UI/NewUXMLTemplate.uss?fileID=7433441132597879392&amp;guid=a26177683e18734429c83f2b7473328f&amp;type=3#NewUXMLTemplate" />
-    <ui:VisualElement name="SpringInspector" class="Inspector" style="flex-direction: column;">
+    <ui:VisualElement name="SpringInspector" class="Inspector" style="flex-direction: column; width: 240px; background-color: rgba(148, 148, 148, 0.57);">
         <ui:VisualElement name="TypeGroup" class="type-group">
-            <ui:Label tabindex="-1" text="Type" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold; font-size: 24px; color: rgb(255, 255, 255);" />
+            <ui:Label tabindex="-1" text="Type" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold; font-size: 14px; color: rgb(255, 255, 255);" />
             <ui:VisualElement name="TypeButtonGroup" class="type-button-group" />
         </ui:VisualElement>
-        <ui:IntegerField label="Height" value="0" name="HeightInputField" class="height-input-field" style="font-size: 24px; -unity-font-style: bold; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
-        <ui:Toggle label="Hole" name="HoleToggle" style="color: rgb(255, 255, 255); font-size: 24px; -unity-font-style: bold; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
-        <ui:VisualElement name="HoleInspector" style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; display: none;">
+        <ui:IntegerField label="Height" value="0" name="HeightInputField" class="height-input-field" style="font-size: 14px; -unity-font-style: bold; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
+        <ui:Toggle label="Hole" name="HoleToggle" style="color: rgb(255, 255, 255); font-size: 14px; -unity-font-style: bold; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
+        <ui:VisualElement name="HoleInspector" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; display: none;">
             <ui:VisualElement name="HoleInspectorHeader" class="hole-inspector-header">
-                <ui:Label tabindex="-1" text="Hole Springs" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 24px; color: rgb(255, 255, 255); -unity-font-style: bold;" />
+                <ui:Label tabindex="-1" text="Hole Springs" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 14px; color: rgb(255, 255, 255); -unity-font-style: bold;" />
                 <ui:VisualElement name="AddSpringButton" class="add-hole-spring-button">
-                    <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; flex-grow: 1; font-size: 36px; margin-top: -4px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; flex-grow: 1; font-size: 24px; margin-top: -4px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="RemoveSpringButton" class="add-hole-spring-button">
-                    <ui:Label tabindex="-1" text="-" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; flex-grow: 1; font-size: 36px; margin-top: -4px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:Label tabindex="-1" text="-" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; flex-grow: 1; font-size: 24px; margin-top: -4px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="HoleSprings" style="flex-direction: row; flex-wrap: wrap;" />
         </ui:VisualElement>
+        <ui:VisualElement name="InspectorOpArea" class="inspector-op-area">
+            <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
+                <ui:Button text="Open" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OpenButton" style="flex-grow: 1;" />
+                <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="flex-grow: 1;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="FileExplorer" class="file-explorer" style="flex-grow: 1; position: absolute; height: 100%; width: 150px;">
+        <ui:TextField picking-mode="Ignore" label="Text Field" name="FileNameInput" class="file-name" />
+        <ui:VisualElement style="flex-grow: 0; flex-direction: row; padding-left: 5px; padding-right: 5px; height: 27px;">
+            <ui:Button text="New" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewLevelButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; width: 50%;" />
+            <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DeleteLevelButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; width: 50%;" />
+        </ui:VisualElement>
+        <ui:ListView focusable="true" name="FileList" fixed-item-height="30" style="flex-grow: 1;" />
     </ui:VisualElement>
 </ui:UXML>

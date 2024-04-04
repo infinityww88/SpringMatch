@@ -146,6 +146,9 @@ namespace SpringMatchEditor {
 		}
 		
 		void OnAddHoleSpringButtonClick(ClickEvent evt) {
+			if (levelEditor.SelectedSpring == null) {
+				return;
+			}
 			AddHoleSpringButton(1);
 			levelEditor.SelectedSpring.GetComponent<EditorSpring>().Add(1);
 		}
