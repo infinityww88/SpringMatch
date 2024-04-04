@@ -72,6 +72,9 @@ namespace SpringMatch {
 					Space.World);
 				var up = spline.GetOrientationUpFast(tf, Space.World);
 				var forward = tangent;
+				if (forward == Vector3.zero || up == Vector3.zero) {
+					Debug.Break();
+				}
 				points[i].rotation = Quaternion.LookRotation(forward, up) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 				points[i].position = pos;
 				points[i].localScale = new Vector3(1, len * scaleFactor * _normalLength, 1);

@@ -29,55 +29,8 @@ namespace SpringMatch {
 		
 		private SpringBinder _springBinder;
 		
-		#region test
-		public Transform testBegin;
-		public Transform testEnd;
-		public Transform testTarget;
-		
-		[Button]
-		void TestShrink() {
-			Shrink(testBegin.position);
-		} 
-		
-		[Button]
-		void TestShrink2Target() {
-			Shrink2Target(testTarget.position, CancellationToken.None);
-		} 
-		
-		[Button]
-		void TestShrink2Shrink() {
-			Shrink2Shrink(testBegin.position, testEnd.position, CancellationToken.None);
-		}
-		
-		[Button]
-		void TestShrink2Stretch() {
-			Shrink2Stretch(testBegin.position, testEnd.position, CancellationToken.None);
-		}
-		
-		[Button]
-		void TestShrink2Stretch2() {
-			Shrink2Stretch(testBegin.position, testEnd.position, testTarget.position, (testEnd.position - testTarget.position).magnitude/2, CancellationToken.None);
-		}
-		
-		#endregion
-		
 		private Transform footCp, handCp, fixHandCp, headCp;
 		private Vector3 fixHandCpInitPos;
-		
-		public float headHeightFactor = 1;
-		public float headHeightOffset = 0;
-		
-		public float footHeightFactor = 1;
-		public float footHeightOffset = 0;
-		
-		public float handHeightFactor = 1;
-		public float handHeightOffset = 0;
-		
-		public float duration = 1f;
-		public float shrinkToShrinkDuration = 0.3f;
-		public float shrinkToShrinkMaxHeight = 2f;
-		
-		public float shrinkHeight = 0.4f;
 
 		public void SetPose(Vector3 pos0, Vector3 pos1, float height) {
 			_springCurve.SetFrame(pos0, pos1, height);
@@ -85,9 +38,11 @@ namespace SpringMatch {
 		
 		#region tween interface
 		
+		private Spring _spring;
+		
 		public void Shrink(Vector3 pos) {
 			_spline.Interpolation = CurvyInterpolation.Linear;
-			float step = shrinkHeight / 4;
+			float step = _spring.Config.shrinkHeight / 4;
 			_springBinder.NormalLength = 1;
 			_springCurve.foot0.position = pos + Vector3.up * step * 0;
 			_springCurve.hand0.position  = pos + Vector3.up * step * 1;
@@ -97,7 +52,15 @@ namespace SpringMatch {
 			_spline.Refresh();
 		}
 		
-		public async UniTask Shrink2Target(Vector3 pos, CancellationToken ct) {
+		float ClampAutoHeight(float height) {
+			return Mathf.Min(_spring.Config.maxAutoHeight, height);
+		}
+		
+		public async UniTask Shrink2Target(Vector3 pos,
+			float autoHeightFactor,
+			float moveDuration,
+			float shrinkDuration,
+			CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			var mag0 = (_springCurve.foot0.position - pos).magnitude;
 			var mag1 = (_springCurve.foot1.position - pos).magnitude;
@@ -106,21 +69,27 @@ namespace SpringMatch {
 				fixTail = true;
 			}
 			_springBinder.NormalLength = 1;
-			await MoveToTarget(pos, _springCurve.height, fixTail, duration, ct);
-			await TweenSpringLen(1, 0.03f, duration, !fixTail).WithCancellation(ct);
+			var height = Mathf.Min(mag0, mag1);
+			//await MoveToTarget(pos, _springCurve.height, fixTail, moveDuration, ct);
+			await MoveToTarget(pos, ClampAutoHeight(height * autoHeightFactor), fixTail, moveDuration, ct);
+			await TweenSpringLen(1, 0.03f, shrinkDuration, !fixTail).WithCancellation(ct);
 		}
 		
-		public async UniTask Shrink2Shrink(Vector3 pos0, Vector3 pos1, CancellationToken ct) {
+		public async UniTask Shrink2Shrink(Vector3 pos0,
+			Vector3 pos1,
+			float autoHeightFactor,
+			float duration,
+			CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
-			float height = (pos0 - pos1).magnitude * 1.5f;
-			SetPose(pos0, pos1, Mathf.Min(height, shrinkToShrinkMaxHeight));
+			float height = (pos0 - pos1).magnitude * autoHeightFactor;
+			SetPose(pos0, pos1, Mathf.Min(height, _spring.Config.shrinkToShrinkMaxHeight));
 			float t = 0.03f;
-			await TweenSpringLen(0.03f, 1, shrinkToShrinkDuration, false).WithCancellation(ct);
-			await TweenSpringLen(1, 0.03f, shrinkToShrinkDuration, true).WithCancellation(ct);
+			await TweenSpringLen(0.03f, 1, duration, false).WithCancellation(ct);
+			await TweenSpringLen(1, 0.03f, duration, true).WithCancellation(ct);
 		}
 		
-		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, float height, CancellationToken ct) {
+		public async UniTask Shrink2StretchWithHeight(Vector3 pos0, Vector3 pos1, float height, float duration, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 0.03f;
 			_springBinder.Inverse = false;
@@ -128,7 +97,27 @@ namespace SpringMatch {
 			await TweenSpringLen(0.03f, 1, duration, false).WithCancellation(ct);
 		}
 		
-		public async UniTask Stretch2Strink(Vector3 pos0, Vector3 pos1, float height, CancellationToken ct) {
+		public async UniTask Shrink2StretchAutoHeight(Vector3 pos0, Vector3 pos1, float autoHeightFactor, float duration, CancellationToken ct) {
+			await Shrink2StretchWithHeight(pos0,
+				pos1,
+				ClampAutoHeight((pos0 - pos1).magnitude * autoHeightFactor),
+				duration,
+				ct);
+		}
+		
+		public async UniTask Shrink2Stretch3WithHeight(Vector3 pos0, Vector3 pos1, Vector3 pos2, float height0, float height1, float moveDuration, float stretchDuration, CancellationToken ct) {
+			_spline.Interpolation = CurvyInterpolation.BSpline;
+			await Shrink2StretchWithHeight(pos0, pos1, height0, stretchDuration, ct);
+			await MoveToTarget(pos2, height1, true, moveDuration, ct);
+		}
+		
+		public async UniTask Shrink2Stretch3Auto1(Vector3 pos0, Vector3 pos1, Vector3 pos2, float autoHeightFactor, float height, float moveDuration, float stretchDuration, CancellationToken ct) {
+			_spline.Interpolation = CurvyInterpolation.BSpline;
+			await Shrink2StretchAutoHeight(pos0, pos1, autoHeightFactor, stretchDuration, ct);
+			await MoveToTarget(pos2, height, true, moveDuration, ct);
+		}
+		
+		public async UniTask Stretch2Strink(Vector3 pos0, Vector3 pos1, float height, float duration, CancellationToken ct) {
 			_spline.Interpolation = CurvyInterpolation.BSpline;
 			_springBinder.NormalLength = 1f;
 			_springBinder.Inverse = false;
@@ -136,15 +125,7 @@ namespace SpringMatch {
 			await TweenSpringLen(1, 0.03f, duration, false).WithCancellation(ct);
 		}
 		
-		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, CancellationToken ct) {
-			await Shrink2Stretch(pos0, pos1, (pos0 - pos1).magnitude/2, ct);
-		}
 		
-		public async UniTask Shrink2Stretch(Vector3 pos0, Vector3 pos1, Vector3 pos2, float height, CancellationToken ct) {
-			_spline.Interpolation = CurvyInterpolation.BSpline;
-			await Shrink2Stretch(pos0, pos1, ct);
-			await MoveToTarget(pos2, height, true, duration, ct);
-		}
 		#endregion
 		
 		private Tweener TweenSpringLen(float beginT, float endT, float duration, bool inverse) {
@@ -162,6 +143,7 @@ namespace SpringMatch {
 		{
 			//SetPose(testBegin.position, testEnd.position, (testBegin.position - testEnd.position).magnitude/2);
 			_springBinder = GetComponent<SpringBinder>();
+			_spring = GetComponentInParent<Spring>();
 		}
 
 		async UniTask MoveToTarget(Vector3 pos, float height, bool fixTail, float duration, CancellationToken ct) {
@@ -200,6 +182,8 @@ namespace SpringMatch {
 		
 		void SetCPTweenCurves(bool fixTail) {
 			
+			var _springConfig = _spring.Config;
+			
 			headCp = _springCurve.head;
 			
 			if (fixTail) {
@@ -218,16 +202,16 @@ namespace SpringMatch {
 			_handTweenCurve.transform.GetChild(0).position = handCp.position;
 			_handTweenCurve.transform.GetChild(2).position = _destCurveFrame.hand1.position;
 			_handTweenCurve.transform.GetChild(1).position = 
-			(handCp.position + _destCurveFrame.hand1.position) / 2 + Vector3.up * (handHeightFactor * (handCp.position - _destCurveFrame.hand1.position).magnitude + handHeightOffset);
+			(handCp.position + _destCurveFrame.hand1.position) / 2 + Vector3.up * (_springConfig.handHeightFactor * (handCp.position - _destCurveFrame.hand1.position).magnitude + _springConfig.handHeightOffset);
 			
 			_footTweenCurve.transform.GetChild(0).position = footCp.position;
 			_footTweenCurve.transform.GetChild(2).position = _destCurveFrame.foot1.position;
 			_footTweenCurve.transform.GetChild(1).position = _handTweenCurve.transform.GetChild(1).position
-			 + Vector3.up * (footHeightFactor * (footCp.position - _destCurveFrame.foot1.position).magnitude + footHeightOffset);
+			 + Vector3.up * (_springConfig.footHeightFactor * (footCp.position - _destCurveFrame.foot1.position).magnitude + _springConfig.footHeightOffset);
 			_headTweenCurve.transform.GetChild(0).position = headCp.position;
 			_headTweenCurve.transform.GetChild(2).position = _destCurveFrame.head.position;
 			_headTweenCurve.transform.GetChild(1).position =
-			(headCp.position + _destCurveFrame.head.position) / 2 + Vector3.up * (headHeightFactor * (headCp.position - _destCurveFrame.head.position).magnitude + headHeightOffset);
+			(headCp.position + _destCurveFrame.head.position) / 2 + Vector3.up * (_springConfig.headHeightFactor * (headCp.position - _destCurveFrame.head.position).magnitude + _springConfig.headHeightOffset);
 		}
 	}
 }

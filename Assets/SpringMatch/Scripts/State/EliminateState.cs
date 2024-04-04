@@ -18,6 +18,8 @@ namespace SpringMatch {
 			if (spring.EliminateIndex == 0) {
 				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
 					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex),
+					spring.Config.slotSlotAutoHeightFactor,
+					spring.Config.slotSlotDuration,
 					_cts.Token);
 
 			} else if (spring.EliminateIndex == 1) {
@@ -27,13 +29,14 @@ namespace SpringMatch {
 				}
 				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
 					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex),
+					spring.Config.slotSlotAutoHeightFactor,
+					spring.Config.slotSlotDuration,
 					_cts.Token);
 			} else {
 				await UniTask.WaitUntil(() => spring.EliminateCompanySpring0.End && spring.EliminateCompanySpring1.End || _cts.IsCancellationRequested);
 				if (_cts.IsCancellationRequested) {
 					return;
 				}
-				Debug.Log($"state unlock {spring.EliminateTargetSlotIndex}");
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
 				Destroy(spring.gameObject);
 				Destroy(spring.EliminateCompanySpring0.gameObject);

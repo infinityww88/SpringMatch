@@ -9,8 +9,7 @@ namespace SpringMatch {
 	public class Board2HoleState : BaseState
 	{
 		protected override async UniTaskVoid _Update() {
-			Debug.Log($"{spring.gameObject.name} board 2 hole start");
-			await spring.Deformer.Stretch2Strink(spring.Foot0Pos, spring.Foot1Pos, spring.Height, _cts.Token);
+			await spring.Deformer.Stretch2Strink(spring.Foot0Pos, spring.Foot1Pos, spring.Height, spring.Config.holeGridDuration, _cts.Token);
 			Debug.Log($"{spring.gameObject.name} board 2 hole end");
 			spring.HoleSpring.GoBack = false;
 			spring.EnableRender(false);

@@ -29,8 +29,9 @@ namespace SpringMatch {
 			await spring.Deformer.Shrink2Shrink(
 				SlotManager.Inst.GetSlotPos(spring.SlotIndex),
 				SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex),
+				spring.Config.slotSlotAutoHeightFactor,
+				spring.Config.slotSlotDuration,
 				_cts.Token);
-			//await spring.TweenToSlot(SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex), _cts.Token).SuppressCancellationThrow();
 			
 			spring.SlotIndex = index;
 			

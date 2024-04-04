@@ -56,6 +56,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9206d78d9596504e959dde040466cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _springConfig: {fileID: 11400000, guid: c02af6184b70afb4e8f84b7cfbd3ed07, type: 2}
   _springCollider: {fileID: 102035471022632860}
   _springDeformer: {fileID: 2713527589544699836}
   _springShake: {fileID: 4974207618688202992}
@@ -303,9 +304,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1988754795530048253, guid: ef056e143e7524649bf1d0a60526dcb7, type: 3}
+      propertyPath: duration
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 5117113777209208889, guid: ef056e143e7524649bf1d0a60526dcb7, type: 3}
       propertyPath: m_Name
       value: SpringModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6237712500995778672, guid: ef056e143e7524649bf1d0a60526dcb7, type: 3}
+      propertyPath: m_Orientation
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8878552535885368753, guid: ef056e143e7524649bf1d0a60526dcb7, type: 3}
       propertyPath: strengthFactor

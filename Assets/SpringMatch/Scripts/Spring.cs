@@ -23,6 +23,12 @@ namespace SpringMatch {
 		public EState State { get; set; }
 	
 		private HashSet<Spring> _overlaySpring = new HashSet<Spring>();
+		
+		[SerializeField]
+		[InlineEditor]
+		private SpringConfig _springConfig;
+		
+		public SpringConfig Config => _springConfig;
 	
 		[SerializeField]
 		private BoxCollider _springCollider;

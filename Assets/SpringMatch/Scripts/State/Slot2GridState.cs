@@ -12,18 +12,21 @@ namespace SpringMatch {
 			spring.EnablePickupCollider(false);
 			
 			if (spring.HoleSpring != null && spring.HoleSpring.NextHoleSpring != null) {
-				await UniTask.WaitForSeconds(0.5f, cancellationToken: _cts.Token);
+				await UniTask.WaitForSeconds(spring.Config.holeGridDuration, cancellationToken: _cts.Token);
 			}
 			
 			Vector3 slotPos = SlotManager.Inst.GetSlotPos(spring.SlotIndex);
 			if ((spring.Foot0Pos - slotPos).magnitude > (spring.Foot1Pos - slotPos).magnitude) {
 				spring.SwapFoots();
 			}
-			await spring.Deformer.Shrink2Stretch(
+			await spring.Deformer.Shrink2Stretch3Auto1(
 				SlotManager.Inst.GetSlotPos(spring.SlotIndex),
 				spring.Foot0Pos,
 				spring.Foot1Pos,
+				spring.Config.gridSlotAutoHeightFactor,
 				spring.Height,
+				spring.Config.girdSlotShrinkDuration,
+				spring.Config.gridSlotMoveDuration,
 				_cts.Token
 			);
 			spring.SlotIndex = spring.TargetSlotIndex = -1;

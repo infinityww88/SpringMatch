@@ -10,9 +10,14 @@ namespace SpringMatch {
 	{
 		protected override async UniTaskVoid _Update() {
 			spring.EnablePickupCollider(false);
-			await spring.Deformer.Shrink2Stretch(
+			await spring.Deformer.Shrink2Stretch3WithHeight(
 				SlotManager.Inst.GetSlotPos(spring.SlotIndex),
-				spring.Foot0Pos, spring.Foot1Pos, spring.Height,
+				spring.Foot0Pos,
+				spring.Foot1Pos,
+				spring.Height,
+				spring.Height,
+				spring.Config.slotExtraMoveDuration,
+				spring.Config.slotExtraShrinkDuration,
 				_cts.Token
 			);
 			//await spring.TweenToExtra(spring.Foot0Pos, spring.Foot1Pos, spring.Height, _cts.Token)

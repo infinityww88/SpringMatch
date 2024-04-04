@@ -4092,7 +4092,7 @@ MonoBehaviour:
   _editorState: 0
   _editedSpring: {fileID: 0}
   scrollHeightFactor: 0.2
-  drawSpringHeightFactor: 0.5
+  drawSpringHeightFactor: 0.7
   editorUI: {fileID: 699565662}
   _cameraHPivot: {fileID: 835166086}
   _cameraVPivot: {fileID: 911866143}
