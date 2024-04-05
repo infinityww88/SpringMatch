@@ -217,15 +217,19 @@ namespace SpringMatch {
 		public void EnableDetectCollider(bool enabled) {
 			_springCollider.gameObject.SetActive(enabled);
 		}
+		
+		void ReleasePickupCollider() {
+			while (_pickupColliderRoot.childCount > 0) {
+				var c = _pickupColliderRoot.GetChild(0);
+				GlobalManager.Inst.sphereColliderPool.Release(c.gameObject);
+			}
+		}
 	
 		[Button]
 		public void GeneratePickupColliders(float radius) {
 			_spline.Refresh();
 		
-			while (_pickupColliderRoot.childCount > 0) {
-				var c = _pickupColliderRoot.GetChild(0);
-				GlobalManager.Inst.sphereColliderPool.Release(c.gameObject);
-			}
+			ReleasePickupCollider();
 		
 			var len = _spline.Length;
 			var n = Mathf.Ceil(len / radius);
@@ -252,6 +256,13 @@ namespace SpringMatch {
 		void Awake()
 		{
 			_renderer = GetComponentInChildren<Renderer>();
+		}
+		
+		// This function is called when the MonoBehaviour will be destroyed.
+		protected void OnDestroy()
+		{
+			ReleasePickupCollider();
+			_overlaySpring.Clear();
 		}
 	}
 }
