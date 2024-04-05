@@ -19,8 +19,7 @@ namespace SpringMatch {
 		public float height = 10;
 		
 		public GameObject cellPrefab;
-		public GameObject holePrefab;
-		
+
 		public Transform GetCell(int x, int y) {
 			Assert.IsTrue(x >= 0 && x < col && y >= 0 && y < row);
 			int index = y * col + x;
@@ -35,18 +34,15 @@ namespace SpringMatch {
 		[Button]
 		public void MakeHole(int x, int y) {
 			var cell = GetCell(x, y);
-			int index = cell.transform.GetSiblingIndex();
-			var hole = Instantiate(holePrefab, cell.position, cell.rotation, transform);
-			Destroy(cell.gameObject);
-			hole.transform.SetSiblingIndex(index);
+			cell.GetChild(0).gameObject.SetActive(false);
+			cell.GetChild(1).gameObject.SetActive(true);
 		}
 		
+		[Button]
 		public void ClearHole(int x, int y) {
 			var cell = GetCell(x, y);
-			int index = cell.transform.GetSiblingIndex();
-			var newCell = Instantiate(cellPrefab, cell.position, cell.rotation, transform);
-			Destroy(cell.gameObject);
-			newCell.transform.SetSiblingIndex(index);
+			cell.GetChild(0).gameObject.SetActive(true);
+			cell.GetChild(1).gameObject.SetActive(false);
 		}
 
 		#if UNITY_EDITOR
