@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using System;
 
 using Grid = SpringMatch.Grid;
 
@@ -74,6 +75,12 @@ namespace SpringMatchEditor {
 		
 		public Dictionary<int, Color> TypeColorPattle => _typeColorPattle;
 		
+		public void ForeachSpring(Action<Spring> action) {
+			foreach (var s in _springs) {
+				action(s);
+			}
+		}
+		
 		[Button]
 		private LevelData ToLevelData() {
 			LevelData ld = new LevelData();
@@ -86,6 +93,7 @@ namespace SpringMatchEditor {
 					hd.x1 = es.pos1.x;
 					hd.y1 = es.pos1.y;
 					hd.heightStep = es.heightStep;
+					hd.hideWhenCovered = es.HideWhenCovered;
 					hd.types.Add(spring.Type);
 					hd.types.AddRange(es.HoleSpringTypes);
 					ld.holes.Add(hd);
@@ -97,6 +105,7 @@ namespace SpringMatchEditor {
 					sd.y1 = es.pos1.y;
 					sd.type = spring.Type;
 					sd.heightStep = es.heightStep;
+					sd.hideWhenCovered = es.HideWhenCovered;
 					ld.springs.Add(sd);
 				}
 			}
@@ -267,6 +276,7 @@ namespace SpringMatchEditor {
 				heightStep = (int)(height / scrollHeightFactor);
 				height = heightStep * scrollHeightFactor;
 			}
+			Debug.Log($"PutSpring {hideWhenCovered}");
 			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered);
 			spring.SetColor(TypeColorPattle[type]);
 			spring.GeneratePickupColliders(0.35f);
@@ -274,6 +284,8 @@ namespace SpringMatchEditor {
 			editorSpring.pos0 = new Vector2Int(x0, y0);
 			editorSpring.pos1 = new Vector2Int(x1, y1);
 			editorSpring.heightStep = heightStep;
+			editorSpring.HideWhenCovered = hideWhenCovered;
+			spring.HideWhenCovered = hideWhenCovered && !editorUI.ViewWithoutHide;
 			_springs.Add(spring);
 			return spring;
 		}

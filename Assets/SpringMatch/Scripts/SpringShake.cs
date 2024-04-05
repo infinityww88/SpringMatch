@@ -40,7 +40,7 @@ namespace SpringMatch {
 				float x = Mathf.Abs((n / 2) - i) / (float)n * 2;
 				float s = curve.Evaluate(x) * strength;
 				var localOffset = c.parent.InverseTransformVector(dir * s);
-				seq.Join(c.DOPunchPosition(localOffset, duration, vibrato, elasticity));
+				seq.Join(c.DOPunchPosition(localOffset, duration, vibrato, elasticity).SetTarget(c));
 			}
 			seq.SetTarget(gameObject).onComplete = onEnd;
 		}

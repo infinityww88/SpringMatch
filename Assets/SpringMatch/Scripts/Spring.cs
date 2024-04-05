@@ -68,7 +68,18 @@ namespace SpringMatch {
 		
 		public Color _hideColor = Color.gray;
 		
-		public bool HideWhenCovered;
+		[SerializeField]
+		private bool _hideWhenCovered = false;
+		
+		public bool HideWhenCovered {
+			get {
+				return _hideWhenCovered;
+			}
+			set {
+				_hideWhenCovered = value;
+				_SetColor();
+			}
+		}
 		
 		public HoleSpring HoleSpring { get; set; }
 		
@@ -93,7 +104,7 @@ namespace SpringMatch {
 			_overlaySpring.Remove(spring);
 			if (IsTop) {
 				Lighter();
-				_SetColor(FinalColor() * DarkFactor());
+				_SetColor();
 			}
 		}
 		
@@ -177,25 +188,26 @@ namespace SpringMatch {
 	
 		public void SetColor(Color color) {
 			_color = color;
-			_SetColor(FinalColor() * DarkFactor());
+			_SetColor();
 		}
 		
 		Color FinalColor() {
 			return (HideWhenCovered && !IsTop) ? _hideColor : _color;
 		}
 	
-		void _SetColor(Color c) {
+		void _SetColor() {
+			var c = FinalColor() * DarkFactor();
 			_renderer.material.SetColor("_BaseColor", c);
 		}
 	
 		public void Darker() {
 			_isDark = true;
-			_SetColor(FinalColor() * DarkFactor());
+			_SetColor();
 		}
 		
 		public void Lighter() {
 			_isDark = false;
-			_SetColor(FinalColor() * DarkFactor());
+			_SetColor();
 		}
 		
 		public void EnablePickupCollider(bool enabled) {

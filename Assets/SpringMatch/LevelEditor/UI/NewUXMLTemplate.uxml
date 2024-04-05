@@ -6,6 +6,8 @@
             <ui:VisualElement name="TypeButtonGroup" class="type-button-group" />
         </ui:VisualElement>
         <ui:IntegerField label="Height" value="0" name="HeightInputField" class="height-input-field" style="font-size: 14px; -unity-font-style: bold; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
+        <ui:Toggle label="Hide when covered" name="HideWhenCovered" style="color: rgb(255, 255, 255); font-size: 14px; -unity-font-style: bold; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
+        <ui:Toggle label="View Without Hide" name="ViewWithoutHide" style="color: rgb(255, 255, 255); font-size: 14px; -unity-font-style: bold; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
         <ui:Toggle label="Hole" name="HoleToggle" style="color: rgb(255, 255, 255); font-size: 14px; -unity-font-style: bold; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;" />
         <ui:VisualElement name="HoleInspector" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; display: none;">
             <ui:VisualElement name="HoleInspectorHeader" class="hole-inspector-header">

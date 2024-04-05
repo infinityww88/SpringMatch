@@ -17,6 +17,8 @@ namespace SpringMatchEditor {
 		private VisualElement root;
 		private VisualElement typeButtonGroup;
 		private IntegerField heightInputField;
+		private Toggle hideWhenCoveredToggle;
+		private Toggle viewWithoutHideToggle;
 		private Toggle holeToggle;
 		private VisualElement addHoleSpringButton;
 		private VisualElement removeHoleSpringButton;
@@ -25,6 +27,8 @@ namespace SpringMatchEditor {
 		
 		private const string typeButtonGroupName = "TypeButtonGroup";
 		private const string heightInputFieldName = "HeightInputField";
+		private const string hideWhenCoveredToggleName = "HideWhenCovered";
+		private const string viewWithoutHideToggleName = "ViewWithoutHide";
 		private const string holeToggleName = "HoleToggle";
 		private const string addHoleSpringButtonName = "AddSpringButton";
 		private const string removeHoleSpringButtonName = "RemoveSpringButton";
@@ -39,6 +43,8 @@ namespace SpringMatchEditor {
 		[SerializeField]
 		private LevelEditor levelEditor;
 		
+		public bool ViewWithoutHide => viewWithoutHideToggle.value;
+		
 		#region start
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
@@ -47,22 +53,19 @@ namespace SpringMatchEditor {
 			
 			typeButtonGroup = root.Q(typeButtonGroupName);
 			heightInputField = root.Q<IntegerField>(heightInputFieldName);
-			holeToggle = root.Q<Toggle>(holeToggleName);
 			addHoleSpringButton = root.Q(addHoleSpringButtonName);
 			removeHoleSpringButton = root.Q(removeHoleSpringButtonName);
 			holeSpringGroup = root.Q(holeSpringGroupName);
 			holeInspector = root.Q(holeInspectorName);
 			
-			Assert.IsNotNull(typeButtonGroup);
-			Assert.IsNotNull(heightInputField);
-			Assert.IsNotNull(holeToggle);
-			Assert.IsNotNull(addHoleSpringButton);
-			Assert.IsNotNull(removeHoleSpringButton);
-			Assert.IsNotNull(holeSpringGroup);
-			Assert.IsNotNull(holeInspector);
+			hideWhenCoveredToggle = root.Q<Toggle>(hideWhenCoveredToggleName);
+			viewWithoutHideToggle = root.Q<Toggle>(viewWithoutHideToggleName);
+			holeToggle = root.Q<Toggle>(holeToggleName);
 			
 			SetupTypeButtonGroup();
 			SetupHeightInputField();
+			SetupHideWhenCoveredToggle();
+			SetupViewWithoutHideToggle();
 			SetupHoleToggle();
 			SetupAddHoleSpringButton();
 			SetupRemoveHoleSpringButton();
@@ -93,6 +96,14 @@ namespace SpringMatchEditor {
 			holeToggle.RegisterCallback<ChangeEvent<bool>>(OnHoleToggleChange);
 		}
 		
+		void SetupHideWhenCoveredToggle() {
+			hideWhenCoveredToggle.RegisterCallback<ChangeEvent<bool>>(OnHideWhenCoveredToggleChange);
+		}
+		
+		void SetupViewWithoutHideToggle() {
+			viewWithoutHideToggle.RegisterCallback<ChangeEvent<bool>>(OnViewWithoutHideToggleChange);
+		}
+		
 		void SetupAddHoleSpringButton() {
 			addHoleSpringButton.RegisterCallback<ClickEvent>(OnAddHoleSpringButtonClick);
 		}
@@ -107,6 +118,22 @@ namespace SpringMatchEditor {
 		#endregion
 	
 		#region callback
+		
+		void OnHideWhenCoveredToggleChange(ChangeEvent<bool> evt) {
+			if (levelEditor.SelectedSpring == null) {
+				return;
+			}
+			var es = levelEditor.SelectedSpring.GetComponent<EditorSpring>();
+			es.HideWhenCovered = evt.newValue;
+			levelEditor.SelectedSpring.HideWhenCovered = es.HideWhenCovered && !viewWithoutHideToggle.value;
+		}
+		
+		void OnViewWithoutHideToggleChange(ChangeEvent<bool> evt) {
+			levelEditor.ForeachSpring(s => {
+				var es = s.GetComponent<EditorSpring>();
+				s.HideWhenCovered = es.HideWhenCovered && !viewWithoutHideToggle.value;
+			});
+		}
 		
 		void OnHeightChange(ChangeEvent<int> evt) {
 			levelEditor.SetHeightStep(evt.newValue);
@@ -201,6 +228,7 @@ namespace SpringMatchEditor {
 			SelectHoleSpringButton(null);
 			holeSpringGroup.Clear();
 			holeToggle.SetValueWithoutNotify(false);
+			hideWhenCoveredToggle.SetValueWithoutNotify(false);
 			holeInspector.style.display = DisplayStyle.None;
 			heightInputField.SetValueWithoutNotify(0);
 		}
@@ -229,6 +257,7 @@ namespace SpringMatchEditor {
 			} else {
 				holeToggle.SetValueWithoutNotify(false);
 			}
+			hideWhenCoveredToggle.SetValueWithoutNotify(editorSpring.HideWhenCovered);
 		}
 	}
 

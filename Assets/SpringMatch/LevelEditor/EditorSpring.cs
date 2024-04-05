@@ -11,6 +11,7 @@ namespace SpringMatchEditor {
 		public Vector2Int pos1;
 		private List<int> holeSpringTypes = new List<int>();
 		private bool _isHole = false;
+		public bool HideWhenCovered;
 		
 		public bool IsValid { get; set; }
 		
