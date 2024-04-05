@@ -163,7 +163,6 @@ namespace SpringMatch {
 					continue;
 				}
 				s.AddOverlaySpring(this);
-				Debug.Log($"calc {gameObject.name} cover {s.gameObject.name}, hit {hitInfos[i].point}");
 			}
 		}
 		
@@ -231,9 +230,6 @@ namespace SpringMatch {
 	
 		void Awake()
 		{
-			_spline.OnInitialized.AddListener(evt => {
-				Debug.Log($"spring refresh {Time.frameCount}");
-			});
 			_renderer = GetComponentInChildren<Renderer>();
 		}
 	}

@@ -10,7 +10,6 @@ namespace SpringMatch {
 	
 	public class SlotManager : MonoBehaviour
 	{
-		public Transform dest;
 		public Spring spring;
 	
 		private Slot[] slots;
@@ -71,7 +70,6 @@ namespace SpringMatch {
 		}
 		
 		public void UnlockTweenSlot(int middleIndex) {
-			Debug.Log($"unlock tween slot {middleIndex-1} {middleIndex} {middleIndex+1}");
 			slots[middleIndex-1].InEliminateTween--;
 			slots[middleIndex].InEliminateTween--;
 			slots[middleIndex+1].InEliminateTween--;
@@ -82,9 +80,7 @@ namespace SpringMatch {
 			slots[index-2].InEliminateTween++;
 			slots[index-1].InEliminateTween++;
 			slots[index].InEliminateTween++;
-			
-			Debug.Log($"EliminateTriple tween {index-2} {index-1} {index}");
-			
+						
 			slots[index-2].Spring.EliminateCompanySpring0 = slots[index-1].Spring;
 			slots[index-2].Spring.EliminateCompanySpring1 = slots[index].Spring;
 			

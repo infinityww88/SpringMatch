@@ -4,6 +4,10 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Assertions;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace SpringMatch {
 	
 	public class Grid : MonoBehaviour
@@ -44,7 +48,8 @@ namespace SpringMatch {
 			Destroy(cell.gameObject);
 			newCell.transform.SetSiblingIndex(index);
 		}
-		
+
+		#if UNITY_EDITOR
 		[Button]
 		void GenerateGrid() {
 			while (transform.childCount > 0) {
@@ -57,11 +62,13 @@ namespace SpringMatch {
 			
 			for (int j = 0; j < row; j++) {
 				for (int i = 0; i < col; i++) {
-					GameObject o = Instantiate(cellPrefab, transform);
+					GameObject o = (GameObject)PrefabUtility.InstantiatePrefab(cellPrefab, transform);
+					
 					o.transform.localPosition = new Vector3(left + hstep * i, 0, top - vstep * j);
 				}
 			}
 		}
+		#endif
 	}
 }
 

@@ -4087,7 +4087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grid: {fileID: 1719313890}
   cellHighlightColor: {r: 0.9811321, g: 0.34709862, b: 0.34709862, a: 1}
-  cellColor: {r: 0.50980395, g: 0.50980395, b: 0.50980395, a: 1}
+  cellColor: {r: 0.77254903, g: 0.7254902, b: 0.7254902, a: 1}
   springPrefab: {fileID: 1635948112449690181, guid: 219840e9067914a4cb349309759b682b, type: 3}
   _editorState: 0
   _editedSpring: {fileID: 0}

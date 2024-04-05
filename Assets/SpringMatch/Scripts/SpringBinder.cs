@@ -72,10 +72,12 @@ namespace SpringMatch {
 					Space.World);
 				var up = spline.GetOrientationUpFast(tf, Space.World);
 				var forward = tangent;
-				if (forward == Vector3.zero || up == Vector3.zero) {
+				if (forward != Vector3.zero && up != Vector3.zero) {
+					points[i].rotation = Quaternion.LookRotation(forward, up) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
+				} else {
+					Debug.LogWarning($"spline forward or up vector is zero: {GetComponentInParent<Spring>().gameObject.name} forward {forward}, up {up}, bone {points[i].gameObject.name}, index {i}, tf {tf}");
 					Debug.Break();
 				}
-				points[i].rotation = Quaternion.LookRotation(forward, up) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 				points[i].position = pos;
 				points[i].localScale = new Vector3(1, len * scaleFactor * _normalLength, 1);
 			}
