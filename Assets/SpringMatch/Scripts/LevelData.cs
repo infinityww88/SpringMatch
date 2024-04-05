@@ -23,6 +23,7 @@ namespace SpringMatch {
 		public int x1;
 		public int y1;
 		public int heightStep;
+		public bool hideWhenCovered;
 	}
 	
 	public class SpringData : SpringPose {

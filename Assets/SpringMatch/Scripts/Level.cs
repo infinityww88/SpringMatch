@@ -42,7 +42,8 @@ namespace SpringMatch {
 						$"spring {i++}",
 						sd.type,
 						colorPattle[sd.type],
-						-1);
+						-1,
+						sd.hideWhenCovered);
 					s.EnableRender(false);
 					s.GetComponent<BoardState>().enabled = true;
 					_springs.Add(s);
@@ -63,7 +64,8 @@ namespace SpringMatch {
 							$"hole {i} spring {j++}",
 							t,
 							colorPattle[t],
-							i);
+							i,
+							holeData.hideWhenCovered);
 						s.gameObject.SetActive(false);
 						hole.AddSpring(s);
 					}
@@ -106,7 +108,7 @@ namespace SpringMatch {
 		}
 		
 		[Button]
-		Spring NewSpring(int x0, int y0, int x1, int y1, float height, string name, int type, Color color, int holeId) {
+		Spring NewSpring(int x0, int y0, int x1, int y1, float height, string name, int type, Color color, int holeId, bool hideWhenCovered) {
 			var springCurve = Instantiate(holeId >= 0 ? holeSpringPrefab : springPrefab);
 			springCurve.name = name;
 			var pos0 = grid.GetCell(x0, y0).position;
@@ -117,7 +119,7 @@ namespace SpringMatch {
 				holeSpring.HoleId = holeId;
 				spring.HoleSpring = holeSpring;
 			}
-			spring.Init(pos0, pos1, height, type);
+			spring.Init(pos0, pos1, height, type, hideWhenCovered);
 			spring.SetColor(color);
 			return spring;
 		}

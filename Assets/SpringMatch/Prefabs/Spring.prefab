@@ -64,6 +64,7 @@ MonoBehaviour:
   _pickupColliderRoot: {fileID: 7667047006698008097}
   _spline: {fileID: 7539541982620228913}
   _darkFactor: 0.6
+  _hideColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
 --- !u!114 &2120286159490310181
 MonoBehaviour:
   m_ObjectHideFlags: 0

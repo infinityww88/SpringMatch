@@ -134,11 +134,11 @@ namespace SpringMatchEditor {
 			_springs.Clear();
 			var leveData = JsonConvert.DeserializeObject<LevelData>(json);
 			leveData.springs.ForEach(data => {
-				PutSpring(data.x0, data.y0, data.x1, data.y1, data.type, data.heightStep);
+				PutSpring(data.x0, data.y0, data.x1, data.y1, data.type, data.heightStep, data.hideWhenCovered);
 			});
 			leveData.holes.ForEach(data => {
 				grid.MakeHole(data.x0, data.y0);
-				Spring spring = PutSpring(data.x0, data.y0, data.x1, data.y1, data.types[0], data.heightStep);
+				Spring spring = PutSpring(data.x0, data.y0, data.x1, data.y1, data.types[0], data.heightStep, data.hideWhenCovered);
 				var es = ES(spring);
 				es.IsHole = true;
 				es.Add(data.types.Skip(1).ToList());
@@ -246,17 +246,17 @@ namespace SpringMatchEditor {
 			SetCellColor(startCell?.gameObject, cellColor);
 			SetCellColor(currCell?.gameObject, cellColor);
 			if (startCell != null && currCell != null) {
-				SelectedSpring = PutSpring(grid.GetCellCoord(startCell), grid.GetCellCoord(currCell), 1, -1);
+				SelectedSpring = PutSpring(grid.GetCellCoord(startCell), grid.GetCellCoord(currCell), 1, -1, false);
 				_editorState = EditorState.EditSpring;
 				CalcOverlay();
 			}
 		}
 		
-		Spring PutSpring(Vector2Int pos0, Vector2Int pos1, int type, int heightStep) {
-			return PutSpring(pos0.x, pos0.y, pos1.x, pos1.y, type, heightStep);
+		Spring PutSpring(Vector2Int pos0, Vector2Int pos1, int type, int heightStep, bool hideWhenCovered) {
+			return PutSpring(pos0.x, pos0.y, pos1.x, pos1.y, type, heightStep, hideWhenCovered);
 		}
 		
-		Spring PutSpring(int x0, int y0, int x1, int y1, int type, int heightStep) {
+		Spring PutSpring(int x0, int y0, int x1, int y1, int type, int heightStep, bool hideWhenCovered) {
 			Transform startCell = grid.GetCell(x0, y0);
 			Transform currCell = grid.GetCell(x1, y1);
 			var spring = Instantiate(springPrefab);
@@ -267,7 +267,7 @@ namespace SpringMatchEditor {
 				heightStep = (int)(height / scrollHeightFactor);
 				height = heightStep * scrollHeightFactor;
 			}
-			spring.Init(startCell.position, currCell.position, height, type);
+			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered);
 			spring.SetColor(TypeColorPattle[type]);
 			spring.GeneratePickupColliders(0.35f);
 			var editorSpring = spring.gameObject.AddComponent<EditorSpring>();
@@ -345,7 +345,7 @@ namespace SpringMatchEditor {
 			_editedSpring.Init(_editedSpring.Foot0Pos,
 				_editedSpring.Foot1Pos,
 				editorSpring.heightStep * scrollHeightFactor,
-				_editedSpring.Type);
+				_editedSpring.Type, false);
 			Utils.RunNextFrame(() => {
 				_editedSpring.GeneratePickupColliders(0.35f);
 			}, 2);

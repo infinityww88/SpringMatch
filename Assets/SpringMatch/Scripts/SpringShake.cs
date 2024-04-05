@@ -27,9 +27,7 @@ namespace SpringMatch {
 				onEnd?.Invoke();
 				return;
 			}
-			
-			Debug.Log($"SpringBinder {GetComponent<SpringBinder>().enabled}");
-			
+						
 			int n = root.childCount;
 			Vector3 dir = root.GetChild(n-1).position - root.GetChild(0).position;
 			float strength = dir.magnitude * strengthFactor;

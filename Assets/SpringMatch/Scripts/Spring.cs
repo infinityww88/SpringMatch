@@ -66,6 +66,10 @@ namespace SpringMatch {
 			}
 		}
 		
+		public Color _hideColor = Color.gray;
+		
+		public bool HideWhenCovered;
+		
 		public HoleSpring HoleSpring { get; set; }
 		
 		[ShowInInspector]
@@ -89,7 +93,7 @@ namespace SpringMatch {
 			_overlaySpring.Remove(spring);
 			if (IsTop) {
 				Lighter();
-				_SetColor(_color * DarkFactor());
+				_SetColor(FinalColor() * DarkFactor());
 			}
 		}
 		
@@ -122,7 +126,7 @@ namespace SpringMatch {
 			Debug.Break();
 		}
 	
-		public void Init(Vector3 pos0, Vector3 pos1, float height, int type) {
+		public void Init(Vector3 pos0, Vector3 pos1, float height, int type, bool hideWhenCovered) {
 			End = false;
 			Type = type;
 			Foot0Pos = pos0;
@@ -135,6 +139,7 @@ namespace SpringMatch {
 			ExtraSlotIndex = -1;
 			LastExtraSlotIndex = -1;
 			EliminateTargetSlotIndex = -1;
+			HideWhenCovered = hideWhenCovered;
 			Utils.AlignCollider(_springCollider, pos0, pos1, height);
 		}
 		
@@ -172,7 +177,11 @@ namespace SpringMatch {
 	
 		public void SetColor(Color color) {
 			_color = color;
-			_SetColor(_color * DarkFactor());
+			_SetColor(FinalColor() * DarkFactor());
+		}
+		
+		Color FinalColor() {
+			return (HideWhenCovered && !IsTop) ? _hideColor : _color;
 		}
 	
 		void _SetColor(Color c) {
@@ -181,12 +190,12 @@ namespace SpringMatch {
 	
 		public void Darker() {
 			_isDark = true;
-			_SetColor(_color * DarkFactor());
+			_SetColor(FinalColor() * DarkFactor());
 		}
 		
 		public void Lighter() {
 			_isDark = false;
-			_SetColor(_color * DarkFactor());
+			_SetColor(FinalColor() * DarkFactor());
 		}
 		
 		public void EnablePickupCollider(bool enabled) {
