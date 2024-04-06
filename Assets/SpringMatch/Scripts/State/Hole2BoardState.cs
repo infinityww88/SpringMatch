@@ -9,8 +9,9 @@ namespace SpringMatch {
 	public class Hole2BoardState : BaseState
 	{
 		protected override async UniTaskVoid _Update() {
-			spring.EnableRender(true);
 			spring.Deformer.Shrink(spring.Foot0Pos);
+			await UniTask.DelayFrame(2, cancellationToken: _cts.Token);
+			spring.EnableRender(true);
 			await UniTask.WaitForSeconds(0.3f, cancellationToken: _cts.Token);
 			await spring.Deformer.Shrink2StretchWithHeight(spring.Foot0Pos,
 				spring.Foot1Pos,

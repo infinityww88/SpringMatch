@@ -70,6 +70,7 @@ namespace SpringMatch {
 							i,
 							holeData.hideWhenCovered);
 						s.gameObject.SetActive(false);
+						s.EnableRender(false);
 						hole.AddSpring(s);
 					}
 					_holes[i] = hole;
@@ -82,6 +83,9 @@ namespace SpringMatch {
 				}
 				Utils.RunNextFrame(() => {
 					CalcOverlay();
+					foreach (var s in _springs) {
+						s.EnableRender(true);
+					}
 				}, 2);
 			}
 			catch (Exception e) {
@@ -106,7 +110,6 @@ namespace SpringMatch {
 				} else {
 					s.Lighter();
 				}
-				s.EnableRender(true);
 			}
 		}
 		
