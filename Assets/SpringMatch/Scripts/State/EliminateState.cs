@@ -16,6 +16,7 @@ namespace SpringMatch {
 			
 			var slotMgr = SlotManager.Inst;
 			if (spring.EliminateIndex == 0) {
+				EffectManager.Inst.VibrateMerge();
 				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
 					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex),
 					spring.Config.slotSlotAutoHeightFactor,
