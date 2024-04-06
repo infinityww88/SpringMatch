@@ -218,7 +218,7 @@ namespace SpringMatchEditor {
 			if (cell == null) {
 				return;
 			}
-			var renderer = cell.GetComponent<Renderer>();
+			var renderer = cell.GetComponentInChildren<Renderer>();
 			renderer.material.SetColor("_BaseColor", color);
 		}
 		
@@ -305,7 +305,7 @@ namespace SpringMatchEditor {
 			if (!hit) {
 				return null;
 			}
-			return hitInfo.collider.transform;
+			return hitInfo.collider.transform.parent;
 		}
 		
 		private EditorSpring ES(Spring s) => s.GetComponent<EditorSpring>();

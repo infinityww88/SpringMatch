@@ -16,7 +16,8 @@ namespace SpringMatchEditor {
 		
 		private VisualElement root;
 		private VisualElement typeButtonGroup;
-		private IntegerField heightInputField;
+
+		private TextField heightInputField;
 		private Toggle hideWhenCoveredToggle;
 		private Toggle viewWithoutHideToggle;
 		private Toggle holeToggle;
@@ -52,7 +53,7 @@ namespace SpringMatchEditor {
 			root = GetComponent<UIDocument>().rootVisualElement;
 			
 			typeButtonGroup = root.Q(typeButtonGroupName);
-			heightInputField = root.Q<IntegerField>(heightInputFieldName);
+			heightInputField = root.Q<TextField>(heightInputFieldName);
 			addHoleSpringButton = root.Q(addHoleSpringButtonName);
 			removeHoleSpringButton = root.Q(removeHoleSpringButtonName);
 			holeSpringGroup = root.Q(holeSpringGroupName);
@@ -230,7 +231,7 @@ namespace SpringMatchEditor {
 			holeToggle.SetValueWithoutNotify(false);
 			hideWhenCoveredToggle.SetValueWithoutNotify(false);
 			holeInspector.style.display = DisplayStyle.None;
-			heightInputField.SetValueWithoutNotify(0);
+			heightInputField.SetValueWithoutNotify("0");
 		}
 		
 		public void UpdateHeight() {
@@ -238,7 +239,7 @@ namespace SpringMatchEditor {
 				return;
 			}
 			heightInputField.SetValueWithoutNotify(
-				levelEditor.SelectedSpring.GetComponent<EditorSpring>().heightStep);
+				levelEditor.SelectedSpring.GetComponent<EditorSpring>().heightStep.ToString());
 		}
 		
 		public void Inspector(Spring spring) {
@@ -246,7 +247,7 @@ namespace SpringMatchEditor {
 			if (spring == null) {
 				return;
 			}
-			heightInputField.SetValueWithoutNotify(spring.GetComponent<EditorSpring>().heightStep);
+			heightInputField.SetValueWithoutNotify(spring.GetComponent<EditorSpring>().heightStep.ToString());
 			var editorSpring = spring.GetComponent<EditorSpring>();
 			if (editorSpring.IsHole) {
 				holeInspector.style.display = DisplayStyle.Flex;
