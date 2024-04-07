@@ -152,7 +152,7 @@ namespace SpringMatch {
 		}
 		
 		public void OnPickupSpring(Spring spring) {
-			if (!_springs.Contains(spring)) {
+			if (!_springs.Contains(spring) && !ExtraSlotManager.Inst.Contains(spring)) {
 				return;
 			}
 			EffectManager.Inst.VibratePickup();
@@ -162,7 +162,7 @@ namespace SpringMatch {
 			}
 			spring.EnablePickupCollider(false);
 			spring.EnableDetectCollider(false);
-			
+
 			if (lastPickupSpring != null && lastPickupSpring.HoleSpring != null) {
 				lastPickupSpring.HoleSpring = null;
 			}
@@ -176,7 +176,6 @@ namespace SpringMatch {
 					NextSpring(spring);
 				}
 			}
-			
 			
 			SlotManager.Inst.AddSpring(spring);
 		}

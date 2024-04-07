@@ -40,15 +40,25 @@ namespace SpringMatch {
 		[BoxGroup("Move Curve Factor")]
 		public float handHeightOffset = 0;
 		
+		[BoxGroup("Tween Height")]
 		public float shrinkToShrinkMaxHeight = 2f;
-		
+		[BoxGroup("Tween Height")]
 		public float shrinkHeight = 0.4f;
-		
+		[BoxGroup("Tween Height")]
 		public float gridSlotAutoHeightFactor = 0.7f;
+		[BoxGroup("Tween Height")]
 		public float extraSlotAutoHeightFactor = 1f;
+		[BoxGroup("Tween Height")]
 		public float slotSlotAutoHeightFactor = 1.5f;
-		
+		[BoxGroup("Tween Height")]
 		public float maxAutoHeight = 5f;
+		
+		[BoxGroup("Spring LOD")]
+		public List<string> springPoolKeys;
+		[BoxGroup("Spring LOD")]
+		public List<float> springInitLength;
+		[BoxGroup("Spring LOD")]
+		public Vector2 lodRange;
 	}
 
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace SpringMatch {
 	
@@ -18,6 +19,10 @@ namespace SpringMatch {
 		{
 			Inst = this;
 			_extraSlot = GetComponentsInChildren<ExtraSlot>();
+		}
+		
+		public bool Contains(Spring spring) {
+			return _extraSlot.Any(e => e.Spring == spring);
 		}
 		
 		public void AddSprings(Spring[] springs) {

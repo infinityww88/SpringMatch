@@ -31,3 +31,14 @@ MonoBehaviour:
   extraSlotAutoHeightFactor: 1
   slotSlotAutoHeightFactor: 1.5
   maxAutoHeight: 3
+  springPoolKeys:
+  - springModel0
+  - springModel1
+  - springModel2
+  - springModel3
+  springInitLength:
+  - 3.15
+  - 4.7
+  - 6.23
+  - 7.8
+  lodRange: {x: 0, y: 10}

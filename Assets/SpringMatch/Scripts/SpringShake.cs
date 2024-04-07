@@ -11,14 +11,21 @@ namespace SpringMatch {
 		[SerializeField]
 		private Transform root;
 		
-		private Transform[] bones;
-		
 		public AnimationCurve curve;
 		public float strengthFactor = 1;
 		
 		public float duration = 0.5f;
 		public int vibrato = 10;
 		public float elasticity = 1;
+		
+		public Transform BonesRoot {
+			get {
+				return root;
+			}
+			set {
+				root = value;
+			}
+		}
 		
 		[Button]
 		public void Shake(TweenCallback onEnd)

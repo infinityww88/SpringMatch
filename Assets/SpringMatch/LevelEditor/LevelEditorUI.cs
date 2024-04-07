@@ -224,7 +224,7 @@ namespace SpringMatchEditor {
 		}
 		
 		[Button]
-		void ResetUI() {
+		void ResetUI() { 
 			SelectTypeButton(null);
 			SelectHoleSpringButton(null);
 			holeSpringGroup.Clear();

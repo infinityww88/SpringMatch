@@ -48,6 +48,7 @@ namespace SpringMatch {
 		[SerializeField]
 		private CurvySpline _spline;
 
+		[SerializeField]
 		private Renderer _renderer;
 
 		[SerializeField]
@@ -183,6 +184,7 @@ namespace SpringMatch {
 		}
 		
 		public void EnableRender(bool enabled) {
+			Debug.Log($"{gameObject.name} enable render {enabled}");
 			_renderer.enabled = enabled;
 		}
 	
@@ -252,10 +254,18 @@ namespace SpringMatch {
 			ExtraSlotIndex = extraIndex;
 			LastExtraSlotIndex = extraIndex;
 		}
+		
+		public void OnReplaceModel(GameObject model, int lodIndex) {
+			_renderer = model.GetComponentInChildren<Renderer>();
+			_SetColor();
+			_springBinder.BonesRoot = model.transform.GetChild(0);
+			_springBinder.initLen = _springConfig.springInitLength[lodIndex];
+			_springShake.BonesRoot = model.transform.GetChild(0);
+		}
 	
 		void Awake()
 		{
-			_renderer = GetComponentInChildren<Renderer>();
+			//_renderer = GetComponentInChildren<Renderer>();
 		}
 		
 		// This function is called when the MonoBehaviour will be destroyed.

@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using DG.Tweening;
+using UnityEngine.Events;
 
 namespace SpringMatch {
 	
@@ -31,9 +32,53 @@ namespace SpringMatch {
 		
 		private Transform footCp, handCp, fixHandCp, headCp;
 		private Vector3 fixHandCpInitPos;
+		
+		[SerializeField]
+		private UnityEvent<GameObject, int> OnChangeSpringModel;
+		
+		private int currLodIndex = -1;
+		private GameObject currModel = null;
+		
+		#region test
+		public Transform foot0;
+		public Transform foot1;
+		[Button]
+		void TestSetPose() {
+			SetPose(foot0.position, foot1.position, (foot0.position - foot1.position).magnitude / 1.5f);
+		}
+		#endregion
+		
+		void UpdateModelByDistance(float distance) {
+			int n = _spring.Config.springPoolKeys.Count;
+			float step = _spring.Config.lodRange.y / n;
+			int index = (int)Mathf.Min(n-1, Mathf.Floor(distance / step));
+			
+			if (index == currLodIndex) {
+				return;
+			}
+			string key = null;
+			if (currModel != null) {
+				key = _spring.Config.springPoolKeys[currLodIndex];
+				GameObjectsPool.Inst.Release(key, currModel);
+			}
+			
+			key = _spring.Config.springPoolKeys[index];
+			Debug.Log($"use spring model {key}");
+			currModel = GameObjectsPool.Inst.Get(key);
+			currModel.GetComponentInChildren<Renderer>().enabled = true;
+			currModel.transform.SetParent(transform);
+			currLodIndex = index;
+			OnChangeSpringModel.Invoke(currModel, currLodIndex);
+		}
+		
+		public void UpdateModelByDistance(Vector3 pos0, Vector3 pos1) {
+			UpdateModelByDistance((pos0 - pos1).magnitude);
+			
+		}
 
 		public void SetPose(Vector3 pos0, Vector3 pos1, float height) {
 			_springCurve.SetFrame(pos0, pos1, height);
+			UpdateModelByDistance(pos0, pos1);
 		}
 		
 		#region tween interface
@@ -49,6 +94,7 @@ namespace SpringMatch {
 			_springCurve.head.position = pos + Vector3.up * step * 2;
 			_springCurve.hand1.position = pos + Vector3.up * step * 3;
 			_springCurve.foot1.position = pos + Vector3.up * step * 4;
+			UpdateModelByDistance(0);
 			_spline.Refresh();
 		}
 		
@@ -163,6 +209,7 @@ namespace SpringMatch {
 			if (fixTail) {
 				point = _springCurve.foot1;
 			}
+			UpdateModelByDistance(point.position, targetPos);
 			_destCurveFrame.SetFrame(point.position, targetPos, height);
 			SetCPTweenCurves(fixTail);
 		}

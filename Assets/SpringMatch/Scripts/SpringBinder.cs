@@ -14,10 +14,10 @@ namespace SpringMatch {
 		[SerializeField]
 		private Transform root;
 	
-		private Transform[] points;
-	
-		[Range(0, 1)]
-		public float scaleFactor = 0.03f;
+		public float initLen = 3.14f;
+		
+		public float maxScale = 2f;
+		public float minScale = 1f;
 		
 		[SerializeField]
 		[Range(0, 1)]
@@ -26,7 +26,14 @@ namespace SpringMatch {
 		[SerializeField]
 		private bool _inverse = false;
 		
-		public Transform BonesRoot => root;
+		public Transform BonesRoot {
+			get {
+				return root;
+			}
+			set {
+				root = value;
+			}
+		}
 		
 		public float NormalLength {
 			get {
@@ -45,23 +52,20 @@ namespace SpringMatch {
 				_inverse = value;
 			}
 		}
-	
-		// Start is called before the first frame update
-		void Awake()
-		{
-			points = new Transform[root.childCount];
-			for (int i = 0; i < root.childCount; i++) {
-				points[i] = root.GetChild(i);
-			}
-		}
 
 		// Update is called once per frame
-		void Update()
+		void LateUpdate()
 		{
+			if (root == null) {
+				return;
+			}
+			
 			var len = spline.Length;
-			float step = _normalLength / (points.Length - 1);
-			for (int i = 0; i < points.Length; i++) {
-				//float distance = step * i;
+			float step = _normalLength / (root.childCount - 1);
+			for (int i = 0; i < root.childCount; i++) {
+				var bone = root.GetChild(i);
+				//float distance = step * i * len;
+				//float tf = spline.DistanceToTF(distance);
 				float tf = step * i;
 				if (_inverse) {
 					tf = 1 - _normalLength + tf;
@@ -73,13 +77,14 @@ namespace SpringMatch {
 				var up = spline.GetOrientationUpFast(tf, Space.World);
 				var forward = tangent;
 				if (forward != Vector3.zero && up != Vector3.zero) {
-					points[i].rotation = Quaternion.LookRotation(forward, up) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
+					bone.rotation = Quaternion.LookRotation(forward, up) * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 				} else {
-					Debug.LogWarning($"spline forward or up vector is zero: {GetComponentInParent<Spring>().gameObject.name} forward {forward}, up {up}, bone {points[i].gameObject.name}, index {i}, tf {tf}");
+					Debug.LogWarning($"spline forward or up vector is zero: {GetComponentInParent<Spring>().gameObject.name} forward {forward}, up {up}, bone {bone.gameObject.name}, index {i}, tf {tf}");
 					Debug.Break();
 				}
-				points[i].position = pos;
-				points[i].localScale = new Vector3(1, len * scaleFactor * _normalLength, 1);
+				bone.localScale = new Vector3(1, 
+					Mathf.Max(minScale, Mathf.Min(maxScale, len / initLen)) * _normalLength, 1);
+				bone.position = pos;
 			}
 		}
 	}
