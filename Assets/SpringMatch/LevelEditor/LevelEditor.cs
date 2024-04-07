@@ -27,6 +27,7 @@ namespace SpringMatchEditor {
 		public Color cellHighlightColor;
 		public Color cellColor;
 		public Spring springPrefab;
+		public SpringConfig config;
 		
 		[SerializeField]
 		private EditorState _editorState;
@@ -279,7 +280,7 @@ namespace SpringMatchEditor {
 			Debug.Log($"PutSpring {hideWhenCovered}");
 			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered);
 			spring.SetColor(TypeColorPattle[type]);
-			spring.GeneratePickupColliders(0.35f);
+			spring.GeneratePickupColliders(spring.Config.colliderRadius);
 			var editorSpring = spring.gameObject.AddComponent<EditorSpring>();
 			editorSpring.pos0 = new Vector2Int(x0, y0);
 			editorSpring.pos1 = new Vector2Int(x1, y1);
@@ -359,7 +360,7 @@ namespace SpringMatchEditor {
 				editorSpring.heightStep * scrollHeightFactor,
 				_editedSpring.Type, false);
 			Utils.RunNextFrame(() => {
-				_editedSpring.GeneratePickupColliders(0.35f);
+				_editedSpring.GeneratePickupColliders(config.colliderRadius);
 			}, 2);
 			CalcOverlay();
 		}

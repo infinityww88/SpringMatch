@@ -42,6 +42,8 @@ namespace SpringMatch {
 
 	public class LevelData
 	{
+		public int row;
+		public int col;
 		public List<SpringData> springs = new List<SpringData>();
 		public List<HoleData> holes = new List<HoleData>();
 	}

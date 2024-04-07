@@ -16,8 +16,8 @@ namespace SpringMatch {
 		public GameObject springPrefab;
 		public GameObject holeSpringPrefab;
 		public Grid grid;
-		public TextAsset colorJson;
-		public TextAsset levelJson;
+		//public TextAsset colorJson;
+		//public TextAsset levelJson;
 		
 		private Dictionary<int, Color> colorPattle = new Dictionary<int, Color>();
 		
@@ -29,14 +29,17 @@ namespace SpringMatch {
 		[Button]
 		void Load() {
 			try {
-				//string pattleJson = File.ReadAllText(Path.Join(Application.persistentDataPath, "color.json"));
-				string pattleJson = colorJson.text;
+				string pattleJson = File.ReadAllText(Path.Join(Application.persistentDataPath, "color.json"));
+				//string pattleJson = colorJson.text;
 				JsonConvert.DeserializeObject<List<SpringColorPattle>>(pattleJson).ForEach(item => {
 					colorPattle[item.type] = item.color;
 				});
 				
-				//string levelJson = File.ReadAllText(Path.Join(Application.persistentDataPath, "level.json"));
-				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson.text);
+				string levelJson = File.ReadAllText(Path.Join(Application.persistentDataPath, "level.json"));
+				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
+				
+				grid.GenerateGrid(levelData.row, levelData.col);
+				Debug.Log($"{levelData.row} {levelData.col}");
 				int i = 0;
 				foreach (var sd in levelData.springs) {
 					var s = NewSpring(sd.x0, sd.y0,
@@ -149,6 +152,9 @@ namespace SpringMatch {
 		}
 		
 		public void OnPickupSpring(Spring spring) {
+			if (!_springs.Contains(spring)) {
+				return;
+			}
 			EffectManager.Inst.VibratePickup();
 			if (SlotManager.Inst.IsFull() || !spring.IsTop) {
 				spring.Shake();

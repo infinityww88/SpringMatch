@@ -11,7 +11,7 @@ namespace SpringMatch {
 	{	
 		protected override async UniTaskVoid _Update() {
 			spring.EnablePickupCollider(true);
-			spring.GeneratePickupColliders(0.35f);
+			spring.GeneratePickupColliders(spring.Config.colliderRadius);
 			await UniTask.WaitUntil(() => spring.TargetSlotIndex >= 0
 				|| (spring.HoleSpring != null && spring.HoleSpring.GoBack) 
 				|| _cts.IsCancellationRequested);

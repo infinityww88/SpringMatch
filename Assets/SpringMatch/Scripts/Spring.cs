@@ -133,7 +133,7 @@ namespace SpringMatch {
 		public void SetHeight(float height) {
 			Height = height;
 			_springDeformer.SetPose(Foot0Pos, Foot1Pos, height);
-			GeneratePickupColliders(0.35f);
+			GeneratePickupColliders(_springConfig.colliderRadius);
 			Debug.Break();
 		}
 	

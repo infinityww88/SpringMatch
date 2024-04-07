@@ -21,7 +21,7 @@ namespace SpringMatch {
 	    {
 		    if (Input.touchCount > 0) {
 		    	var touch = Input.GetTouch(0);
-		    	if (touch.phase ==	TouchPhase.Ended) {
+		    	if (touch.phase ==	TouchPhase.Began) {
 		    		Ray ray = Camera.main.ScreenPointToRay(touch.position);
 			    	if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask("Pickup"))) {
 				    	var spring = hitInfo.collider.GetComponentInParent<Spring>();

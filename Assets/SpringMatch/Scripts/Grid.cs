@@ -3,32 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Assertions;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using Newtonsoft.Json;
 
 namespace SpringMatch {
 	
 	public class Grid : MonoBehaviour
 	{
-		public int row = 8;
-		public int col = 8;
+		public int Row { get; private set; }
+		public int Col { get; private set; }
 		
-		public float width = 10;
-		public float height = 10;
+		public float cellSize;
+		
+		public float Width => Col * cellSize;
+		public float Height => Row * cellSize;
 		
 		public GameObject cellPrefab;
 
 		public Transform GetCell(int x, int y) {
-			Assert.IsTrue(x >= 0 && x < col && y >= 0 && y < row);
-			int index = y * col + x;
+			Assert.IsTrue(x >= 0 && x < Col && y >= 0 && y < Row);
+			int index = y * Col + x;
 			return transform.GetChild(index);
 		}
 		
 		public Vector2Int GetCellCoord(Transform cell) {
 			int index = cell.GetSiblingIndex();
-			return new Vector2Int(index % col, index / col);
+			return new Vector2Int(index % Col, index / Col);
 		}
 		
 		[Button]
@@ -45,26 +44,26 @@ namespace SpringMatch {
 			cell.GetChild(1).gameObject.SetActive(false);
 		}
 
-		#if UNITY_EDITOR
 		[Button]
-		void GenerateGrid() {
+		public void GenerateGrid(int row, int col) {
+			Row = row;
+			Col = col;
 			while (transform.childCount > 0) {
-				DestroyImmediate(transform.GetChild(0).gameObject);
+				var t = transform.GetChild(0);
+				t.SetParent(null);
+				Destroy(t.gameObject);
 			}
-			float hstep = width / col;
-			float vstep = height / row;
-			float left = -width / 2 + hstep / 2;
-			float top = height / 2 - vstep / 2;
+			float left = -Width / 2 + cellSize / 2;
+			float top = Height / 2 - cellSize / 2;
 			
-			for (int j = 0; j < row; j++) {
-				for (int i = 0; i < col; i++) {
-					GameObject o = (GameObject)PrefabUtility.InstantiatePrefab(cellPrefab, transform);
-					
-					o.transform.localPosition = new Vector3(left + hstep * i, 0, top - vstep * j);
+			for (int j = 0; j < Row; j++) {
+				for (int i = 0; i < Col; i++) {
+					//GameObject o = (GameObject)PrefabUtility.InstantiatePrefab(cellPrefab, transform);
+					GameObject o = (GameObject)Instantiate(cellPrefab, transform);
+					o.transform.localPosition = new Vector3(left + cellSize * i, 0, top - cellSize * j);
 				}
 			}
 		}
-		#endif
 	}
 }
 
