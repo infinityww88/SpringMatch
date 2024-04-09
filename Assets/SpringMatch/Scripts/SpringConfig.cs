@@ -59,6 +59,10 @@ namespace SpringMatch {
 		public List<float> springInitLength;
 		[BoxGroup("Spring LOD")]
 		public Vector2 lodRange;
+		
+		public AnimationCurve footLerpFactorCurve;
+		public AnimationCurve handLerpFactorCurve;
+		public AnimationCurve headLerpFactorCurve;
 	}
 
 }

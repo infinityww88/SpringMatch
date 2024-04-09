@@ -22,6 +22,7 @@ namespace SpringMatch {
 	
 		public EState State { get; set; }
 	
+		[SerializeField]
 		private HashSet<Spring> _overlaySpring = new HashSet<Spring>();
 		
 		[SerializeField]

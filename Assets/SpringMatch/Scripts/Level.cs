@@ -224,6 +224,9 @@ namespace SpringMatch {
 			}
 			lastPickupSpring = null;
 			var springs = SlotManager.Inst.ShiftOutString(3);
+			foreach (var s in springs) {
+				s.HoleSpring = null;
+			}
 			ExtraSlotManager.Inst.AddSprings(springs);
 		}
 		

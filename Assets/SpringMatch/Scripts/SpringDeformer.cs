@@ -42,9 +42,25 @@ namespace SpringMatch {
 		#region test
 		public Transform foot0;
 		public Transform foot1;
+		public Transform target;
 		[Button]
 		void TestSetPose() {
 			SetPose(foot0.position, foot1.position, (foot0.position - foot1.position).magnitude / 1.5f);
+		}
+		
+		[Button]
+		async UniTaskVoid TestMove() {
+			var pos = target.position;
+			SetPose(foot0.position, foot1.position, (foot0.position - foot1.position).magnitude / 1.5f);
+			var mag0 = (_springCurve.foot0.position - pos).magnitude;
+			var mag1 = (_springCurve.foot1.position - pos).magnitude;
+			bool fixTail = false;
+			if (mag0 > mag1) {
+				fixTail = true;
+			}
+			_springBinder.NormalLength = 1;
+			var height = Mathf.Min(mag0, mag1);
+			await MoveToTarget(pos, _springCurve.height, fixTail, _spring.Config.gridSlotMoveDuration, CancellationToken.None);
 		}
 		#endregion
 		
@@ -215,13 +231,13 @@ namespace SpringMatch {
 		}
 		
 		void LerpCPTweenCurve(float lertTf) {
-			var pos = _footTweenCurve.Interpolate((lertTf == 0 ? 0 : 0.2f) + 0.8f * lertTf, Space.World);
+			var pos = _footTweenCurve.Interpolate(_spring.Config.footLerpFactorCurve.Evaluate(lertTf), Space.World);
 			footCp.position = pos;
 			
-			pos = _handTweenCurve.Interpolate((lertTf == 0 ? 0 : 0.05f) + 0.95f * lertTf, Space.World);
+			pos = _handTweenCurve.Interpolate(_spring.Config.handLerpFactorCurve.Evaluate(lertTf), Space.World);
 			handCp.position = pos;
 			
-			pos = _headTweenCurve.Interpolate(lertTf, Space.World);
+			pos = _headTweenCurve.Interpolate(_spring.Config.headLerpFactorCurve.Evaluate(lertTf), Space.World);
 			headCp.position = pos;
 			
 			fixHandCp.position = Vector3.Lerp(fixHandCpInitPos, _destCurveFrame.hand0.position, lertTf);

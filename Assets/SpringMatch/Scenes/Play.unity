@@ -1203,6 +1203,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _footWidth: 2
+  posFactor: 0.6
+  minSlotLen: 1
+  refMaxLen: 10
+  testNum: 6
 --- !u!1 &700189544
 GameObject:
   m_ObjectHideFlags: 0
@@ -1235,8 +1239,6 @@ MonoBehaviour:
   springPrefab: {fileID: 245051030443960163, guid: 219840e9067914a4cb349309759b682b, type: 3}
   holeSpringPrefab: {fileID: 839084693850096933, guid: d8e36753c7be2ff4f922f9644191f061, type: 3}
   grid: {fileID: 1719313890}
-  colorJson: {fileID: 4900000, guid: 5ecedf1784cf2c54c9179d9e90b870fd, type: 3}
-  levelJson: {fileID: 4900000, guid: 52084d5faa95451489197a5f772d4318, type: 3}
   stepHeight: 0.2
 --- !u!4 &700189546
 Transform:
