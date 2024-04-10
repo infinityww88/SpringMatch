@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Assertions;
+using UnityEngine;
 using Newtonsoft.Json;
 
 namespace SpringMatch {
@@ -43,6 +44,23 @@ namespace SpringMatch {
 			cell.GetChild(0).gameObject.SetActive(true);
 			cell.GetChild(1).gameObject.SetActive(false);
 		}
+		
+		public bool showCoord = false;
+		
+		// OnGUI is called for rendering and handling GUI events.
+		protected void OnGUI()
+		{
+			if (!showCoord) {
+				return;
+			}
+			GUI.contentColor = Color.red;
+			for (int i = 0; i < transform.childCount; i++) {
+				var c = transform.GetChild(i);
+				var coord = GetCellCoord(transform.GetChild(i));
+				var screenPos = Camera.main.WorldToScreenPoint(c.position);
+				GUI.Label(new Rect(screenPos.x-10, Screen.height - screenPos.y-10, 200f, 80f), $"{coord.x},{coord.y}");
+			}
+		}
 
 		[Button]
 		public void GenerateGrid(int row, int col) {
@@ -51,7 +69,7 @@ namespace SpringMatch {
 			while (transform.childCount > 0) {
 				var t = transform.GetChild(0);
 				t.SetParent(null);
-				Destroy(t.gameObject);
+				DestroyImmediate(t.gameObject);
 			}
 			float left = -Width / 2 + cellSize / 2;
 			float top = Height / 2 - cellSize / 2;

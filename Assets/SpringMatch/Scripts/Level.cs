@@ -15,6 +15,10 @@ namespace SpringMatch {
 	{
 		public GameObject springPrefab;
 		public GameObject holeSpringPrefab;
+		
+		[SerializeField]
+		private Transform _springsRoot;
+		
 		public Grid grid;
 		//public TextAsset colorJson;
 		//public TextAsset levelJson;
@@ -26,8 +30,15 @@ namespace SpringMatch {
 		
 		private HashSet<Spring> _springs = new HashSet<Spring>();
 		private Dictionary<int, SpringHole> _holes = new Dictionary<int, SpringHole>();
-		[Button]
-		void Load() {
+		
+		private bool _done = false;
+		
+		public void Done() {
+			_done = true;
+			GetComponentInChildren<Pickup>().enabled = false;
+		}
+
+		public void Load() {
 			try {
 				string pattleJson = File.ReadAllText(Path.Join(Application.persistentDataPath, "color.json"));
 				//string pattleJson = colorJson.text;
@@ -50,6 +61,7 @@ namespace SpringMatch {
 						colorPattle[sd.type],
 						-1,
 						sd.hideWhenCovered);
+					s.transform.SetParent(_springsRoot);
 					s.EnableRender(false);
 					s.GetComponent<BoardState>().enabled = true;
 					_springs.Add(s);
@@ -72,6 +84,7 @@ namespace SpringMatch {
 							colorPattle[t],
 							i,
 							holeData.hideWhenCovered);
+						s.transform.SetParent(_springsRoot);
 						s.gameObject.SetActive(false);
 						s.EnableRender(false);
 						hole.AddSpring(s);
@@ -128,6 +141,8 @@ namespace SpringMatch {
 				holeSpring.HoleId = holeId;
 				spring.HoleSpring = holeSpring;
 			}
+			spring.GridPos0 = new	Vector2Int(x0, y0);
+			spring.GridPos1 = new	Vector2Int(x1, y1);
 			spring.Init(pos0, pos1, height, type, hideWhenCovered);
 			spring.SetColor(color);
 			return spring;
@@ -185,6 +200,12 @@ namespace SpringMatch {
 			spring.HoleSpring.NextHoleSpring = newSpring;
 			newSpring.HoleSpring.PrevHoleSpring = spring;
 			newSpring.GetComponent<Hole2BoardState>().enabled = true;
+			var pos0 = grid.GetCell(newSpring.GridPos0.x, newSpring.GridPos0.y).position;
+			var pos1 = grid.GetCell(newSpring.GridPos1.x, newSpring.GridPos1.y).position;
+			//newSpring.Foot0Pos = pos0;
+			//newSpring.Foot1Pos = pos1;
+			newSpring.Init(pos0, pos1, newSpring.Height, newSpring.Type, newSpring.HideWhenCovered);
+			newSpring.Deformer.Shrink(pos0);
 			_springs.Add(newSpring);
 			CalcOverlay(newSpring);
 		}
@@ -243,10 +264,12 @@ namespace SpringMatch {
 			SceneManager.LoadScene(0, LoadSceneMode.Single);
 		}
 		
-		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
-		protected void Start()
+		// This function is called when the MonoBehaviour will be destroyed.
+		protected void OnDestroy()
 		{
-			Load();
+			if (Inst == this) {
+				Inst = null;
+			}
 		}
 	}
 }

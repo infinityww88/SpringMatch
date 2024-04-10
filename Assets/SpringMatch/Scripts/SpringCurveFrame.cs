@@ -24,8 +24,9 @@ public class SpringCurveFrame : MonoBehaviour
 		this.height = height;
 		Vector3 center = (pos0 + pos1) / 2;
 		head.position = center + Vector3.up * height;
-		hand0.position = foot0.position + Vector3.up * height * handHeightN;
-		hand1.position = foot1.position + Vector3.up * height * handHeightN;
+		Vector3 bias = pos1 - pos0;
+		hand0.position = foot0.position + Vector3.up * height * handHeightN + bias.normalized * 0.001f;
+		hand1.position = foot1.position + Vector3.up * height * handHeightN + bias.normalized * -0.001f;
 	}
 }
 

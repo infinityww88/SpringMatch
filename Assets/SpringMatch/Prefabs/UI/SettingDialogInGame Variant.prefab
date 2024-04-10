@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 2048045162}
   - component: {fileID: 2048045161}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ExitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -256,7 +256,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2048045162}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4847301063493210548}
+        m_TargetAssemblyTypeName: SpringMatch.SettingManager, Assembly-CSharp
+        m_MethodName: OnExitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &7132670583206920427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -455,3 +467,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7077422021900165315, guid: 635d15cfcfbb1404290b6146683d72ed, type: 3}
   m_PrefabInstance: {fileID: 7132670583206920427}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4847301063493210548 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2430049032132858207, guid: 635d15cfcfbb1404290b6146683d72ed, type: 3}
+  m_PrefabInstance: {fileID: 7132670583206920427}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72228fef7becde54f9ed6b5b6b0f4487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

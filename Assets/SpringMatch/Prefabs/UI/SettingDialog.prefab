@@ -443,9 +443,9 @@ MonoBehaviour:
   OnToggleChange:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7077422021398640421}
-        m_TargetAssemblyTypeName: SpringMatch.UI.ToggleButton, Assembly-CSharp
-        m_MethodName: OnToggle
+      - m_Target: {fileID: 2430049032132858207}
+        m_TargetAssemblyTypeName: SpringMatch.SettingManager, Assembly-CSharp
+        m_MethodName: OnToggleMusic
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -827,7 +827,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7077422021676989213}
   m_Layer: 5
-  m_Name: SoundSetting (1)
+  m_Name: MusicSetting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -866,7 +866,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7077422021768439734}
   m_Layer: 5
-  m_Name: SoundSetting (2)
+  m_Name: VibrateSetting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -907,6 +907,7 @@ GameObject:
   - component: {fileID: 7077422021880388051}
   - component: {fileID: 7077422021880388050}
   - component: {fileID: 7077422021880388052}
+  - component: {fileID: 2430049032132858207}
   m_Layer: 5
   m_Name: SettingDialog
   m_TagString: Untagged
@@ -1019,6 +1020,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2430049032132858207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077422021880388048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72228fef7becde54f9ed6b5b6b0f4487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7077422021888384966
 GameObject:
   m_ObjectHideFlags: 0
@@ -1731,9 +1744,9 @@ MonoBehaviour:
   OnToggleChange:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7077422022299243632}
-        m_TargetAssemblyTypeName: SpringMatch.UI.ToggleButton, Assembly-CSharp
-        m_MethodName: OnToggle
+      - m_Target: {fileID: 2430049032132858207}
+        m_TargetAssemblyTypeName: SpringMatch.SettingManager, Assembly-CSharp
+        m_MethodName: OnToggleSound
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2052,9 +2065,9 @@ MonoBehaviour:
   OnToggleChange:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7077422022609187779}
-        m_TargetAssemblyTypeName: SpringMatch.UI.ToggleButton, Assembly-CSharp
-        m_MethodName: OnToggle
+      - m_Target: {fileID: 2430049032132858207}
+        m_TargetAssemblyTypeName: SpringMatch.SettingManager, Assembly-CSharp
+        m_MethodName: OnToggleVibrate
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

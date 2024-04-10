@@ -48,10 +48,9 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 7627245500031143334, guid: 540a5ebbdec5f784a94c4d48d5d93d6a, type: 3}
-    - {fileID: 8848461298763241230, guid: 53cae5309d489684e85df2cb38f37d4f, type: 3}
-    - {fileID: 7137151102059584636, guid: 044cf8249c8940a498c87165cc3106b8, type: 3}
-    - {fileID: 5185440225188075048, guid: ea420fb0237e3694b904af1f20fb3bb8, type: 3}
+    - {fileID: 771823056957462594, guid: 83535a7841e6ae64f99d3a878000f910, type: 3}
+    - {fileID: 4662407828760766513, guid: 55fb2b33c0b1f7945b1c5915eb296b21, type: 3}
+    - {fileID: 2899688935885356759, guid: 4c9bf095e125aa349b6671901b19665b, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -70,7 +69,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
@@ -131,30 +130,6 @@ MonoBehaviour:
     - Name: prefab
       Entry: 10
       Data: 2
-    - Name: defaultCapacity
-      Entry: 3
-      Data: 10
-    - Name: maxSize
-      Entry: 3
-      Data: 100
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: springModel3
-    - Name: $v
-      Entry: 7
-      Data: 5|SpringMatch.PoolItem, Assembly-CSharp
-    - Name: prefab
-      Entry: 10
-      Data: 3
     - Name: defaultCapacity
       Entry: 3
       Data: 10

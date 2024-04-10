@@ -51,10 +51,15 @@ namespace SpringMatch {
 
 		[SerializeField]
 		private Renderer _renderer;
+		
+		const string POOL_KEY = "sphereCollider";
 
 		[SerializeField]
 		private float _darkFactor = 0.6f;
 		private bool _isDark = false;
+		
+		public Vector2Int GridPos0 { get; set; }
+		public Vector2Int GridPos1 { get; set; }
 	
 		private Color _color;
 	
@@ -122,8 +127,8 @@ namespace SpringMatch {
 			_overlaySpring.Add(spring);
 		}
 	
-		public Vector3 Foot0Pos { get; private set; } 
-		public Vector3 Foot1Pos { get; private set; }
+		public Vector3 Foot0Pos { get; set; } 
+		public Vector3 Foot1Pos { get; set; }
 		public float Height { get; private set; }
 		public SpringDeformer Deformer => _springDeformer;
 		
@@ -224,7 +229,7 @@ namespace SpringMatch {
 		void ReleasePickupCollider() {
 			while (_pickupColliderRoot.childCount > 0) {
 				var c = _pickupColliderRoot.GetChild(0);
-				GlobalManager.Inst.sphereColliderPool.Release(c.gameObject);
+				GameObjectsPool.Inst?.Release(POOL_KEY, c.gameObject);
 			}
 		}
 	
@@ -240,7 +245,7 @@ namespace SpringMatch {
 				var l = i * len / n;
 				var tf = _spline.DistanceToTF(l);
 				var pos = _spline.Interpolate(tf, Space.World);
-				GameObject o = GlobalManager.Inst.sphereColliderPool.Get();
+				GameObject o = GameObjectsPool.Inst.Get(POOL_KEY);
 				o.transform.position = pos;
 				o.transform.SetParent(_pickupColliderRoot, true);
 				o.transform.localScale = Vector3.one * radius * 2;
@@ -272,7 +277,9 @@ namespace SpringMatch {
 		// This function is called when the MonoBehaviour will be destroyed.
 		protected void OnDestroy()
 		{
-			ReleasePickupCollider();
+			if (GameObjectsPool.Inst != null) {
+				ReleasePickupCollider();
+			}
 			_overlaySpring.Clear();
 		}
 	}
