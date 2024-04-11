@@ -63,6 +63,7 @@ MonoBehaviour:
   _springBinder: {fileID: 1729957802384001014}
   _pickupColliderRoot: {fileID: 7667047006698008097}
   _spline: {fileID: 7539541982620228913}
+  _renderer: {fileID: 0}
   _darkFactor: 0.6
   _hideColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
   _hideWhenCovered: 0
@@ -311,7 +312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6237712500995778672, guid: ef056e143e7524649bf1d0a60526dcb7, type: 3}
       propertyPath: m_Orientation
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8878552535885368753, guid: ef056e143e7524649bf1d0a60526dcb7, type: 3}
       propertyPath: strengthFactor
