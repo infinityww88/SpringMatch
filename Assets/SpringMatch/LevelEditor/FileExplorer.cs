@@ -14,13 +14,25 @@ namespace SpringMatchEditor {
 	
 	public class FileExplorer : MonoBehaviour
 	{
-		private const string FILE_NAME_INPUT = "FileNameInput";
-		private const string NEW_LEVEL_BUTTON = "NewLevelButton";
-		private const string DELETE_LEVEL_BUTTON = "DeleteLevelButton";
-		private const string FILE_LIST_VIEW = "FileList";
+		[MyUTKElementAttr("RowInput")]
+		private TextField rowInputField;
 		
+		[MyUTKElementAttr("ColInput")]
+		private TextField colInputField;
+		
+		[MyUTKElementAttr("NewLevelButton")]
+		private Button newLevelButton;
+		[MyUTKElementAttr("DeleteLevelButton")]
+		private Button deleteLevelButton;
+		[MyUTKElementAttr("FileList")]
 		private ListView _fileListView;
+		[MyUTKElementAttr("FileNameInput")]
 		private TextField _fileNameInput;
+		
+		[MyUTKElementAttr("OpenButton")]
+		private Button openButton;
+		[MyUTKElementAttr("SaveButton")]
+		private Button saveButton;
 		
 		private string _levelDataDir;
 		
@@ -31,11 +43,8 @@ namespace SpringMatchEditor {
 		void Start()
 		{
 			CreateLevelDir();
+			Utils.InitUTK(this);
 			var root = GetComponent<UIDocument>().rootVisualElement;
-			_fileNameInput = root.Q<TextField>(FILE_NAME_INPUT);
-			_fileListView = root.Q<ListView>(FILE_LIST_VIEW);
-			var newLevelButton = root.Q<Button>(NEW_LEVEL_BUTTON);
-			var deleteLevelButton = root.Q<Button>(DELETE_LEVEL_BUTTON);
 			newLevelButton.RegisterCallback<ClickEvent>(OnNewLevelClick);
 			deleteLevelButton.RegisterCallback<ClickEvent>(OnDeleteLevelClick);
 			SetupFileListScrollView();
@@ -45,10 +54,17 @@ namespace SpringMatchEditor {
 				}
 			});
 			_fileNameInput.value = "untitled";
-			root.Q<Button>("OpenButton").RegisterCallback<ClickEvent>(evt => {
+			openButton.RegisterCallback<ClickEvent>(evt => {
 				System.Diagnostics.Process.Start("explorer.exe", _levelDataDir.Replace("/", "\\"));
 			});
-			root.Q<Button>("SaveButton").RegisterCallback<ClickEvent>(SaveLevel);
+			saveButton.RegisterCallback<ClickEvent>(SaveLevel);
+			
+			SetupGridSizeInput();
+		}
+		
+		void SetupGridSizeInput() {
+			rowInputField.RegisterCallback<ChangeEvent<string>>(OnGridSizeChange);
+			colInputField.RegisterCallback<ChangeEvent<string>>(OnGridSizeChange);
 		}
 		
 		void CreateLevelDir() {
@@ -59,9 +75,21 @@ namespace SpringMatchEditor {
 			Directory.CreateDirectory(_levelDataDir);
 		}
 		
+		void OnGridSizeChange(ChangeEvent<string> evt) {
+			int v = 0;
+			int.TryParse(evt.newValue, out v);
+			var e = (TextField)evt.target;
+			v = Mathf.Max(6, Mathf.Min(15, v));
+			e.SetValueWithoutNotify($"{v}");
+		}
+		
 		void OnNewLevelClick(ClickEvent evt) {
 			_fileNameInput.value = "untitled";
 			_levelEditor.ClearLevel();
+			Debug.Log($"{rowInputField.value} {colInputField.value}");
+			var row = int.Parse(rowInputField.text);
+			var col = int.Parse(colInputField.text);
+			_levelEditor.NewLevel(row, col);
 		}
 		
 		void OnDeleteLevelClick(ClickEvent evt) {

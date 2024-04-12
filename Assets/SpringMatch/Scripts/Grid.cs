@@ -69,7 +69,7 @@ namespace SpringMatch {
 			while (transform.childCount > 0) {
 				var t = transform.GetChild(0);
 				t.SetParent(null);
-				DestroyImmediate(t.gameObject);
+				Destroy(t.gameObject);
 			}
 			float left = -Width / 2 + cellSize / 2;
 			float top = Height / 2 - cellSize / 2;

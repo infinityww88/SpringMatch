@@ -29,7 +29,11 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="FileExplorer" class="file-explorer" style="flex-grow: 1; position: absolute; height: 100%; width: 150px;">
-        <ui:TextField picking-mode="Ignore" label="Text Field" name="FileNameInput" class="file-name" />
+        <ui:TextField picking-mode="Ignore" label="Text Field" name="FileNameInput" class="file-name text-input" />
+        <ui:VisualElement style="flex-direction: row;">
+            <ui:TextField picking-mode="Ignore" label="Text Field" value="6" text="6" name="RowInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;" />
+            <ui:TextField picking-mode="Ignore" label="Text Field" value="6" text="6" name="ColInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;" />
+        </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 0; flex-direction: row; padding-left: 5px; padding-right: 5px; height: 27px;">
             <ui:Button text="New" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewLevelButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; width: 50%;" />
             <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DeleteLevelButton" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; width: 50%;" />

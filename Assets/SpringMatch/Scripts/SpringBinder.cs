@@ -77,7 +77,7 @@ namespace SpringMatch {
 				var rot = spline.GetOrientationFast(tf, false, Space.World);
 				bone.rotation = rot * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 				bone.localScale = new Vector3(1, 
-					Mathf.Max(minScale, Mathf.Min(maxScale, len / initLen)) * _normalLength, 1);
+				Mathf.Max(minScale, Mathf.Min(maxScale, len / initLen)) * _normalLength, 1);
 				bone.position = pos;
 			}
 		}

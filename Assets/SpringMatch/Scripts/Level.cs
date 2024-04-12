@@ -202,8 +202,6 @@ namespace SpringMatch {
 			newSpring.GetComponent<Hole2BoardState>().enabled = true;
 			var pos0 = grid.GetCell(newSpring.GridPos0.x, newSpring.GridPos0.y).position;
 			var pos1 = grid.GetCell(newSpring.GridPos1.x, newSpring.GridPos1.y).position;
-			//newSpring.Foot0Pos = pos0;
-			//newSpring.Foot1Pos = pos1;
 			newSpring.Init(pos0, pos1, newSpring.Height, newSpring.Type, newSpring.HideWhenCovered);
 			newSpring.Deformer.Shrink(pos0);
 			_springs.Add(newSpring);

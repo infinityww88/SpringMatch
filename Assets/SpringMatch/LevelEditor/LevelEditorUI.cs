@@ -6,62 +6,70 @@ using UnityEngine.Assertions;
 using Sirenix.OdinInspector;
 using System.Linq;
 using SpringMatch;
+using System;
 
 namespace SpringMatchEditor {
+	
+	[AttributeUsage(AttributeTargets.Field, Inherited = true)]
+	public class MyUTKElementAttr : Attribute {
+		public string FieldName { get; set; }
+		public MyUTKElementAttr(string fieldName) {
+			FieldName = fieldName;
+		}
+	} 
 	
 	public class LevelEditorUI : MonoBehaviour
 	{
 		[SerializeField]
 		private VisualTreeAsset typeButtonTemplate;
 		
-		private VisualElement root;
+		[MyUTKElementAttr("TypeButtonGroup")]
 		private VisualElement typeButtonGroup;
 
+		[MyUTKElementAttr("HeightInputField")]
 		private TextField heightInputField;
+		
+		[MyUTKElementAttr("HideWhenCovered")]
 		private Toggle hideWhenCoveredToggle;
+		
+		[MyUTKElementAttr("ViewWithoutHide")]
 		private Toggle viewWithoutHideToggle;
+		
+		[MyUTKElementAttr("HoleToggle")]
 		private Toggle holeToggle;
+		
+		[MyUTKElementAttr("AddSpringButton")]
 		private VisualElement addHoleSpringButton;
+		
+		[MyUTKElementAttr("RemoveSpringButton")]
 		private VisualElement removeHoleSpringButton;
+		
+		[MyUTKElementAttr("HoleSprings")]
 		private VisualElement holeSpringGroup;
+		
+		[MyUTKElementAttr("HoleInspector")]
 		private VisualElement holeInspector;
 		
-		private const string typeButtonGroupName = "TypeButtonGroup";
-		private const string heightInputFieldName = "HeightInputField";
-		private const string hideWhenCoveredToggleName = "HideWhenCovered";
-		private const string viewWithoutHideToggleName = "ViewWithoutHide";
-		private const string holeToggleName = "HoleToggle";
-		private const string addHoleSpringButtonName = "AddSpringButton";
-		private const string removeHoleSpringButtonName = "RemoveSpringButton";
-		private const string holeSpringGroupName = "HoleSprings";
-		private const string holeInspectorName = "HoleInspector";
+		private VisualElement selectedHoleSpringButton;
+		private VisualElement selectedTypeButton;
 		
 		private const string CSS_BUTTON_SELECT = "button-select";
-		
-		private VisualElement selectedHoleSpringButton = null;
-		private VisualElement selectedTypeButton = null;
 		
 		[SerializeField]
 		private LevelEditor levelEditor;
 		
 		public bool ViewWithoutHide => viewWithoutHideToggle.value;
 		
+		[Button]
+		void Init() {
+			Utils.InitUTK(this);
+		}
+		
 		#region start
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			root = GetComponent<UIDocument>().rootVisualElement;
-			
-			typeButtonGroup = root.Q(typeButtonGroupName);
-			heightInputField = root.Q<TextField>(heightInputFieldName);
-			addHoleSpringButton = root.Q(addHoleSpringButtonName);
-			removeHoleSpringButton = root.Q(removeHoleSpringButtonName);
-			holeSpringGroup = root.Q(holeSpringGroupName);
-			holeInspector = root.Q(holeInspectorName);
-			
-			hideWhenCoveredToggle = root.Q<Toggle>(hideWhenCoveredToggleName);
-			viewWithoutHideToggle = root.Q<Toggle>(viewWithoutHideToggleName);
-			holeToggle = root.Q<Toggle>(holeToggleName);
+			Utils.InitUTK(this);
 			
 			SetupTypeButtonGroup();
 			SetupHeightInputField();
@@ -90,7 +98,7 @@ namespace SpringMatchEditor {
 		}
 		
 		void SetupHeightInputField() {
-			heightInputField.RegisterCallback<ChangeEvent<int>>(OnHeightChange);
+			heightInputField.RegisterCallback<ChangeEvent<string>>(OnHeightChange);
 		}
 		
 		void SetupHoleToggle() {
@@ -116,6 +124,7 @@ namespace SpringMatchEditor {
 		void SetupHoleSpringGroup() {
 			
 		}
+		
 		#endregion
 	
 		#region callback
@@ -136,8 +145,10 @@ namespace SpringMatchEditor {
 			});
 		}
 		
-		void OnHeightChange(ChangeEvent<int> evt) {
-			levelEditor.SetHeightStep(evt.newValue);
+		void OnHeightChange(ChangeEvent<string> evt) {
+			int height = 0;
+			int.TryParse(evt.newValue, out height);
+			levelEditor.SetHeightStep(height);
 		}
 		
 		void OnHoleToggleChange(ChangeEvent<bool> evt) {

@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
 using FluffyUnderware.Curvy;
+using System.Reflection;
+using UnityEngine.UIElements;
+using UnityEngine.Assertions;
 
 public class Utils
 {
@@ -23,5 +26,21 @@ public class Utils
 	public static async UniTask CallDelay(Action action, float seconds) {
 		await UniTask.WaitForSeconds(seconds);
 		action?.Invoke();
+	}
+	
+	public static void InitUTK<T>(T component) where T : MonoBehaviour {
+		var doc = component.GetComponent<UIDocument>();
+		var root = doc.rootVisualElement;
+		FieldInfo[] fields = component.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+		foreach (var fi in fields) {
+			if (fi.FieldType == typeof(VisualElement) || fi.FieldType.IsSubclassOf(typeof(VisualElement))) {
+				var attr = fi.GetCustomAttribute<SpringMatchEditor.MyUTKElementAttr>();
+				if (attr != null) {
+					var e = root.Q(attr.FieldName);
+					Assert.IsNotNull(e, $"{attr.FieldName} visual element can't find");
+					fi.SetValue(component, e);
+				}
+			}
+		}
 	}
 }

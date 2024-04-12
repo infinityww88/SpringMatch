@@ -82,6 +82,10 @@ namespace SpringMatchEditor {
 			}
 		}
 		
+		public void NewLevel(int row, int col) {
+			grid.GenerateGrid(row, col);
+		}
+		
 		[Button]
 		private LevelData ToLevelData() {
 			LevelData ld = new LevelData();
@@ -142,11 +146,12 @@ namespace SpringMatchEditor {
 		
 		void Load(string json) {
 			_springs.Clear();
-			var leveData = JsonConvert.DeserializeObject<LevelData>(json);
-			leveData.springs.ForEach(data => {
+			var levelData = JsonConvert.DeserializeObject<LevelData>(json);
+			grid.GenerateGrid(levelData.row, levelData.col);
+			levelData.springs.ForEach(data => {
 				PutSpring(data.x0, data.y0, data.x1, data.y1, data.type, data.heightStep, data.hideWhenCovered);
 			});
-			leveData.holes.ForEach(data => {
+			levelData.holes.ForEach(data => {
 				grid.MakeHole(data.x0, data.y0);
 				Spring spring = PutSpring(data.x0, data.y0, data.x1, data.y1, data.types[0], data.heightStep, data.hideWhenCovered);
 				var es = ES(spring);
@@ -358,7 +363,8 @@ namespace SpringMatchEditor {
 			_editedSpring.Init(_editedSpring.Foot0Pos,
 				_editedSpring.Foot1Pos,
 				editorSpring.heightStep * scrollHeightFactor,
-				_editedSpring.Type, false);
+				_editedSpring.Type,
+				_editedSpring.HideWhenCovered);
 			Utils.RunNextFrame(() => {
 				_editedSpring.GeneratePickupColliders(config.colliderRadius);
 			}, 2);
