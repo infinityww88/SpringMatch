@@ -91,28 +91,15 @@ namespace SpringMatchEditor {
 			LevelData ld = new LevelData();
 			foreach (var spring in _springs) {
 				var es = spring.GetComponent<EditorSpring>();
-				if (es.IsHole) {
-					HoleData hd = new HoleData();
-					hd.x0 = es.pos0.x;
-					hd.y0 = es.pos0.y;
-					hd.x1 = es.pos1.x;
-					hd.y1 = es.pos1.y;
-					hd.heightStep = es.heightStep;
-					hd.hideWhenCovered = es.HideWhenCovered;
-					hd.types.Add(spring.Type);
-					hd.types.AddRange(es.HoleSpringTypes);
-					ld.holes.Add(hd);
-				} else {
-					SpringData sd = new SpringData();
-					sd.x0 = es.pos0.x;
-					sd.y0 = es.pos0.y;
-					sd.x1 = es.pos1.x;
-					sd.y1 = es.pos1.y;
-					sd.type = spring.Type;
-					sd.heightStep = es.heightStep;
-					sd.hideWhenCovered = es.HideWhenCovered;
-					ld.springs.Add(sd);
-				}
+				SpringData sd = new SpringData();
+				sd.x0 = spring.GridPos0.x;
+				sd.y0 = spring.GridPos0.y;
+				sd.x1 = spring.GridPos1.x;
+				sd.y1 = spring.GridPos1.y;
+				//sd.type = spring.Type;
+				sd.heightStep = es.heightStep;
+				sd.hideWhenCovered = es.HideWhenCovered;
+				ld.springs.Add(sd);
 			}
 			return ld;
 		}
@@ -138,10 +125,10 @@ namespace SpringMatchEditor {
 		}
 		
 		void LoadPattle(string json) {
-			var pattle = JsonConvert.DeserializeObject<List<SpringColorPattle>>(json);
-			pattle.ForEach(p => {
-				_typeColorPattle[p.type] = p.color;
-			});
+			//var pattle = JsonConvert.DeserializeObject<List<SpringColorPattle>>(json);
+			//pattle.ForEach(p => {
+			//	_typeColorPattle[p.type] = p.color;
+			//});
 		}
 		
 		void Load(string json) {
@@ -149,8 +136,9 @@ namespace SpringMatchEditor {
 			var levelData = JsonConvert.DeserializeObject<LevelData>(json);
 			grid.GenerateGrid(levelData.row, levelData.col);
 			levelData.springs.ForEach(data => {
-				PutSpring(data.x0, data.y0, data.x1, data.y1, data.type, data.heightStep, data.hideWhenCovered);
+				//TODO PutSpring(data.x0, data.y0, data.x1, data.y1, data.type, data.heightStep, data.hideWhenCovered);
 			});
+			/* TODO
 			levelData.holes.ForEach(data => {
 				grid.MakeHole(data.x0, data.y0);
 				Spring spring = PutSpring(data.x0, data.y0, data.x1, data.y1, data.types[0], data.heightStep, data.hideWhenCovered);
@@ -158,6 +146,7 @@ namespace SpringMatchEditor {
 				es.IsHole = true;
 				es.Add(data.types.Skip(1).ToList());
 			});
+			*/
 			CalcOverlay();
 		}
 		
@@ -169,7 +158,7 @@ namespace SpringMatchEditor {
 			foreach (var s in _springs) {
 				var es = ES(s);
 				if (es.IsHole) {
-					grid.ClearHole(es.pos0.x, es.pos0.y);
+					//TODO grid.ClearHole(es.pos0.x, es.pos0.y);
 				}
 				Destroy(s.gameObject);
 			}
@@ -196,7 +185,7 @@ namespace SpringMatchEditor {
 				spring.CalcSpringOverlay();
 			}
 			foreach (Spring spring in _springs) {
-				spring.SetColor(_typeColorPattle[spring.Type]);
+				//TODO spring.SetColor(_typeColorPattle[spring.Type]);
 				spring.GetComponent<EditorSpring>().IsValid = true;
 				if (!spring.IsTop) {
 					spring.Darker();
@@ -210,8 +199,8 @@ namespace SpringMatchEditor {
 						continue;
 					}
 					if (s0.CoverdBy(s1) && s1.CoverdBy(s0)) {
-						s0.SetColor(InvalidColor);
-						s1.SetColor(InvalidColor);
+						//TODO s0.SetColor(InvalidColor);
+						//TODO s1.SetColor(InvalidColor);
 						s0.GetComponent<EditorSpring>().IsValid = false;
 						s1.GetComponent<EditorSpring>().IsValid = false;
 					}
@@ -284,11 +273,11 @@ namespace SpringMatchEditor {
 			}
 			Debug.Log($"PutSpring {hideWhenCovered}");
 			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered);
-			spring.SetColor(TypeColorPattle[type]);
+			// TODO spring.SetColor(TypeColorPattle[type]);
 			spring.GeneratePickupColliders(spring.Config.colliderRadius);
 			var editorSpring = spring.gameObject.AddComponent<EditorSpring>();
-			editorSpring.pos0 = new Vector2Int(x0, y0);
-			editorSpring.pos1 = new Vector2Int(x1, y1);
+			// TODO editorSpring.pos0 = new Vector2Int(x0, y0);
+			// TODO editorSpring.pos1 = new Vector2Int(x1, y1);
 			editorSpring.heightStep = heightStep;
 			editorSpring.HideWhenCovered = hideWhenCovered;
 			spring.HideWhenCovered = hideWhenCovered && !editorUI.ViewWithoutHide;
@@ -322,7 +311,7 @@ namespace SpringMatchEditor {
 			}
 			_editedSpring.Type = type;
 			if (ES(_editedSpring).IsValid) {
-				_editedSpring.SetColor(_typeColorPattle[type]);
+				//TODO _editedSpring.SetColor(_typeColorPattle[type]);
 			}
 		}
 		
@@ -338,8 +327,8 @@ namespace SpringMatchEditor {
 				return;
 			}
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
-			editorSpring.IsHole = true;
-			grid.MakeHole(editorSpring.pos0.x, editorSpring.pos0.y);
+			//TODO editorSpring.IsHole = true;
+			//TODO grid.MakeHole(editorSpring.pos0.x, editorSpring.pos0.y);
 		}
 		
 		public void ClearHole() {
@@ -347,8 +336,8 @@ namespace SpringMatchEditor {
 				return;
 			}
 			var editorSpring = _editedSpring.GetComponent<EditorSpring>();
-			editorSpring.IsHole = false;
-			grid.ClearHole(editorSpring.pos0.x, editorSpring.pos0.y);
+			//TODO editorSpring.IsHole = false;
+			//TODO grid.ClearHole(editorSpring.pos0.x, editorSpring.pos0.y);
 		}
 		
 		public void OnPickupSpring(Spring spring) {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace SpringMatch {
 	
@@ -17,34 +18,29 @@ namespace SpringMatch {
 		}
 	}
 	
-	public class SpringPose {
+	public class SpringData {
 		public int x0;
 		public int y0;
 		public int x1;
 		public int y1;
 		public int heightStep;
 		public bool hideWhenCovered;
+		public int followNum;
+		public bool IsHole => followNum > 0;
 	}
 	
-	public class SpringData : SpringPose {
-		public int type;
-	}
-	
-	public class HoleData : SpringPose {
-		public List<int> types = new	List<int>();
-	}
-	
-	public class SpringColorPattle {
-		public int type;
+	public class ColorNums {
 		[JsonConverter(typeof(ColorConvert))]
 		public Color color;
+		public int num;
 	}
 
 	public class LevelData
 	{
 		public int row;
 		public int col;
+		public List<ColorNums> colorNums;
 		public List<SpringData> springs = new List<SpringData>();
-		public List<HoleData> holes = new List<HoleData>();
+		public int TotalNum => colorNums.Select(e => e.num).Sum();
 	}
 }

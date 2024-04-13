@@ -88,6 +88,16 @@ namespace SpringMatch {
 			}
 		}
 		
+		public Color Color {
+			get {
+				return _color;
+			}
+			set {
+				_color = value;
+				_SetColor();
+			}
+		}
+		
 		public HoleSpring HoleSpring { get; set; }
 		
 		[ShowInInspector]
@@ -192,11 +202,6 @@ namespace SpringMatch {
 		public void EnableRender(bool enabled) {
 			Debug.Log($"{gameObject.name} enable render {enabled}");
 			_renderer.enabled = enabled;
-		}
-	
-		public void SetColor(Color color) {
-			_color = color;
-			_SetColor();
 		}
 		
 		Color FinalColor() {

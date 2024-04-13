@@ -263,9 +263,9 @@ namespace SpringMatchEditor {
 			if (editorSpring.IsHole) {
 				holeInspector.style.display = DisplayStyle.Flex;
 				holeToggle.SetValueWithoutNotify(true);
-				foreach (var t in editorSpring.HoleSpringTypes) {
-					AddHoleSpringButton(t);
-				}
+				//foreach (var t in editorSpring.HoleSpringTypes) {
+				//	AddHoleSpringButton(t);
+				//}
 			} else {
 				holeToggle.SetValueWithoutNotify(false);
 			}

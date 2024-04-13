@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace SpringMatch {
 	
@@ -25,6 +26,10 @@ namespace SpringMatch {
 		
 		public void PushSpring(Spring spring) {
 			_springs.Insert(0, spring);
+		}
+		
+		public void ForeachSpring(Action<Spring> action) {
+			_springs?.ForEach(action);
 		}
 	}
 
