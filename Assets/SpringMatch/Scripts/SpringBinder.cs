@@ -14,14 +14,19 @@ namespace SpringMatch {
 		[SerializeField]
 		private Transform root;
 	
-		public float initLen = 3.14f;
-		
-		public float maxScale = 2f;
-		public float minScale = 1f;
+		public float initLen = 1f;
 		
 		[SerializeField]
 		[Range(0, 1)]
 		private float _normalLength = 1;
+		
+		private Spring _spring;
+		
+		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
+		protected void Start()
+		{
+			_spring = GetComponentInParent<Spring>();
+		}
 
 		[SerializeField]
 		private bool _inverse = false;
@@ -77,7 +82,8 @@ namespace SpringMatch {
 				var rot = spline.GetOrientationFast(tf, false, Space.World);
 				bone.rotation = rot * Quaternion.FromToRotation(Vector3.up, Vector3.forward);
 				bone.localScale = new Vector3(1, 
-				Mathf.Max(minScale, Mathf.Min(maxScale, len / initLen)) * _normalLength, 1);
+					Mathf.Max(_spring.Config.minScale,
+						Mathf.Min(_spring.Config.maxScale, len / initLen * _spring.Config.scaleFactor)) * _normalLength, 1);
 				bone.position = pos;
 			}
 		}

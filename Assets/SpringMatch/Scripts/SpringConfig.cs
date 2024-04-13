@@ -63,6 +63,13 @@ namespace SpringMatch {
 		public AnimationCurve footLerpFactorCurve;
 		public AnimationCurve handLerpFactorCurve;
 		public AnimationCurve headLerpFactorCurve;
+		
+		[BoxGroup("Spring Scale")]
+		public float maxScale = 3;
+		[BoxGroup("Spring Scale")]
+		public float minScale = 1;
+		[BoxGroup("Spring Scale")]
+		public float scaleFactor = 1f;
 	}
 
 }
