@@ -96,7 +96,6 @@ namespace SpringMatchEditor {
 		
 		public void LoadColors() {
 			_colorNums.Clear();
-			Debug.Log(_colors.Count);
 			foreach (var c in _colors) {
 				_colorNums.Add(new ColorNums {
 					color = c,
@@ -104,7 +103,7 @@ namespace SpringMatchEditor {
 				});
 			}
 			editorUI.UpdateNumInfo();
-			editorUI.ResetColorNum();
+			editorUI.UpdateColorNum();
 		}
 		
 		public void NewLevel(int row, int col) {
@@ -184,13 +183,18 @@ namespace SpringMatchEditor {
 			}
 			var json = File.ReadAllText(path);
 			ClearLevel();
-			LoadColors();
 			Load(json);
 		}
 		
 		void Load(string json) {
 			_springs.Clear();
+			
 			var levelData = JsonConvert.DeserializeObject<LevelData>(json);
+			
+			_colorNums = levelData.colorNums;
+			Debug.Log(JsonConvert.SerializeObject(_colorNums, new ColorConvert()));
+			editorUI.UpdateColorNum();
+			
 			grid.GenerateGrid(levelData.row, levelData.col);
 			levelData.springs.ForEach(data => {
 				int idx = UnityEngine.Random.Range(0, _colors.Count);
@@ -201,6 +205,7 @@ namespace SpringMatchEditor {
 			});
 			CalcOverlay();
 			editorUI.UpdateNumInfo();
+			RandomColor();
 		}
 		
 		[Button]

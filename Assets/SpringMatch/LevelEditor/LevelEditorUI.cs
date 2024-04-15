@@ -119,10 +119,13 @@ namespace SpringMatchEditor {
 			
 		}
 		
-		public void ResetColorNum() {
+		public void UpdateColorNum() {
 			for (int i = 0; i < colorNumGroup.childCount; i++) {
 				var tf = (TextField)colorNumGroup[i];
-				tf.SetValueWithoutNotify("0");
+				int idx = (int)tf.userData;
+				var cn = levelEditor.ColorNums[idx];
+				Debug.Log($"{idx} {cn.num} {cn.color}");
+				tf.SetValueWithoutNotify($"{cn.num}");
 			}
 		}
 		
@@ -140,13 +143,12 @@ namespace SpringMatchEditor {
 		void SetupColorNums() {
 			Debug.Log(levelEditor.ColorNums.Count);
 			for(int i = 0; i < levelEditor.ColorNums.Count; i++) {
-				Debug.Log(levelEditor.ColorNums[i].color);
 				var cn = levelEditor.ColorNums[i];
 				TextField tf = new	TextField();
 				tf.userData = i;
 				tf.Q(className: "unity-text-field__input").style.backgroundColor = cn.color;
 				tf.AddToClassList("color-num-input");
-				tf.SetValueWithoutNotify("0");
+				tf.SetValueWithoutNotify(levelEditor.ColorNums[i].num.ToString());
 				tf.RegisterCallback<ChangeEvent<string>>(OnColorNumChange);
 				colorNumGroup.Add(tf);
 			}
