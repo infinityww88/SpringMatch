@@ -53,8 +53,11 @@ namespace SpringMatch {
 			cell.GetChild(0).gameObject.SetActive(false);
 			cell.GetChild(1).gameObject.SetActive(true);
 			var c = cell.GetComponent<Cell>();
-			var numInfo = Instantiate(_numInfoPrefab, _canvas.transform);
-			c.NumInfo = numInfo;
+			if (c.NumInfo == null) {
+				var numInfo = Instantiate(_numInfoPrefab, _canvas.transform);
+				c.NumInfo = numInfo;
+			}
+			
 			c.SetNum(followNum + 1);
 			c.SetNumInfoPos(_canvas);
 		}
