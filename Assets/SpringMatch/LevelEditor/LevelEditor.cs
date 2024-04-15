@@ -164,10 +164,12 @@ namespace SpringMatchEditor {
 		public void RandomColor() {
 			List<ValueTuple<Color, int>> colorTypes = new	List<ValueTuple<Color, int>>();
 			int i = 0;
+			int t = 0;
 			foreach (var cn in _colorNums) {
 				for (i = 0; i < cn.num; i++) {
-					colorTypes.Add(ValueTuple.Create(cn.color, i));
+					colorTypes.Add(ValueTuple.Create(cn.color, t));
 				}
+				t++;
 			}
 			for (i = 1; i < colorTypes.Count; i++) {
 				int j = UnityEngine.Random.Range(i, colorTypes.Count);
@@ -341,6 +343,7 @@ namespace SpringMatchEditor {
 			spring.GridPos0 = new	Vector2Int(x0, y0);
 			spring.GridPos1 = new	Vector2Int(x1, y1);
 			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered);
+			spring.Type = type;
 			spring.Color = _colors[type];
 			spring.GeneratePickupColliders(spring.Config.colliderRadius);
 			var editorSpring = spring.gameObject.AddComponent<EditorSpring>();
@@ -374,25 +377,24 @@ namespace SpringMatchEditor {
 		private EditorSpring ES(Spring s) => s.GetComponent<EditorSpring>();
 		
 		
-		public void SetHoleSpringNum(int num) {
+		public void SetHoleSpringNum(int followNum) {
 			if (_editedSpring == null) {
 				return;
 			}
 			var es = ES(_editedSpring);
-			if (num > 0 && es.followNum == 0) {
-				MakeHole(num);
-			} else if (num <= 0 && es.followNum > 0) {
+			if (followNum > 0) {
+				MakeHole(followNum);
+			} else {
 				ClearHole();
 			}
-			ES(_editedSpring).followNum = num;
-			
+			ES(_editedSpring).followNum = followNum;
 		}
 		
-		public void MakeHole(int num) {
+		public void MakeHole(int followNum) {
 			if (_editedSpring == null) {
 				return;
 			}
-			grid.MakeHole(_editedSpring.GridPos0.x, _editedSpring.GridPos0.y, num);
+			grid.MakeHole(_editedSpring.GridPos0.x, _editedSpring.GridPos0.y, followNum);
 		}
 		
 		public void ClearHole() {

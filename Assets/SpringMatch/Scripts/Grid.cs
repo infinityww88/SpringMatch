@@ -48,14 +48,14 @@ namespace SpringMatch {
 		}
 		
 		[Button]
-		public void MakeHole(int x, int y, int num) {
+		public void MakeHole(int x, int y, int followNum) {
 			var cell = GetCell(x, y);
 			cell.GetChild(0).gameObject.SetActive(false);
 			cell.GetChild(1).gameObject.SetActive(true);
 			var c = cell.GetComponent<Cell>();
 			var numInfo = Instantiate(_numInfoPrefab, _canvas.transform);
 			c.NumInfo = numInfo;
-			c.SetNum(num + 1);
+			c.SetNum(followNum + 1);
 			c.SetNumInfoPos(_canvas);
 		}
 		

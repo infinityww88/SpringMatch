@@ -124,7 +124,6 @@ namespace SpringMatchEditor {
 				var tf = (TextField)colorNumGroup[i];
 				int idx = (int)tf.userData;
 				var cn = levelEditor.ColorNums[idx];
-				Debug.Log($"{idx} {cn.num} {cn.color}");
 				tf.SetValueWithoutNotify($"{cn.num}");
 			}
 		}
@@ -141,7 +140,6 @@ namespace SpringMatchEditor {
 		}
 		
 		void SetupColorNums() {
-			Debug.Log(levelEditor.ColorNums.Count);
 			for(int i = 0; i < levelEditor.ColorNums.Count; i++) {
 				var cn = levelEditor.ColorNums[i];
 				TextField tf = new	TextField();
@@ -208,7 +206,6 @@ namespace SpringMatchEditor {
 			num = Mathf.Clamp(num, 0, 100);
 			var e = (TextField)evt.target;
 			e.SetValueWithoutNotify($"{num}");
-			Debug.Log($"change hole num {num}");
 			levelEditor.SetHoleSpringNum(num);
 			UpdateNumInfo();
 		}

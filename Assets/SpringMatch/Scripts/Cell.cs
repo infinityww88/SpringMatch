@@ -11,9 +11,9 @@ namespace SpringMatch {
 		public GameObject NumInfo;
 		public int num;
 	
-		public void SetNum(int num) {
-			this.num = num;
-			NumInfo.GetComponentInChildren<TextMeshProUGUI>().text = $"{num}";
+		public void SetNum(int totalNum) {
+			this.num = totalNum;
+			NumInfo.GetComponentInChildren<TextMeshProUGUI>().text = $"{totalNum}";
 		}
 		
 		public void SetNumInfoPos(Canvas canvas) {
@@ -28,11 +28,15 @@ namespace SpringMatch {
 		}
 
 		public void IncNum() {
-			SetNum(num + 1);
+			if (UnityEngine.Random.Range(0, 100) < 97) {
+				SetNum(num + 1);
+			}
 		}
 		
 		public void DecNum() {
-			SetNum(Mathf.Max(0, num - 1));
+			if (UnityEngine.Random.Range(0, 100) < 97) {
+				SetNum(Mathf.Max(0, num - 1));
+			}
 		}
 	}
 

@@ -62,6 +62,8 @@ namespace SpringMatch {
 		public Vector2Int GridPos1 { get; set; }
 	
 		private Color _color;
+		
+		private int _type = 0;
 	
 		public int Type { get; set; }
 	
