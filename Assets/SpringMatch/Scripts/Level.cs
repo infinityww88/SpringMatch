@@ -8,6 +8,7 @@ using System.Threading;
 using System.IO;
 using System;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 namespace SpringMatch {
 	
@@ -64,7 +65,7 @@ namespace SpringMatch {
 
 		public void Load() {
 			try {				
-				string levelJson = File.ReadAllText(Path.Join(Application.persistentDataPath, "level.json"));
+				string levelJson = File.ReadAllText(Path.GetFullPath("level.json"));
 				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
 				
 				grid.GenerateGrid(levelData.row, levelData.col);
@@ -92,7 +93,7 @@ namespace SpringMatch {
 						s.gameObject.SetActive(false);
 						hole.AddSpring(s);
 						
-						grid.MakeHole(sd.x0, sd.y0);
+						grid.MakeHole(sd.x0, sd.y0, sd.followNum);
 						
 						s.gameObject.name = $"hole {hole.ID} spring 0";
 						
@@ -181,8 +182,7 @@ namespace SpringMatch {
 		
 		[Button]
 		public void OpenFolder() {
-			Debug.Log(Application.persistentDataPath);
-			System.Diagnostics.Process.Start("explorer.exe", Application.persistentDataPath.Replace("/", "\\"));
+			System.Diagnostics.Process.Start("explorer.exe", Path.GetFullPath(".").Replace("/", "\\"));
 		}
 	
 		// Start is called before the first frame update
@@ -221,6 +221,10 @@ namespace SpringMatch {
 				if (spring.HoleSpring.HoleId >= 0 && _holes[spring.HoleSpring.HoleId].Count > 0) {
 					NextSpring(spring);
 				}
+			
+				var gridPos = spring.GridPos0;
+				Cell cell = grid.GetCell(gridPos.x, gridPos.y).GetComponent<Cell>();
+				cell.DecNum();
 			}
 			
 			SlotManager.Inst.AddSpring(spring);
@@ -228,6 +232,7 @@ namespace SpringMatch {
 		
 		void NextSpring(Spring spring) {
 			var newSpring = _holes[spring.HoleSpring.HoleId].PopSpring();
+			
 			spring.HoleSpring.NextHoleSpring = newSpring;
 			newSpring.HoleSpring.PrevHoleSpring = spring;
 			newSpring.GetComponent<Hole2BoardState>().enabled = true;
@@ -247,6 +252,11 @@ namespace SpringMatch {
 			
 			if (lastPickupSpring.LastExtraSlotIndex < 0) {
 				_springs.Add(lastPickupSpring);
+				if (lastPickupSpring.HoleSpring != null) {
+					var gridPos = lastPickupSpring.GridPos0;
+					var cell = grid.GetCell(gridPos.x, gridPos.y).GetComponent<Cell>();
+					cell.IncNum();
+				}
 				if (lastPickupSpring.HoleSpring != null && lastPickupSpring.HoleSpring.NextHoleSpring != null) {
 					var nextSpring = lastPickupSpring.HoleSpring.NextHoleSpring;
 					nextSpring.EnablePickupCollider(false);

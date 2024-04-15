@@ -140,8 +140,18 @@ namespace SpringMatchEditor {
 		// Start is called before the first frame update
 		void Awake()
 		{
-			string json = File.ReadAllText(Path.Join(Application.persistentDataPath, "color.json"));
-			_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
+			string json = "";
+			string path = Path.GetFullPath("color.json");
+			try {
+				json = File.ReadAllText(path);
+				_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
+			}
+			catch (Exception e) {
+				json = "[\"#AA0000\",\"#00AA00\",\"#004BAA\",\"#A40B88\"]";
+				File.WriteAllText(path, json);
+				_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
+			}
+	
 			Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
 		}
 		
@@ -175,7 +185,7 @@ namespace SpringMatchEditor {
 			if (string.IsNullOrEmpty(fn)) {
 				return;
 			}
-			var path = Path.Join(Application.persistentDataPath, fn);
+			var path = Path.GetFullPath($"{fn}");
 			if (!File.Exists(path)) {
 				Debug.Log("New Leve 6x6");
 				NewLevel(6, 6);
@@ -200,7 +210,7 @@ namespace SpringMatchEditor {
 				int idx = UnityEngine.Random.Range(0, _colors.Count);
 				PutSpring(data.x0, data.y0, data.x1, data.y1, idx, data.heightStep, data.hideWhenCovered, data.followNum);
 				if (data.followNum > 0) {
-					grid.MakeHole(data.x0, data.y0);
+					grid.MakeHole(data.x0, data.y0, data.followNum);
 				}
 			});
 			CalcOverlay();
@@ -370,7 +380,7 @@ namespace SpringMatchEditor {
 			}
 			var es = ES(_editedSpring);
 			if (num > 0 && es.followNum == 0) {
-				MakeHole();
+				MakeHole(num);
 			} else if (num <= 0 && es.followNum > 0) {
 				ClearHole();
 			}
@@ -378,11 +388,11 @@ namespace SpringMatchEditor {
 			
 		}
 		
-		public void MakeHole() {
+		public void MakeHole(int num) {
 			if (_editedSpring == null) {
 				return;
 			}
-			grid.MakeHole(_editedSpring.GridPos0.x, _editedSpring.GridPos0.y);
+			grid.MakeHole(_editedSpring.GridPos0.x, _editedSpring.GridPos0.y, num);
 		}
 		
 		public void ClearHole() {

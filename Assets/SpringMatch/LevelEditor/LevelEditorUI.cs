@@ -108,7 +108,7 @@ namespace SpringMatchEditor {
 				);
 			}
 			else {
-				var path = Path.Join(Application.persistentDataPath, $"level.json");
+				var path = Path.GetFullPath("level.json");
 				File.WriteAllText(path,
 					levelEditor.ExportLevel());
 				_dialog.Show("<color=green>Level saved.</color>",

@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine.Assertions;
 using UnityEngine;
 using Newtonsoft.Json;
+using TMPro;
 
 namespace SpringMatch {
 	
@@ -19,6 +20,17 @@ namespace SpringMatch {
 		public float Height => Row * cellSize;
 		
 		public GameObject cellPrefab;
+		
+		[SerializeField]
+		private GameObject _numInfoPrefab;
+
+		private Canvas _canvas;
+		
+		// Awake is called when the script instance is being loaded.
+		protected void Awake()
+		{
+			_canvas = FindObjectOfType<Canvas>();
+		}
 
 		public Transform GetCell(int x, int y) {
 			Assert.IsTrue(x >= 0 && x < Col && y >= 0 && y < Row);
@@ -31,11 +43,20 @@ namespace SpringMatch {
 			return new Vector2Int(index % Col, index / Col);
 		}
 		
+		void SetNumInfoPos() {
+			
+		}
+		
 		[Button]
-		public void MakeHole(int x, int y) {
+		public void MakeHole(int x, int y, int num) {
 			var cell = GetCell(x, y);
 			cell.GetChild(0).gameObject.SetActive(false);
 			cell.GetChild(1).gameObject.SetActive(true);
+			var c = cell.GetComponent<Cell>();
+			var numInfo = Instantiate(_numInfoPrefab, _canvas.transform);
+			c.NumInfo = numInfo;
+			c.SetNum(num + 1);
+			c.SetNumInfoPos(_canvas);
 		}
 		
 		[Button]
@@ -43,22 +64,22 @@ namespace SpringMatch {
 			var cell = GetCell(x, y);
 			cell.GetChild(0).gameObject.SetActive(true);
 			cell.GetChild(1).gameObject.SetActive(false);
+			var c = cell.GetComponent<Cell>();
+			Destroy(c.NumInfo);
+			c.NumInfo = null;
 		}
 		
-		public bool showCoord = false;
+		public bool updateCellNumInfo = false;
 		
-		// OnGUI is called for rendering and handling GUI events.
-		protected void OnGUI0()
-		{
-			if (!showCoord) {
+		public void Update() {
+			if (!updateCellNumInfo) {
 				return;
 			}
-			GUI.contentColor = Color.red;
 			for (int i = 0; i < transform.childCount; i++) {
-				var c = transform.GetChild(i);
-				var coord = GetCellCoord(transform.GetChild(i));
-				var screenPos = Camera.main.WorldToScreenPoint(c.position);
-				GUI.Label(new Rect(screenPos.x-10, Screen.height - screenPos.y-10, 200f, 80f), $"{coord.x},{coord.y}");
+				var c = transform.GetChild(i).GetComponent<Cell>();
+				if (c.NumInfo != null) {
+					c.SetNumInfoPos(_canvas);
+				}
 			}
 		}
 
