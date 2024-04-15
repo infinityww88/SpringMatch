@@ -38,7 +38,9 @@ namespace SpringMatch {
 		
 		IEnumerator<ValueTuple<Color, int>> CreateColorTypeGenerator(List<ColorNums> colorNums) {
 			for (int i = 0; i < colorNums.Count; i++) {
-				yield return ValueTuple.Create(colorNums[i].color, i);
+				for (int j = 0; j < colorNums[i].num; j++) {
+					yield return ValueTuple.Create(colorNums[i].color, i);
+				}
 			}
 		}
 		
@@ -288,7 +290,7 @@ namespace SpringMatch {
 		}
 	
 		public void ReloadScene() {
-			SceneManager.LoadScene(0, LoadSceneMode.Single);
+			SceneManager.LoadScene(1, LoadSceneMode.Single);
 		}
 		
 		// This function is called when the MonoBehaviour will be destroyed.

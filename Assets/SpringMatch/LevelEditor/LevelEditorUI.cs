@@ -7,6 +7,8 @@ using Sirenix.OdinInspector;
 using System.Linq;
 using SpringMatch;
 using System;
+using System.IO;
+using Cysharp.Threading.Tasks;
 
 namespace SpringMatchEditor {
 	
@@ -19,12 +21,9 @@ namespace SpringMatchEditor {
 	} 
 	
 	public class LevelEditorUI : MonoBehaviour
-	{
-		[SerializeField]
-		private VisualTreeAsset typeButtonTemplate;
-		
-		[MyUTKElementAttr("TypeButtonGroup")]
-		private VisualElement typeButtonGroup;
+	{	
+		[MyUTKElementAttr("ColorNumGroup")]
+		private VisualElement colorNumGroup;
 
 		[MyUTKElementAttr("HeightInputField")]
 		private TextField heightInputField;
@@ -32,33 +31,42 @@ namespace SpringMatchEditor {
 		[MyUTKElementAttr("HideWhenCovered")]
 		private Toggle hideWhenCoveredToggle;
 		
-		[MyUTKElementAttr("ViewWithoutHide")]
-		private Toggle viewWithoutHideToggle;
+		//[MyUTKElementAttr("ViewWithoutHide")]
+		//private Toggle viewWithoutHideToggle;
 		
-		[MyUTKElementAttr("HoleToggle")]
-		private Toggle holeToggle;
+		[MyUTKElementAttr("HoleNumInputField")]
+		private TextField holeNumInputField;
 		
-		[MyUTKElementAttr("AddSpringButton")]
-		private VisualElement addHoleSpringButton;
+		[MyUTKElementAttr("NewLevelButton")]
+		private Button newLevelButton;
 		
-		[MyUTKElementAttr("RemoveSpringButton")]
-		private VisualElement removeHoleSpringButton;
+		[MyUTKElementAttr("PlayButton")]
+		private Button playButton;
 		
-		[MyUTKElementAttr("HoleSprings")]
-		private VisualElement holeSpringGroup;
+		[MyUTKElementAttr("OpenButton")]
+		private Button openButton;
 		
-		[MyUTKElementAttr("HoleInspector")]
-		private VisualElement holeInspector;
+		[MyUTKElementAttr("SaveButton")]
+		private Button saveButton;
 		
-		private VisualElement selectedHoleSpringButton;
-		private VisualElement selectedTypeButton;
+		[MyUTKElementAttr("RandomColorButton")]
+		private Button randomColorButton;
 		
-		private const string CSS_BUTTON_SELECT = "button-select";
+		[MyUTKElementAttr("NumInfo")]
+		private Label numInfo;
+		
+		[MyUTKElementAttr("RowInput")]
+		private TextField rowInputField;
+		
+		[MyUTKElementAttr("ColInput")]
+		private TextField colInputField;
 		
 		[SerializeField]
 		private LevelEditor levelEditor;
 		
-		public bool ViewWithoutHide => viewWithoutHideToggle.value;
+		private DialogUI _dialog;
+		
+		//public bool ViewWithoutHide => viewWithoutHideToggle.value;
 		
 		[Button]
 		void Init() {
@@ -67,33 +75,80 @@ namespace SpringMatchEditor {
 		
 		#region start
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
-		protected void Start()
+		IEnumerator Start()
 		{
 			Utils.InitUTK(this);
-			
-			SetupTypeButtonGroup();
+			_dialog = GetComponent<DialogUI>();
+			yield return UniTask.WaitUntil(() => levelEditor.ColorNums.Count > 0).ToCoroutine();
+			SetupColorNums();
 			SetupHeightInputField();
 			SetupHideWhenCoveredToggle();
-			SetupViewWithoutHideToggle();
-			SetupHoleToggle();
-			SetupAddHoleSpringButton();
-			SetupRemoveHoleSpringButton();
-			SetupHoleSpringGroup();
+			//SetupViewWithoutHideToggle();
+			SetupHoleNumInputField();
+			SetupGridSizeInput();
+			newLevelButton.RegisterCallback<ClickEvent>(OnNewLevelButtonClick);
+			openButton.RegisterCallback<ClickEvent>(evt => {
+				System.Diagnostics.Process.Start("explorer.exe", Application.persistentDataPath.Replace("/", "\\"));
+			});
+			saveButton.RegisterCallback<ClickEvent>(SaveLevel);
+			randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
+			playButton.RegisterCallback<ClickEvent>(OnPlay);
 		}
 		#endregion
 		
+		public void UpdateNumInfo() {
+			numInfo.text = $"{levelEditor.TotalSpringNum()} / {levelEditor.TotalColorNum()}";
+		}
+		
+		void SaveLevel(ClickEvent evt) {
+			if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
+				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)",
+				() => levelEditor.InteractPending = true,
+				() => levelEditor.InteractPending = false
+				);
+			}
+			else {
+				var path = Path.Join(Application.persistentDataPath, $"level.json");
+				File.WriteAllText(path,
+					levelEditor.ExportLevel());
+				_dialog.Show("<color=green>Level saved.</color>",
+				() => levelEditor.InteractPending = true,
+				() => levelEditor.InteractPending = false
+				);
+			}
+			
+		}
+		
+		public void ResetColorNum() {
+			for (int i = 0; i < colorNumGroup.childCount; i++) {
+				var tf = (TextField)colorNumGroup[i];
+				tf.SetValueWithoutNotify("0");
+			}
+		}
+		
 		#region setup
-		void SetupTypeButtonGroup() {
-			foreach (var i in levelEditor.TypeColorPattle) {
-				var t = i.Key;
-				var color = i.Value;
-				
-				var temp = typeButtonTemplate.Instantiate();
-				VisualElement typeButton = temp[0];
-				typeButton.userData = t;
-				typeButton.style.backgroundColor = color;
-				typeButtonGroup.Add(typeButton);
-				typeButton.RegisterCallback<ClickEvent>(OnTypeButtonClick);
+		
+		void SetupGridSizeInput() {
+			rowInputField.RegisterCallback<ChangeEvent<string>>(OnGridSizeChange);
+			colInputField.RegisterCallback<ChangeEvent<string>>(OnGridSizeChange);
+		}
+		
+		void SetupHoleNumInputField() {
+			holeNumInputField.RegisterCallback<ChangeEvent<String>>(OnHoleNumChange);
+		}
+		
+		void SetupColorNums() {
+			Debug.Log(levelEditor.ColorNums.Count);
+			for(int i = 0; i < levelEditor.ColorNums.Count; i++) {
+				Debug.Log(levelEditor.ColorNums[i].color);
+				var cn = levelEditor.ColorNums[i];
+				TextField tf = new	TextField();
+				tf.userData = i;
+				tf.Q(className: "unity-text-field__input").style.backgroundColor = cn.color;
+				tf.AddToClassList("color-num-input");
+				tf.SetValueWithoutNotify("0");
+				tf.RegisterCallback<ChangeEvent<string>>(OnColorNumChange);
+				colorNumGroup.Add(tf);
 			}
 		}
 		
@@ -101,49 +156,88 @@ namespace SpringMatchEditor {
 			heightInputField.RegisterCallback<ChangeEvent<string>>(OnHeightChange);
 		}
 		
-		void SetupHoleToggle() {
-			holeToggle.RegisterCallback<ChangeEvent<bool>>(OnHoleToggleChange);
-		}
-		
 		void SetupHideWhenCoveredToggle() {
 			hideWhenCoveredToggle.RegisterCallback<ChangeEvent<bool>>(OnHideWhenCoveredToggleChange);
 		}
 		
+		/*
 		void SetupViewWithoutHideToggle() {
 			viewWithoutHideToggle.RegisterCallback<ChangeEvent<bool>>(OnViewWithoutHideToggleChange);
 		}
-		
-		void SetupAddHoleSpringButton() {
-			addHoleSpringButton.RegisterCallback<ClickEvent>(OnAddHoleSpringButtonClick);
-		}
-		
-		void SetupRemoveHoleSpringButton() {
-			removeHoleSpringButton.RegisterCallback<ClickEvent>(OnRemoveHoleSpringButtonClick);
-		}
-		
-		void SetupHoleSpringGroup() {
-			
-		}
+		*/
 		
 		#endregion
 	
 		#region callback
 		
+		void OnPlay(ClickEvent evt) {
+			UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+		}
+		
+		void OnRandomColorClick(ClickEvent evt) {
+			if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
+				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)",
+				() => levelEditor.InteractPending = true,
+				() => levelEditor.InteractPending = false
+				);
+			}
+			else {
+				levelEditor.RandomColor();
+			}
+		}
+		
+		void OnGridSizeChange(ChangeEvent<string> evt) {
+			int v = 0;
+			int.TryParse(evt.newValue, out v);
+			var e = (TextField)evt.target;
+			v = Mathf.Max(6, Mathf.Min(15, v));
+			e.SetValueWithoutNotify($"{v}");
+		}
+		
+		void OnNewLevelButtonClick(ClickEvent evt) {
+			int row = int.Parse(rowInputField.value);
+			int col = int.Parse(colInputField.value);
+			levelEditor.NewLevel(row, col);
+		}
+		
+		void OnHoleNumChange(ChangeEvent<string> evt) {
+			int num = 0;
+			int.TryParse(evt.newValue, out num);
+			num = Mathf.Clamp(num, 0, 100);
+			var e = (TextField)evt.target;
+			e.SetValueWithoutNotify($"{num}");
+			Debug.Log($"change hole num {num}");
+			levelEditor.SetHoleSpringNum(num);
+			UpdateNumInfo();
+		}
+		
+		void OnColorNumChange(ChangeEvent<string> evt) {
+			int num = 0;
+			int.TryParse(evt.newValue, out num);
+			num = Mathf.Clamp(num, 0, 100);
+			var e = (TextField)evt.target;
+			var index = (int)(e.userData);
+			e.SetValueWithoutNotify($"{num}");
+			levelEditor.SetColorNum(index, num);
+			UpdateNumInfo();
+		}
+		
 		void OnHideWhenCoveredToggleChange(ChangeEvent<bool> evt) {
 			if (levelEditor.SelectedSpring == null) {
 				return;
 			}
-			var es = levelEditor.SelectedSpring.GetComponent<EditorSpring>();
-			es.HideWhenCovered = evt.newValue;
-			levelEditor.SelectedSpring.HideWhenCovered = es.HideWhenCovered && !viewWithoutHideToggle.value;
+			levelEditor.SelectedSpring.HideWhenCovered = evt.newValue;
 		}
 		
+		/*
 		void OnViewWithoutHideToggleChange(ChangeEvent<bool> evt) {
 			levelEditor.ForeachSpring(s => {
 				var es = s.GetComponent<EditorSpring>();
 				s.HideWhenCovered = es.HideWhenCovered && !viewWithoutHideToggle.value;
+				Debug.Log($">> es.hidewhencovered {es.HideWhenCovered} {viewWithoutHideToggle.value} {s.HideWhenCovered}");
 			});
 		}
+		*/
 		
 		void OnHeightChange(ChangeEvent<string> evt) {
 			int height = 0;
@@ -151,99 +245,7 @@ namespace SpringMatchEditor {
 			levelEditor.SetHeightStep(height);
 		}
 		
-		void OnHoleToggleChange(ChangeEvent<bool> evt) {
-			DisplayStyle display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
-			holeInspector.style.display = display;
-			if (evt.newValue == false) {
-				selectedHoleSpringButton = null;
-			}
-			if (evt.newValue == true) {
-				levelEditor.MakeHole();
-			} else {
-				levelEditor.ClearHole();
-				holeSpringGroup.Clear();
-			}
-		}
-		
-		void OnTypeButtonClick(ClickEvent evt) {
-			VisualElement e = (VisualElement)evt.target;
-			SelectTypeButton(e);
-			Debug.Log($"type button {e.userData} click");
-			if (levelEditor.SelectedSpring == null) {
-				return;
-			}
-			int type = (int)e.userData;
-			if (selectedHoleSpringButton != null) {
-				selectedHoleSpringButton.style.backgroundColor = e.style.backgroundColor;
-				int index = selectedHoleSpringButton.parent.IndexOf(selectedHoleSpringButton);
-				Debug.Log($"set hole spring button {index} => {type}");
-				levelEditor.ChangeHoleSpringType(index, type);
-			}
-			else {
-				levelEditor.ChangeSpringType(type);
-			}
-		}
-		
-		void OnAddHoleSpringButtonClick(ClickEvent evt) {
-			if (levelEditor.SelectedSpring == null) {
-				return;
-			}
-			AddHoleSpringButton(1);
-			levelEditor.SelectedSpring.GetComponent<EditorSpring>().Add(1);
-		}
-		
-		void OnRemoveHoleSpringButtonClick(ClickEvent evt) {
-			if (selectedHoleSpringButton != null) {
-				int index = selectedHoleSpringButton.parent.IndexOf(selectedHoleSpringButton);
-				levelEditor.SelectedSpring.GetComponent<EditorSpring>().Remove(index);
-				holeSpringGroup.Remove(selectedHoleSpringButton);
-				selectedHoleSpringButton = null;
-				return;
-			}
-			if (holeSpringGroup.childCount == 0) {
-				return;
-			}
-			levelEditor.SelectedSpring.GetComponent<EditorSpring>().Remove(holeSpringGroup.childCount-1);
-			holeSpringGroup.Remove(holeSpringGroup.Children().Last());
-		}
-		
-		void OnHoleSpringButtonClick(ClickEvent evt) {
-			SelectHoleSpringButton((VisualElement)(evt.target));
-		}
-		
 		#endregion
-		
-		void SelectTypeButton(VisualElement button) {
-			selectedTypeButton?.RemoveFromClassList(CSS_BUTTON_SELECT);
-			selectedTypeButton = button;
-			button?.AddToClassList(CSS_BUTTON_SELECT);
-		}
-		
-		void SelectHoleSpringButton(VisualElement button) {
-			selectedHoleSpringButton?.RemoveFromClassList(CSS_BUTTON_SELECT);
-			selectedHoleSpringButton = button;
-			button?.AddToClassList(CSS_BUTTON_SELECT);
-		}
-		
-		VisualElement AddHoleSpringButton(int type) {
-			var temp = typeButtonTemplate.Instantiate();
-			VisualElement typeButton = temp[0];
-			typeButton.RegisterCallback<ClickEvent>(OnHoleSpringButtonClick);
-			holeSpringGroup.Add(typeButton);
-			typeButton.style.backgroundColor = levelEditor.TypeColorPattle[type];
-			return typeButton;
-		}
-		
-		[Button]
-		void ResetUI() { 
-			SelectTypeButton(null);
-			SelectHoleSpringButton(null);
-			holeSpringGroup.Clear();
-			holeToggle.SetValueWithoutNotify(false);
-			hideWhenCoveredToggle.SetValueWithoutNotify(false);
-			holeInspector.style.display = DisplayStyle.None;
-			heightInputField.SetValueWithoutNotify("0");
-		}
 		
 		public void UpdateHeight() {
 			if (levelEditor.SelectedSpring == null) {
@@ -254,22 +256,13 @@ namespace SpringMatchEditor {
 		}
 		
 		public void Inspector(Spring spring) {
-			ResetUI();
 			if (spring == null) {
 				return;
 			}
 			heightInputField.SetValueWithoutNotify(spring.GetComponent<EditorSpring>().heightStep.ToString());
 			var editorSpring = spring.GetComponent<EditorSpring>();
-			if (editorSpring.IsHole) {
-				holeInspector.style.display = DisplayStyle.Flex;
-				holeToggle.SetValueWithoutNotify(true);
-				//foreach (var t in editorSpring.HoleSpringTypes) {
-				//	AddHoleSpringButton(t);
-				//}
-			} else {
-				holeToggle.SetValueWithoutNotify(false);
-			}
-			hideWhenCoveredToggle.SetValueWithoutNotify(editorSpring.HideWhenCovered);
+			holeNumInputField.SetValueWithoutNotify($"{editorSpring.followNum}");
+			hideWhenCoveredToggle.SetValueWithoutNotify(spring.HideWhenCovered);
 		}
 	}
 

@@ -2,7 +2,7 @@
     right: 0;
     position: absolute;
     height: 100%;
-    width: 307px;
+    width: 300px;
     background-color: rgba(108, 108, 108, 0.57);
 }
 
@@ -31,7 +31,7 @@
     margin-left: 5px;
 }
 
-.height-input-field > .unity-base-text-field__label {
+.label-input-field > .unity-base-text-field__label {
     color: rgb(255, 255, 255);
 }
 
@@ -105,7 +105,7 @@
     flex-direction: column-reverse;
 }
 
-.height-input-field {
+.label-input-field {
     -unity-font-style: bold;
     margin-top: 5px;
     margin-right: 5px;
@@ -116,4 +116,20 @@
     padding-bottom: 0;
     padding-left: 0;
     height: 37px;
+}
+
+.color-num-input > .unity-base-field__label {
+    display: none;
+}
+
+.color-num-input > .unity-base-field__input {
+    color: rgba(255, 255, 255, 255);
+    background-color: rgba(236, 86, 30, 255);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.color-num-input {
+    width: 50px;
+    height: 40px;
 }

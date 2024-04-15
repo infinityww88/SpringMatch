@@ -35,6 +35,10 @@ namespace SpringMatch {
 			Screen.SetResolution(450, 900, false);
 		}
 		
+		public void BackToEditor() {
+			UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+		}
+		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{

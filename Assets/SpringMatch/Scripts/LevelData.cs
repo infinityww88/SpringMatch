@@ -41,6 +41,5 @@ namespace SpringMatch {
 		public int col;
 		public List<ColorNums> colorNums;
 		public List<SpringData> springs = new List<SpringData>();
-		public int TotalNum => colorNums.Select(e => e.num).Sum();
 	}
 }

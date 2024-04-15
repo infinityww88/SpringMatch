@@ -79,7 +79,6 @@ namespace SpringMatch {
 			}
 			
 			key = _spring.Config.springPoolKeys[index];
-			Debug.Log($"use spring model {key}");
 			currModel = GameObjectsPool.Inst.Get(key);
 			currModel.GetComponentInChildren<Renderer>().enabled = true;
 			currModel.transform.SetParent(transform);

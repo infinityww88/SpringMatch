@@ -66,6 +66,14 @@ namespace SpringMatchEditor {
 			rowInputField.RegisterCallback<ChangeEvent<string>>(OnGridSizeChange);
 			colInputField.RegisterCallback<ChangeEvent<string>>(OnGridSizeChange);
 		}
+				
+		void OnGridSizeChange(ChangeEvent<string> evt) {
+			int v = 0;
+			int.TryParse(evt.newValue, out v);
+			var e = (TextField)evt.target;
+			v = Mathf.Max(6, Mathf.Min(15, v));
+			e.SetValueWithoutNotify($"{v}");
+		}
 		
 		void CreateLevelDir() {
 			_levelDataDir = Path.Join(Application.persistentDataPath, "Levels");
@@ -74,14 +82,7 @@ namespace SpringMatchEditor {
 			}
 			Directory.CreateDirectory(_levelDataDir);
 		}
-		
-		void OnGridSizeChange(ChangeEvent<string> evt) {
-			int v = 0;
-			int.TryParse(evt.newValue, out v);
-			var e = (TextField)evt.target;
-			v = Mathf.Max(6, Mathf.Min(15, v));
-			e.SetValueWithoutNotify($"{v}");
-		}
+
 		
 		void OnNewLevelClick(ClickEvent evt) {
 			_fileNameInput.value = "untitled";

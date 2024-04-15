@@ -1889,7 +1889,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7845c51036865f14e8064c4d70a4d864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typeButtonTemplate: {fileID: 9197481963319205126, guid: c2a68af6b90683b4c941587a7fd576de, type: 3}
   levelEditor: {fileID: 700189547}
 --- !u!114 &699565663
 MonoBehaviour:
@@ -1900,10 +1899,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 699565659}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f53cd7eca0ed0c44aa4a3a1b6ca64c54, type: 3}
+  m_Script: {fileID: 11500000, guid: 645234bb338cf9449b140629ef7e5671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelEditor: {fileID: 700189547}
 --- !u!1 &700189544
 GameObject:
   m_ObjectHideFlags: 0
@@ -3504,9 +3502,9 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12
+    x: 0
     y: 0
-    width: 0.69
+    width: 0.765
     height: 1
   near clip plane: 0.3
   far clip plane: 1000

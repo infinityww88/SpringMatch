@@ -200,7 +200,6 @@ namespace SpringMatch {
 		}
 		
 		public void EnableRender(bool enabled) {
-			Debug.Log($"{gameObject.name} enable render {enabled}");
 			_renderer.enabled = enabled;
 		}
 		

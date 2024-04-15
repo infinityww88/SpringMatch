@@ -48,7 +48,7 @@ namespace SpringMatch {
 		public bool showCoord = false;
 		
 		// OnGUI is called for rendering and handling GUI events.
-		protected void OnGUI()
+		protected void OnGUI0()
 		{
 			if (!showCoord) {
 				return;
