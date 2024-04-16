@@ -28,15 +28,11 @@ namespace SpringMatch {
 		}
 
 		public void IncNum() {
-			if (UnityEngine.Random.Range(0, 100) < 97) {
-				SetNum(num + 1);
-			}
+			SetNum(num + 1);
 		}
 		
 		public void DecNum() {
-			if (UnityEngine.Random.Range(0, 100) < 97) {
-				SetNum(Mathf.Max(0, num - 1));
-			}
+			SetNum(Mathf.Max(0, num - 1));
 		}
 	}
 
