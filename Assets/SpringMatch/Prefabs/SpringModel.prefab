@@ -26,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5117113777209208889}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,7 +38,6 @@ Transform:
   - {fileID: 4216264971691305153}
   - {fileID: 5276589011063864343}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2752561873636782775
 MonoBehaviour:
@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spline: {fileID: 6237712500995778672}
   root: {fileID: 0}
-  scaleFactor: 0.16
+  initLen: 1
   _normalLength: 1
   _inverse: 0
 --- !u!114 &8878552535885368753
@@ -118,11 +118,15 @@ MonoBehaviour:
   OnChangeSpringModel:
     m_PersistentCalls:
       m_Calls: []
+  foot0: {fileID: 0}
+  foot1: {fileID: 0}
+  target: {fileID: 0}
 --- !u!1001 &549688722184456185
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 245604243018629491}
     m_Modifications:
     - target: {fileID: 429936195478734830, guid: a0a602641a5f9bc46922d2235f903ece, type: 3}
@@ -234,6 +238,9 @@ PrefabInstance:
       value: -41.07
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0a602641a5f9bc46922d2235f903ece, type: 3}
 --- !u!114 &502149965047181858 stripped
 MonoBehaviour:
@@ -256,6 +263,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 245604243018629491}
     m_Modifications:
     - target: {fileID: 207673647508567863, guid: 25fd7b53427d3784aad7d8eb4b9adea7, type: 3}
@@ -304,7 +312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 382379996699654869, guid: 25fd7b53427d3784aad7d8eb4b9adea7, type: 3}
       propertyPath: m_Orientation
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 513632811142162688, guid: 25fd7b53427d3784aad7d8eb4b9adea7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -371,6 +379,9 @@ PrefabInstance:
       value: -39.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fd7b53427d3784aad7d8eb4b9adea7, type: 3}
 --- !u!114 &2250717091783105832 stripped
 MonoBehaviour:
@@ -404,6 +415,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 245604243018629491}
     m_Modifications:
     - target: {fileID: 429936195478734830, guid: a0a602641a5f9bc46922d2235f903ece, type: 3}
@@ -519,6 +531,9 @@ PrefabInstance:
       value: -39.27
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0a602641a5f9bc46922d2235f903ece, type: 3}
 --- !u!4 &4451649931342588477 stripped
 Transform:
@@ -541,6 +556,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 245604243018629491}
     m_Modifications:
     - target: {fileID: 429936195478734830, guid: a0a602641a5f9bc46922d2235f903ece, type: 3}
@@ -656,6 +672,9 @@ PrefabInstance:
       value: -39.27
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0a602641a5f9bc46922d2235f903ece, type: 3}
 --- !u!4 &4216264971691305153 stripped
 Transform:
@@ -678,6 +697,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 245604243018629491}
     m_Modifications:
     - target: {fileID: 1481035064119211900, guid: cf5bf31a6fdd9874181922222dc18034, type: 3}
@@ -793,6 +813,9 @@ PrefabInstance:
       value: SpringCurveFrame
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf5bf31a6fdd9874181922222dc18034, type: 3}
 --- !u!114 &5018646593521349342 stripped
 MonoBehaviour:

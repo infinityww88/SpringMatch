@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using StarkSDKSpace;
+//using StarkSDKSpace;
 using Cysharp.Threading.Tasks;
 
 namespace SpringMatch {
@@ -22,19 +22,19 @@ namespace SpringMatch {
 		}
 
 		public void VibratePickup() {
-			StarkSDK.API.Vibrate(shortPattern, -1);
+			//StarkSDK.API.Vibrate(shortPattern, -1);
 		}
 		
 		public async UniTaskVoid VibrateMerge() {
 			for (int i = 0; i < repeatNum; i++) {
 				Debug.Log($"VibrateMerge {i}");
-				StarkSDK.API.Vibrate(shortPattern, -1);
+				//StarkSDK.API.Vibrate(shortPattern, -1);
 				await UniTask.WaitForSeconds(delayMSecs / 1000f);
 			}
 		}
 		
 		public void VibrateLevelPass() {
-			StarkSDK.API.Vibrate(longPattern, -1);
+			//StarkSDK.API.Vibrate(longPattern, -1);
 		}
 	}
 
