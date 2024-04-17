@@ -18,6 +18,13 @@ namespace SpringMatch {
 		}
 	}
 	
+	public class CameraConfig {
+		public Vector3 cameraPosition;
+		public Quaternion cameraRotation;
+		public Quaternion HorzRotation;
+		public Quaternion VertRotation;
+	}
+	
 	public class SpringData {
 		public int x0;
 		public int y0;

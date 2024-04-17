@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81ac0672a599eef409bad9cf5466addb, type: 3}
+  m_Name: EditorSpringConfig
+  m_EditorClassIdentifier: 
+  gridSlotMoveDuration: 0.3
+  girdSlotShrinkDuration: 0.3
+  slotSlotDuration: 0.2
+  slotExtraMoveDuration: 0.2
+  slotExtraShrinkDuration: 0.3
+  holeGridDuration: 0.3
+  colliderRadius: 0.3
+  headHeightFactor: 0.1
+  headHeightOffset: 0
+  footHeightFactor: 0.1
+  footHeightOffset: 0
+  handHeightFactor: 0.2
+  handHeightOffset: 1
+  shrinkToShrinkMaxHeight: 2
+  shrinkHeight: 0.4
+  gridSlotAutoHeightFactor: 0.5
+  extraSlotAutoHeightFactor: 1
+  slotSlotAutoHeightFactor: 1.5
+  maxAutoHeight: 3
+  springPoolKeys:
+  - springModel0
+  - springModel1
+  - springModel2
+  springInitLength:
+  - 6
+  - 12
+  - 18
+  lodRange: {x: 0, y: 10}
+  footLerpFactorCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  handLerpFactorCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.09255963
+      outSlope: 0.09255963
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.21156758
+    - serializedVersion: 3
+      time: 0.24087593
+      value: 0.103176355
+      inSlope: 0.8048655
+      outSlope: 0.8048655
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1.1813928
+      outSlope: 1.1813928
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  headLerpFactorCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxScale: 3
+  minScale: 1
+  scaleFactor: 1.94

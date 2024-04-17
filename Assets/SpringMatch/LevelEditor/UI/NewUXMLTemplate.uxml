@@ -15,15 +15,21 @@
             <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
                 <ui:Button text="Open" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OpenButton" style="flex-grow: 1;" />
                 <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="flex-grow: 1;" />
+                <ui:Button text="Load" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LoadButton" style="flex-grow: 1;" />
             </ui:VisualElement>
+            <ui:TextField picking-mode="Ignore" label="Level number" name="LevelNumberInputField" class="label-input-field" />
             <ui:Button text="New" display-tooltip-when-elided="true" name="NewLevelButton" />
             <ui:Button text="Play" display-tooltip-when-elided="true" name="PlayButton" />
             <ui:VisualElement style="flex-direction: row;">
-                <ui:TextField picking-mode="Ignore" label="Text Field" value="6" text="6" name="RowInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;" />
-                <ui:TextField picking-mode="Ignore" label="Text Field" value="6" text="6" name="ColInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;" />
+                <ui:TextField picking-mode="Ignore" label="Text Field" value="10" text="10" name="ColInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;" />
+                <ui:TextField picking-mode="Ignore" label="Text Field" value="13" text="13" name="RowInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:Button text="RandomColor" display-tooltip-when-elided="true" name="RandomColorButton" />
+                <ui:VisualElement style="flex-direction: row;">
+                    <ui:Button text="RandomColor" display-tooltip-when-elided="true" name="RandomColorButton" style="flex-shrink: 1; font-size: 12px; -unity-font-style: normal;" />
+                    <ui:Button text="ResetView" display-tooltip-when-elided="true" name="ResetViewButton" style="flex-shrink: 1;" />
+                    <ui:Button text="SaveView" display-tooltip-when-elided="true" name="SaveViewButton" style="flex-shrink: 1;" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

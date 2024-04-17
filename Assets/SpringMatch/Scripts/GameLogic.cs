@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using SpringMatchEditor;
+using System.IO;
 
 namespace SpringMatch {
 	
@@ -42,8 +44,21 @@ namespace SpringMatch {
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			Level.Inst.Load();
+			Level.Inst.Load(LevelEditor.CurrEditLevel);
 			currLevel = Level.Inst;
+			LoadCameraView();
+		}
+		
+		void LoadCameraView() {
+			var path = Path.GetFullPath("cameraConfig.json");
+			if (!File.Exists(path)) {
+				return;
+			}
+			var cameraConfig = JsonUtility.FromJson<CameraConfig>(File.ReadAllText(path));
+			
+			Camera.main.transform.rotation =
+				cameraConfig.HorzRotation * cameraConfig.VertRotation * cameraConfig.cameraRotation;
+			Camera.main.transform.position = cameraConfig.cameraPosition;
 		}
 		
 		public void PreLoadLevel() {
@@ -55,7 +70,7 @@ namespace SpringMatch {
 			currLevel.Done();
 			var token = gameObject.GetCancellationTokenOnDestroy();
 			var nextLevel = Instantiate(levelPrefab, right.position, right.rotation);
-			nextLevel.Load();
+			nextLevel.Load(LevelEditor.CurrEditLevel);
 			await currLevel.transform.DOMoveX(left.position.x, moveDuration)
 				.WithCancellation(token);
 			Destroy(currLevel.gameObject);

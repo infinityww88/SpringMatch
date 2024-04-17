@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 7216487597055330040}
   - component: {fileID: -2927636349923117542}
   m_Layer: 0
-  m_Name: Spring
+  m_Name: EditorSpring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9206d78d9596504e959dde040466cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _springConfig: {fileID: 11400000, guid: c02af6184b70afb4e8f84b7cfbd3ed07, type: 2}
+  _springConfig: {fileID: 11400000, guid: dbbb6a6ca28876f42b407eb22ce10666, type: 2}
   _springCollider: {fileID: 102035471022632860}
   _springDeformer: {fileID: 1262880419529539832}
   _springShake: {fileID: 8154095339610169268}

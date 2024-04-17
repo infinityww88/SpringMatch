@@ -24,10 +24,12 @@ namespace SpringMatchEditor {
 			_button.RegisterCallback<ClickEvent>(evt => {
 				_dialog.style.display = DisplayStyle.None;
 				_okAction?.Invoke();
+				LevelEditor.Inst.InteractPending = false;
 			});
 		}
 
-		public void Show(string desc, Action showAction, Action okAction) {
+		public void Show(string desc, Action showAction = null, Action okAction = null) {
+			LevelEditor.Inst.InteractPending = true;
 			_desc.text = desc;
 			_okAction = okAction;
 			_dialog.style.display = DisplayStyle.Flex;

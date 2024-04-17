@@ -9,6 +9,7 @@ using SpringMatch;
 using System;
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SpringMatchEditor {
 	
@@ -27,6 +28,9 @@ namespace SpringMatchEditor {
 
 		[MyUTKElementAttr("HeightInputField")]
 		private TextField heightInputField;
+		
+		[MyUTKElementAttr("LevelNumberInputField")]
+		private TextField levelNumberInputField;
 		
 		[MyUTKElementAttr("HideWhenCovered")]
 		private Toggle hideWhenCoveredToggle;
@@ -49,8 +53,17 @@ namespace SpringMatchEditor {
 		[MyUTKElementAttr("SaveButton")]
 		private Button saveButton;
 		
+		[MyUTKElementAttr("LoadButton")]
+		private Button loadButton;
+		
 		[MyUTKElementAttr("RandomColorButton")]
 		private Button randomColorButton;
+		
+		[MyUTKElementAttr("ResetViewButton")]
+		private Button resetViewButton;
+		
+		[MyUTKElementAttr("SaveViewButton")]
+		private Button saveViewButton;
 		
 		[MyUTKElementAttr("NumInfo")]
 		private Label numInfo;
@@ -88,11 +101,14 @@ namespace SpringMatchEditor {
 			SetupGridSizeInput();
 			newLevelButton.RegisterCallback<ClickEvent>(OnNewLevelButtonClick);
 			openButton.RegisterCallback<ClickEvent>(evt => {
-				System.Diagnostics.Process.Start("explorer.exe", Application.persistentDataPath.Replace("/", "\\"));
+				System.Diagnostics.Process.Start("explorer.exe", Path.GetFullPath("."));
 			});
 			saveButton.RegisterCallback<ClickEvent>(SaveLevel);
 			randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
 			playButton.RegisterCallback<ClickEvent>(OnPlay);
+			loadButton.RegisterCallback<ClickEvent>(OnLoad);
+			resetViewButton.RegisterCallback<ClickEvent>(OnResetView);
+			saveViewButton.RegisterCallback<ClickEvent>(OnSaveView);
 		}
 		#endregion
 		
@@ -100,21 +116,35 @@ namespace SpringMatchEditor {
 			numInfo.text = $"{levelEditor.TotalSpringNum()} / {levelEditor.TotalColorNum()}";
 		}
 		
+		public void SetInputLevelNumber(string number) {
+			levelNumberInputField.SetValueWithoutNotify(number);
+		}
+		
+		string GetInputLevelNumber() {
+			return levelNumberInputField.value.Trim();
+		}
+		
+		void OnLoad(ClickEvent evt) {
+			if (GetInputLevelNumber() == "") {
+				_dialog.Show($"<color=red>No Level Number</color>");
+			}
+			LevelEditor.Inst.LoadLevel($"level_{GetInputLevelNumber()}.json");
+		}
+		
 		void SaveLevel(ClickEvent evt) {
-			if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
-				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)",
-				() => levelEditor.InteractPending = true,
-				() => levelEditor.InteractPending = false
-				);
+			if (GetInputLevelNumber() == "") {
+				_dialog.Show($"<color=red>No Level Number</color>");
+			}
+			else if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
+				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)");
 			}
 			else {
-				var path = Path.GetFullPath("level.json");
+				string levelFile = $"level_{GetInputLevelNumber()}.json";
+				LevelEditor.CurrEditLevel = levelFile;
+				var path = Path.GetFullPath(levelFile);
 				File.WriteAllText(path,
 					levelEditor.ExportLevel());
-				_dialog.Show("<color=green>Level saved.</color>",
-				() => levelEditor.InteractPending = true,
-				() => levelEditor.InteractPending = false
-				);
+				_dialog.Show("<color=green>Level saved.</color>");
 			}
 			
 		}
@@ -170,16 +200,44 @@ namespace SpringMatchEditor {
 	
 		#region callback
 		
+		public void LoadCameraView() {
+			var path = Path.GetFullPath("cameraConfig.json");
+			if (!File.Exists(path)) {
+				return;
+			}
+			var cameraConfig = JsonUtility.FromJson<CameraConfig>(File.ReadAllText(path));
+			Camera.main.transform.localRotation = cameraConfig.cameraRotation;
+			Camera.main.transform.parent.localRotation = cameraConfig.VertRotation;
+			Camera.main.transform.parent.parent.localRotation = cameraConfig.HorzRotation;
+			Camera.main.transform.position = cameraConfig.cameraPosition;
+		}
+		
+		void OnResetView(ClickEvent evt) {
+			LoadCameraView();
+		}
+		
+		void OnSaveView(ClickEvent evt) {
+			SpringMatch.CameraConfig cameraConfig = new CameraConfig();
+			cameraConfig.cameraPosition = Camera.main.transform.position;
+			cameraConfig.cameraRotation = Camera.main.transform.localRotation;
+			cameraConfig.VertRotation = Camera.main.transform.parent.localRotation;
+			cameraConfig.HorzRotation = Camera.main.transform.parent.parent.localRotation;
+			var text = JsonUtility.ToJson(cameraConfig);
+			Debug.Log($"camera config {text}");
+			File.WriteAllText(Path.GetFullPath("cameraConfig.json"), text);
+		}
+		
 		void OnPlay(ClickEvent evt) {
+			if (LevelEditor.CurrEditLevel == "") {
+				_dialog.Show("<color=red>Save Level First</color>");
+				return;
+			}
 			UnityEngine.SceneManagement.SceneManager.LoadScene(1);
 		}
 		
 		void OnRandomColorClick(ClickEvent evt) {
 			if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
-				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)",
-				() => levelEditor.InteractPending = true,
-				() => levelEditor.InteractPending = false
-				);
+				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)");
 			}
 			else {
 				levelEditor.RandomColor();
@@ -190,7 +248,7 @@ namespace SpringMatchEditor {
 			int v = 0;
 			int.TryParse(evt.newValue, out v);
 			var e = (TextField)evt.target;
-			v = Mathf.Max(6, Mathf.Min(15, v));
+			//v = Mathf.Max(6, Mathf.Min(15, v));
 			e.SetValueWithoutNotify($"{v}");
 		}
 		

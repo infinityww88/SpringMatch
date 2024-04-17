@@ -57,13 +57,20 @@ namespace SpringMatchEditor {
 		[FoldoutGroup("RoateView")]
 		private float _cameraRotateVFactor;
 		
+		[SerializeField]
+		private float scrollViewFactor = 1f;
+		
 		public bool InteractPending { get; set; }
+		
+		public static string CurrEditLevel = "";
 		
 		private List<Color> _colors;
 		
 		private List<ColorNums> _colorNums = new List<ColorNums>();
 		
 		public List<ColorNums> ColorNums => _colorNums;
+		
+		public static LevelEditor Inst;
 		
 		public Spring SelectedSpring {
 			get {
@@ -107,6 +114,7 @@ namespace SpringMatchEditor {
 		}
 		
 		public void NewLevel(int row, int col) {
+			CurrEditLevel = "";
 			ClearLevel();
 			grid.GenerateGrid(row, col);
 			LoadColors();
@@ -140,6 +148,7 @@ namespace SpringMatchEditor {
 		// Start is called before the first frame update
 		void Awake()
 		{
+			Inst = this;
 			string json = "";
 			string path = Path.GetFullPath("color.json");
 			try {
@@ -152,13 +161,14 @@ namespace SpringMatchEditor {
 				_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
 			}
 	
-			Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
+			Screen.SetResolution(660, 720, FullScreenMode.Windowed);
 		}
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			LoadLevel("level.json");
+			LoadLevel(CurrEditLevel);
+			editorUI.LoadCameraView();
 		}
 		
 		public void RandomColor() {
@@ -184,16 +194,14 @@ namespace SpringMatchEditor {
 		}
 		
 		public void LoadLevel(string fn) {
-			if (string.IsNullOrEmpty(fn)) {
-				return;
-			}
-			var path = Path.GetFullPath($"{fn}");
-			if (!File.Exists(path)) {
+			if (string.IsNullOrEmpty(fn) || !File.Exists(Path.GetFullPath($"{fn}"))) {
 				Debug.Log("New Leve 6x6");
-				NewLevel(6, 6);
+				NewLevel(13, 10);
 				return;
 			}
-			var json = File.ReadAllText(path);
+			
+			editorUI.SetInputLevelNumber(fn.Substring(6, fn.Length - 6 - 5));
+			var json = File.ReadAllText(Path.GetFullPath($"{fn}"));
 			ClearLevel();
 			Load(json);
 		}
@@ -466,13 +474,22 @@ namespace SpringMatchEditor {
 				}
 				RotateView();
 			}
-			if (Input.mouseScrollDelta.y != 0 && _editedSpring != null) {
-				SetHeightStepDelta((int)Input.mouseScrollDelta.y);
-				editorUI.UpdateHeight();
+			if (Input.mouseScrollDelta.y != 0) {
+				if (Input.GetKey(KeyCode.LeftControl)) {
+					var offset = scrollViewFactor * Input.mouseScrollDelta.y;
+					Camera.main.transform.Translate(-Camera.main.transform.forward * offset, Space.World);
+				}
+				else if (_editedSpring != null) {
+					SetHeightStepDelta((int)Input.mouseScrollDelta.y);
+					editorUI.UpdateHeight();
+				}
 			}
 			
 			if (Input.GetKeyDown(KeyCode.Backspace)) {
 				if (_editedSpring != null) {
+					if (ES(_editedSpring).IsHole) {
+						grid.ClearHole(_editedSpring.GridPos0.x, _editedSpring.GridPos0.y);
+					}
 					Destroy(_editedSpring.gameObject);
 					_springs.Remove(_editedSpring);
 					CalcOverlay();

@@ -63,9 +63,9 @@ namespace SpringMatch {
 			RandomType(t);
 		}
 
-		public void Load() {
+		public void Load(string levelFile) {
 			try {				
-				string levelJson = File.ReadAllText(Path.GetFullPath("level.json"));
+				string levelJson = File.ReadAllText(Path.GetFullPath(levelFile));
 				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
 				
 				grid.GenerateGrid(levelData.row, levelData.col);
