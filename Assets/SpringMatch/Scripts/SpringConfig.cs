@@ -70,6 +70,8 @@ namespace SpringMatch {
 		public float minScale = 1;
 		[BoxGroup("Spring Scale")]
 		public float scaleFactor = 1f;
+		
+		public float colliderLengthOffset = 0;
 	}
 
 }

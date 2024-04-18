@@ -170,7 +170,7 @@ namespace SpringMatch {
 			LastExtraSlotIndex = -1;
 			EliminateTargetSlotIndex = -1;
 			HideWhenCovered = hideWhenCovered;
-			Utils.AlignCollider(_springCollider, pos0, pos1, height);
+			Utils.AlignCollider(_springCollider, pos0, pos1, height, Config.colliderLengthOffset);
 		}
 		
 		public void Shake() {
