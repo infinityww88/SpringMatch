@@ -55,6 +55,7 @@ namespace SpringMatch {
 			var c = cell.GetComponent<Cell>();
 			if (c.NumInfo == null) {
 				var numInfo = Instantiate(_numInfoPrefab, _canvas.transform);
+				numInfo.transform.SetSiblingIndex(0);
 				c.NumInfo = numInfo;
 			}
 			

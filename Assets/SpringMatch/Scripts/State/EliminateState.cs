@@ -42,7 +42,7 @@ namespace SpringMatch {
 				Destroy(spring.gameObject);
 				Destroy(spring.EliminateCompanySpring0.gameObject);
 				Destroy(spring.EliminateCompanySpring1.gameObject);
-				// Play Eliminate Effect
+				EffectManager.Inst.PlayMergeEffect(slotMgr.GetSlotPos(spring.SlotIndex) + Vector3.up);
 			}
 			
 			spring.End = true;

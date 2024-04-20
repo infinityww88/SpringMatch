@@ -32,7 +32,7 @@ namespace SpringMatch {
 		public SpringConfig Config => _springConfig;
 	
 		[SerializeField]
-		private BoxCollider _springCollider;
+		private CapsuleCollider _springCollider;
 	
 		[SerializeField]
 		private SpringDeformer _springDeformer;
@@ -185,10 +185,11 @@ namespace SpringMatch {
 		}
 	
 		public void CalcSpringOverlay() {
-			var hitInfos = Physics.BoxCastAll(_springCollider.center + _springCollider.transform.position,
-				_springCollider.size / 2,
+			float r = _springCollider.height / 2 - _springCollider.radius;
+			var hitInfos = Physics.CapsuleCastAll(_springCollider.transform.position + _springCollider.transform.right * r,
+				_springCollider.transform.position - _springCollider.transform.right * r,
+				_springCollider.radius,
 				Vector3.down,
-				_springCollider.transform.rotation,
 				Mathf.Infinity,
 				LayerMask.GetMask("SpringCollider"),
 				QueryTriggerInteraction.Collide);

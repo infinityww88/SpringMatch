@@ -5,20 +5,16 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
-using SpringMatchEditor;
 using System.IO;
+using TMPro;
+using UnityEngine.SceneManagement;
 
-namespace SpringMatch {
+namespace SpringMatch.UI {
 	
 	public class GameLogic : MonoBehaviour
 	{
 		public static GameLogic Inst;
-		[SerializeField]
-		private RectTransform _requestRevokeItemDialog;
-		[SerializeField]
-		private RectTransform _requestShiftItemDialog;
-		[SerializeField]
-		private RectTransform _requestRandomItemDialog;
+
 		[SerializeField]
 		private Transform left;
 		[SerializeField]
@@ -27,6 +23,16 @@ namespace SpringMatch {
 		private float moveDuration;
 		[SerializeField]
 		private Level levelPrefab;
+		[SerializeField]
+		private RectTransform failedDialog;
+		[SerializeField]
+		private LevelProgress levelProgress;
+		[SerializeField]
+		private TextMeshProUGUI dateLabel;
+		[SerializeField]
+		private string[] levels;
+		
+		private int currLevelIndex = 0;
 		
 		private Level currLevel = null;
 		
@@ -34,7 +40,23 @@ namespace SpringMatch {
 		protected void Awake()
 		{
 			Inst = this;
-			Screen.SetResolution(450, 900, false);
+			//Screen.SetResolution(450, 900, false);
+			var dt = System.DateTime.Now;
+			dateLabel.text = $"{dt.Month}-{dt.Day}";
+		}
+		
+		// This function is called when the object becomes enabled and active.
+		protected void OnEnable()
+		{
+			Level.OnLevelPass += OnLevelPass;
+			Level.OnLevelFail += OnLevelFail;
+		}
+		
+		// This function is called when the behaviour becomes disabled () or inactive.
+		protected void OnDisable()
+		{
+			Level.OnLevelPass -= OnLevelPass;
+			Level.OnLevelFail -= OnLevelFail;
 		}
 		
 		public void BackToEditor() {
@@ -44,7 +66,8 @@ namespace SpringMatch {
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			Level.Inst.Load(LevelEditor.CurrEditLevel);
+			//Level.Inst.Load(SpringMatchEditor.LevelEditor.CurrEditLevel);
+			Level.Inst.Load(levels[currLevelIndex]);
 			currLevel = Level.Inst;
 			LoadCameraView();
 		}
@@ -61,47 +84,70 @@ namespace SpringMatch {
 			Camera.main.transform.position = cameraConfig.cameraPosition;
 		}
 		
-		public void PreLoadLevel() {
-			
+		public void OnLevelPass() {
+			SwitchLevel();
+		}
+		
+		public void OnLevelFail() {
+			failedDialog.gameObject.SetActive(true);
 		}
 		
 		[Button]
 		public async UniTaskVoid SwitchLevel() {
+			await UniTask.WaitForSeconds(2f);
 			currLevel.Done();
 			var token = gameObject.GetCancellationTokenOnDestroy();
-			var nextLevel = Instantiate(levelPrefab, right.position, right.rotation);
-			nextLevel.Load(LevelEditor.CurrEditLevel);
-			await currLevel.transform.DOMoveX(left.position.x, moveDuration)
-				.WithCancellation(token);
+			var nextLevel = Instantiate(levelPrefab);
+			//nextLevel.Load(SpringMatchEditor.LevelEditor.CurrEditLevel);
+			currLevelIndex++;
+			if (currLevelIndex >= levels.Length) {
+				Debug.Log("LevelPass");
+				return;
+			}
+			
+			if (currLevelIndex == 1) {
+				levelProgress.ToLevel2();
+			} else if (currLevelIndex == 2) {
+				levelProgress.ToLevel3();
+			}
+			
+			nextLevel.Load(levels[currLevelIndex]);
+			
+			var offset = left.transform.position.x;
+			currLevel.transform.Translate(Vector3.right * offset, Space.World);
+			Camera.main.transform.Translate(Vector3.right * offset, Space.World);
+			await Camera.main.transform.DOMoveX(0, moveDuration).SetEase(Ease.Linear).WithCancellation(token);
 			Destroy(currLevel.gameObject);
 			currLevel = nextLevel;
-			await currLevel.transform.DOMoveX(0, moveDuration)
-				.WithCancellation(token);
 		}
 		
-		public void OnRequestRevokeItem() {
-			_requestRevokeItemDialog.gameObject.SetActive(true);
+		public void Revoke(ItemButton button) {
+			if (Level.Inst.RestoreLastPickupSpring()) {
+				button.UseItem();
+			}
 		}
 		
-		public void OnGetRevokeItem() {
-			Debug.Log("Get Revoke Item");
+		public void Shift(ItemButton button) {
+			if (Level.Inst.Shift3ToExtra()) {
+				button.UseItem();
+			}
 		}
 		
-		public void OnRequestShiftItem() {
-			_requestShiftItemDialog.gameObject.SetActive(true);
+		public void Random(ItemButton button) {
+			Level.Inst.RandomAllSpringTypes();
+			button.UseItem();
 		}
 		
-		public void OnGetShiftItem() {
-			Debug.Log("Get Shift Item");
+		public void Recover() {
+			Level.Inst.Shift3ToExtra();
 		}
 		
-		public void OnRequestRandomItem() {
-			_requestRandomItemDialog.gameObject.SetActive(true);
+		public void Home() {
+			SceneManager.LoadScene("Loading");
 		}
 		
-		public void OnGetRandomItem() {
-			Debug.Log("Get Random Item");
+		public void Restart() {
+			SceneManager.LoadScene("Play");
 		}
 	}
-
 }

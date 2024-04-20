@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _springConfig: {fileID: 11400000, guid: dbbb6a6ca28876f42b407eb22ce10666, type: 2}
-  _springCollider: {fileID: 102035471022632860}
+  _springCollider: {fileID: 7885979341156167796}
   _springDeformer: {fileID: 1262880419529539832}
   _springShake: {fileID: 8154095339610169268}
   _springBinder: {fileID: 3183146151550509234}
@@ -184,7 +184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1763424105887108120}
-  - component: {fileID: 102035471022632860}
+  - component: {fileID: 7885979341156167796}
   m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
@@ -207,18 +207,19 @@ Transform:
   m_Father: {fileID: 5390123799175843633}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &102035471022632860
-BoxCollider:
+--- !u!136 &7885979341156167796
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4527398506056084466}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.1, z: 0.1}
+  m_Radius: 0.05
+  m_Height: 1
+  m_Direction: 0
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8026340774900762024
 GameObject:

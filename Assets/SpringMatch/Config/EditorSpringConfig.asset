@@ -124,4 +124,4 @@ MonoBehaviour:
   maxScale: 3
   minScale: 1
   scaleFactor: 1.94
-  colliderLengthOffset: -0.2
+  colliderLengthOffset: -0.1

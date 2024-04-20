@@ -48,6 +48,27 @@ namespace SpringMatch.UI {
 			var textTween = TweenLoadingText();
 			await _loadingBar.DOFillAmount(1, 2f).SetTarget(_loadingBar);
 			textTween.Kill();
+			_loadingText.gameObject.SetActive(false);
+			_playButton.gameObject.SetActive(true);
+			_playButton.onClick.AddListener(OnPlay);
+		}
+		
+		public void OnPlay() {
+			Debug.Log("OnPlay");
+			_playButton.onClick.RemoveListener(OnPlay);
+			_playButton.onClick.AddListener(OnStartGame);
+			_settingButton.gameObject.SetActive(true);
+			_declareNote.DOFade(0, 0.3f).OnComplete(() => _declareNote.gameObject.SetActive(false));
+			var t0 = _playButton.GetComponent<Transform>().DOMove(_playButtonPos.transform.position, 0.3f);
+			var t1 = _navButton.GetComponent<RectTransform>().DOAnchorPosY(0, 0.3f);
+			var t2 = _recordButton.GetComponent<RectTransform>().DOAnchorPosY(0, 0.3f);
+		}
+		
+		public void OnStartGame() {
+			Debug.Log("OnStartGame");
+			_playButton.GetComponent<RectTransform>().DOAnchorPosY(_playButton.GetComponent<RectTransform>().anchoredPosition.y - 500f, 0.3f);
+			_navButton.GetComponent<RectTransform>().DOAnchorPosY(_navButton.GetComponent<RectTransform>().anchoredPosition.y - 500f, 0.3f);
+			_recordButton.GetComponent<RectTransform>().DOAnchorPosY(_recordButton.GetComponent<RectTransform>().anchoredPosition.y - 500f, 0.3f);
 		}
 	}
 

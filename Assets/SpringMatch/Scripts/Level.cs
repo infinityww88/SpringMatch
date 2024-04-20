@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.Events;
 
 namespace SpringMatch {
 	
@@ -19,6 +20,8 @@ namespace SpringMatch {
 		
 		[SerializeField]
 		private Transform _springsRoot;
+		
+		public static Action OnLevelFail = null, OnLevelPass = null;
 		
 		public Grid grid;
 		//public TextAsset colorJson;
@@ -228,6 +231,15 @@ namespace SpringMatch {
 			}
 			
 			SlotManager.Inst.AddSpring(spring);
+			
+			if (_springs.Count == 0) {
+				EffectManager.Inst.PlayLevelPassEffect();
+				OnLevelPass?.Invoke();
+			}
+		}
+		
+		public void OnSlotFull() {
+			OnLevelFail?.Invoke();
 		}
 		
 		void NextSpring(Spring spring) {
@@ -245,9 +257,9 @@ namespace SpringMatch {
 		}
 		
 		[Button]
-		public void RestoreLastPickupSpring() {
+		public bool RestoreLastPickupSpring() {
 			if (lastPickupSpring == null) {
-				return;
+				return false;
 			}
 			
 			if (lastPickupSpring.LastExtraSlotIndex < 0) {
@@ -275,12 +287,13 @@ namespace SpringMatch {
 			lastPickupSpring.TargetSlotIndex = -1;
 			
 			lastPickupSpring = null;
+			return true;
 		}
 		
 		[Button]
-		public void Shift3ToExtra() {
+		public bool Shift3ToExtra() {
 			if (SlotManager.Inst.UsedSlotsNum == 0 || !ExtraSlotManager.Inst.Available()) {
-				return;
+				return false;
 			}
 			lastPickupSpring = null;
 			var springs = SlotManager.Inst.ShiftOutString(3);
@@ -288,6 +301,7 @@ namespace SpringMatch {
 				s.HoleSpring = null;
 			}
 			ExtraSlotManager.Inst.AddSprings(springs);
+			return true;
 		}
 		
 		public void RemoveSpring(Spring spring) {

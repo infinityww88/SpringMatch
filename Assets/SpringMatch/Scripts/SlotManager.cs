@@ -48,6 +48,10 @@ namespace SpringMatch {
 					EliminateTriple(index);
 					usedSlotsNum -= 3;
 				}, 2);
+			} else {
+				if (usedSlotsNum == 7) {
+					Level.Inst.OnSlotFull();
+				}
 			}
 		}
 		

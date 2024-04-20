@@ -13,7 +13,7 @@ namespace SpringMatch.UI {
 		public Button tryAgainButton;
 		public Button homeButton;
 		
-		public float titleRaiseHeight = 510;
+		public float titleHeight = 500;
 		public float duration = 0.5f;
 		
 		// Start is called before the first frame update
@@ -25,13 +25,13 @@ namespace SpringMatch.UI {
 		// This function is called when the object becomes enabled and active.
 		protected void OnEnable()
 		{
-			title.anchoredPosition = Vector2.zero;
+			title.anchoredPosition = Vector2.up * titleHeight;
 			tryAgainButton.gameObject.SetActive(false);
 			homeButton.gameObject.SetActive(false);
 			recoverConfirm.gameObject.SetActive(false);
 			
 			var seq = DOTween.Sequence();
-			seq.Append(title.DOAnchorPosY(titleRaiseHeight, duration))
+			seq.Append(title.DOAnchorPosY(0, duration))
 				.AppendCallback(() => {
 					recoverConfirm.gameObject.SetActive(true);
 					recoverConfirm.localScale = Vector2.one * 0.8f;

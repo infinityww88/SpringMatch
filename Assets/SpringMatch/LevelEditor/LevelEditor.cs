@@ -39,6 +39,9 @@ namespace SpringMatchEditor {
 		private float scrollHeightFactor = 1;
 		
 		[SerializeField]
+		private float moveViewFactor = 1f;
+		
+		[SerializeField]
 		private float drawSpringHeightFactor = 0.5f;
 		
 		[SerializeField]
@@ -453,12 +456,30 @@ namespace SpringMatchEditor {
 				_cameraVPivot.localRotation *= Quaternion.Euler(-diff.y * _cameraRotateVFactor, 0, 0);
 			}
 		}
+		
+		async UniTaskVoid MoveView() {
+			Vector3 startPos = Input.mousePosition;
+			Vector3 vpos = Camera.main.ScreenToViewportPoint(startPos);
+			if (vpos.x < 0 || vpos.x > 1 || vpos.y < 0 || vpos.y > 1) {
+				return;
+			}
+			while (!Input.GetMouseButtonUp(1)) {
+				await UniTask.NextFrame();
+				Vector2 diff = Input.mousePosition - startPos;
+				_cameraHPivot.localPosition += Vector3.forward * diff.y * moveViewFactor;
+				startPos = Input.mousePosition;
+			}
+		}
 
 		// Update is called once per frame
 		void Update()
 		{
 			if (InteractPending) {
 				return;
+			}
+			
+			if (Input.GetMouseButtonDown(1)) {
+				MoveView();
 			}
 			
 			if (Input.GetMouseButtonDown(0)) {
@@ -502,6 +523,7 @@ namespace SpringMatchEditor {
 			if (Input.GetKeyDown(KeyCode.Escape)) {
 				_cameraHPivot.localRotation = Quaternion.identity;
 				_cameraVPivot.localRotation = Quaternion.identity;
+				_cameraHPivot.localPosition = Vector3.zero;
 			}
 		}
 	}
