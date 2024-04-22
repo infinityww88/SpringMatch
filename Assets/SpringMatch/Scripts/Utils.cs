@@ -7,8 +7,9 @@ using FluffyUnderware.Curvy;
 using System.Reflection;
 using UnityEngine.UIElements;
 using UnityEngine.Assertions;
+using System.IO;
 
-public class Utils
+public static class Utils
 {
 	public static void AlignCollider(BoxCollider collider, Vector3 pos0, Vector3 pos1, float height) {
 		var s = collider.size;
@@ -41,6 +42,35 @@ public class Utils
 					fi.SetValue(component, e);
 				}
 			}
+		}
+	}
+	
+	public static void CaptureCamera(Camera camera, RenderTexture rt, string path) {
+		var t = RenderTexture.active;
+		RenderTexture.active = rt;
+		camera.targetTexture = rt;
+		camera.Render();
+		Texture2D tex = new Texture2D(rt.width, rt.height);
+		tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+		tex.Apply();
+		byte[] data = ImageConversion.EncodeToPNG(tex);
+		File.WriteAllBytes(path, data);
+		camera.targetTexture = null;
+		RenderTexture.active = t;
+	}
+	
+	public static void Foreach<T>(this IEnumerable<T> array, Action<T> action) {
+		foreach (var e in array) {
+			action(e);
+		}
+	}
+	
+	public static void Foreach<T>(this IEnumerable<T> array, Action<int, T> action)
+	{
+		int i = 0;
+		foreach (var e in array) {
+			action(i, e);
+			i++;
 		}
 	}
 }

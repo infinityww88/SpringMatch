@@ -6,6 +6,7 @@ namespace SpringMatch {
 	
 	public class SettingManager : MonoBehaviour
 	{
+		
 		public void OnToggleSound(bool val) {
 			Debug.Log($"Setting sound {val}");
 		}
