@@ -8,8 +8,9 @@ using Cysharp.Threading.Tasks;
 using System.IO;
 using TMPro;
 using UnityEngine.SceneManagement;
+using SpringMatch.UI;
 
-namespace SpringMatch.UI {
+namespace SpringMatch {
 	
 	public class GameLogic : MonoBehaviour
 	{
@@ -23,8 +24,7 @@ namespace SpringMatch.UI {
 		private float moveDuration;
 		[SerializeField]
 		private Level levelPrefab;
-		[SerializeField]
-		private RectTransform failedDialog;
+
 		[SerializeField]
 		private LevelProgress levelProgress;
 		[SerializeField]
@@ -32,9 +32,22 @@ namespace SpringMatch.UI {
 		[SerializeField]
 		private string[] levels;
 		
+		[SerializeField]
+		private GameObject recoverDialog;
+		
+		[SerializeField]
+		private GameObject passDialog;
+		
+		[SerializeField]
+		private GameObject failDialog;
+		
+		public bool Pending { get; set; } = true;
+		
 		private int currLevelIndex = 0;
 		
 		private Level currLevel = null;
+		
+		private int failedNum = 0;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
@@ -69,7 +82,7 @@ namespace SpringMatch.UI {
 			//Level.Inst.Load(SpringMatchEditor.LevelEditor.CurrEditLevel);
 			Level.Inst.Load(levels[currLevelIndex]);
 			currLevel = Level.Inst;
-			LoadCameraView();
+			//LoadCameraView();
 		}
 		
 		void LoadCameraView() {
@@ -77,19 +90,32 @@ namespace SpringMatch.UI {
 			if (!File.Exists(path)) {
 				return;
 			}
+			/*
 			var cameraConfig = JsonUtility.FromJson<CameraConfig>(File.ReadAllText(path));
 			
 			Camera.main.transform.rotation =
 				cameraConfig.HorzRotation * cameraConfig.VertRotation * cameraConfig.cameraRotation;
 			Camera.main.transform.position = cameraConfig.cameraPosition;
+			*/
 		}
 		
 		public void OnLevelPass() {
-			SwitchLevel();
+			if (currLevelIndex == 0) {
+				SwitchLevel();
+			}
+			else {
+				passDialog.SetActive(true);
+			}
 		}
 		
 		public void OnLevelFail() {
-			failedDialog.gameObject.SetActive(true);
+			Pending = true;
+			if (failedNum == 0) {
+				recoverDialog.SetActive(true);
+			} else {
+				failDialog.SetActive(true);
+			}
+			failedNum++;
 		}
 		
 		[Button]
@@ -105,11 +131,7 @@ namespace SpringMatch.UI {
 				return;
 			}
 			
-			if (currLevelIndex == 1) {
-				levelProgress.ToLevel2();
-			} else if (currLevelIndex == 2) {
-				levelProgress.ToLevel3();
-			}
+			levelProgress.NexLevel();
 			
 			nextLevel.Load(levels[currLevelIndex]);
 			
@@ -139,15 +161,25 @@ namespace SpringMatch.UI {
 		}
 		
 		public void Recover() {
+			Pending = false;
 			Level.Inst.Shift3ToExtra();
 		}
 		
 		public void Home() {
-			SceneManager.LoadScene("Loading");
+			SceneManager.LoadScene("Play");
 		}
 		
+		[Button]
 		public void Restart() {
-			SceneManager.LoadScene("Play");
+			currLevelIndex = 0;
+			
+			Pending = false;
+			failedNum = 0;
+			Destroy(currLevel.gameObject);
+			Instantiate(levelPrefab);
+			Level.Inst.Load(levels[currLevelIndex]);
+			currLevel = Level.Inst;
+			levelProgress.Restart();
 		}
 	}
 }

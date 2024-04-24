@@ -18,10 +18,11 @@ namespace SpringMatch.UI {
 		[SerializeField]
 		private UnityEvent<ItemButton> OnUseItem;
 		
-		[SerializeField]
-		private ItemUsedUpInfo _itemUsedUpInfo;
+		//[SerializeField]
+		//private ItemUsedUpInfo _itemUsedUpInfo;
 		
 		private bool ItemUsed { get; set; }
+		
 		private int _num = 0;
 		
 		public void ShakeButton() {
@@ -42,7 +43,7 @@ namespace SpringMatch.UI {
 		
 		public void OnClick() {
 			if (ItemUsed) {
-				_itemUsedUpInfo.gameObject.SetActive(true);
+				//_itemUsedUpInfo.gameObject.SetActive(true);
 				return;
 			}
 			ScaleButton();

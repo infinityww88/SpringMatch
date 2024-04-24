@@ -24,12 +24,12 @@ namespace SpringMatch {
 		[SerializeField]
 		private GameObject _numInfoPrefab;
 
-		private Canvas _canvas;
+		private RectTransform _numInfoRoot;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
-			_canvas = FindObjectOfType<Canvas>();
+			_numInfoRoot = GameObject.FindGameObjectWithTag("NumInfoRoot").GetComponent<RectTransform>();
 		}
 
 		public Transform GetCell(int x, int y) {
@@ -54,13 +54,13 @@ namespace SpringMatch {
 			cell.GetChild(1).gameObject.SetActive(true);
 			var c = cell.GetComponent<Cell>();
 			if (c.NumInfo == null) {
-				var numInfo = Instantiate(_numInfoPrefab, _canvas.transform);
+				var numInfo = Instantiate(_numInfoPrefab, _numInfoRoot);
 				numInfo.transform.SetSiblingIndex(0);
 				c.NumInfo = numInfo;
 			}
 			
 			c.SetNum(followNum + 1);
-			c.SetNumInfoPos(_canvas);
+			c.SetNumInfoPos(_numInfoRoot);
 		}
 		
 		[Button]
@@ -82,7 +82,7 @@ namespace SpringMatch {
 			for (int i = 0; i < transform.childCount; i++) {
 				var c = transform.GetChild(i).GetComponent<Cell>();
 				if (c.NumInfo != null) {
-					c.SetNumInfoPos(_canvas);
+					c.SetNumInfoPos(_numInfoRoot);
 				}
 			}
 		}
