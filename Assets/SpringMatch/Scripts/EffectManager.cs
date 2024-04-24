@@ -9,6 +9,7 @@ namespace SpringMatch {
 	
 	public class EffectManager : MonoBehaviour
 	{
+		
 		public static EffectManager Inst;
 		public int repeatNum = 25;
 		public float delayMSecs = 35f;
