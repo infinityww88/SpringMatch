@@ -8,6 +8,7 @@ using System.Reflection;
 using UnityEngine.UIElements;
 using UnityEngine.Assertions;
 using System.IO;
+using System;
 
 public class Utils
 {
@@ -42,6 +43,14 @@ public class Utils
 					fi.SetValue(component, e);
 				}
 			}
+		}
+	}
+	
+	public static void ClearChildren(Transform parent) {
+		while (parent.childCount > 0) {
+			var c = parent.GetChild(0);
+			c.SetParent(null);
+			GameObject.Destroy(c.gameObject);
 		}
 	}
 }

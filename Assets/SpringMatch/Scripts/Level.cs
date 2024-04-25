@@ -206,9 +206,11 @@ namespace SpringMatch {
 			}
 			EffectManager.Inst.VibratePickup();
 			if (SlotManager.Inst.IsFull() || !spring.IsTop) {
+				EffectManager.Inst.PlayInvalidSound();
 				spring.Shake();
 				return;
 			}
+			EffectManager.Inst.PlayValidSound();
 			spring.EnablePickupCollider(false);
 			spring.EnableDetectCollider(false);
 
@@ -240,6 +242,7 @@ namespace SpringMatch {
 		
 		public void OnSlotFull() {
 			OnLevelFail?.Invoke();
+			EffectManager.Inst.PlaySlotFullSound();
 		}
 		
 		void NextSpring(Spring spring) {

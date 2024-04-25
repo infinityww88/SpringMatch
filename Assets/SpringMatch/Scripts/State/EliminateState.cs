@@ -17,17 +17,18 @@ namespace SpringMatch {
 			var slotMgr = SlotManager.Inst;
 			if (spring.EliminateIndex == 0) {
 				EffectManager.Inst.VibrateMerge();
+				EffectManager.Inst.PlayEliminateSound();
 				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
 					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex),
 					spring.Config.slotSlotAutoHeightFactor,
 					spring.Config.slotSlotDuration,
 					_cts.Token);
-
 			} else if (spring.EliminateIndex == 1) {
 				await UniTask.WaitUntil(() => spring.EliminateCompanySpring0.End || spring.EliminateCompanySpring1.End || _cts.IsCancellationRequested);
 				if (_cts.IsCancellationRequested) {
 					return;
 				}
+				EffectManager.Inst.PlayEliminateSound();
 				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
 					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex),
 					spring.Config.slotSlotAutoHeightFactor,
@@ -38,6 +39,7 @@ namespace SpringMatch {
 				if (_cts.IsCancellationRequested) {
 					return;
 				}
+				EffectManager.Inst.PlayEliminateSound();
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
 				Destroy(spring.gameObject);
 				Destroy(spring.EliminateCompanySpring0.gameObject);

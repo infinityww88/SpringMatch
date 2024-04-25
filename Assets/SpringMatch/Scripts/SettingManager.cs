@@ -7,19 +7,15 @@ namespace SpringMatch {
 	public class SettingManager : MonoBehaviour
 	{
 		public void OnToggleSound(bool val) {
-			Debug.Log($"Setting sound {val}");
+			EffectManager.Inst.EnableSound(val);
 		}
 		
 		public void OnToggleMusic(bool val) {
-			Debug.Log($"Setting music {val}");
+			EffectManager.Inst.EnableMusic(val);
 		}
 		
 		public void OnToggleVibrate(bool val) {
-			Debug.Log($"Setting vibrate {val}");
-		}
-		
-		public void OnExitGame() {
-			Debug.Log($"Exit Game");
+			EffectManager.Inst.EnableVibrate(val);
 		}
 	}
 

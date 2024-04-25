@@ -9,6 +9,7 @@ using System.IO;
 using TMPro;
 using UnityEngine.SceneManagement;
 using SpringMatch.UI;
+using System;
 
 namespace SpringMatch {
 	
@@ -31,6 +32,16 @@ namespace SpringMatch {
 		private TextMeshProUGUI dateLabel;
 		[SerializeField]
 		private string[] levels;
+		[SerializeField]
+		private GameObject settingDialogHome;
+		[SerializeField]
+		private GameObject settingDialogInGame;
+		
+		[SerializeField]
+		private Button startGameButton, levelPassButton;
+		
+		[SerializeField]
+		private TextMeshProUGUI levelPassInfo;
 		
 		[SerializeField]
 		private GameObject recoverDialog;
@@ -41,6 +52,12 @@ namespace SpringMatch {
 		[SerializeField]
 		private GameObject failDialog;
 		
+		[SerializeField]
+		private RectTransform numInfoRoot;
+		
+		[SerializeField]
+		private Tips tips;
+		
 		public bool Pending { get; set; } = true;
 		
 		private int currLevelIndex = 0;
@@ -49,6 +66,10 @@ namespace SpringMatch {
 		
 		private int failedNum = 0;
 		
+		public bool GameStart { get; set; }
+		
+		private DateTimeOffset lastPassTime = DateTimeOffset.MinValue;
+		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
@@ -56,6 +77,25 @@ namespace SpringMatch {
 			//Screen.SetResolution(450, 900, false);
 			var dt = System.DateTime.Now;
 			dateLabel.text = $"{dt.Month}-{dt.Day}";
+			
+			var s = PlayerPrefs.GetString("lastPassTime", "");
+			if (s != "") {
+				lastPassTime = DateTimeOffset.Parse(s);
+			}
+		}
+		
+		[Button]
+		void Test(int secOffset) {
+			var now = DateTimeOffset.Now;
+			var z = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset);
+			z = z.AddSeconds(secOffset);
+			PlayerPrefs.SetString("lastPassTime", z.ToString());
+		}
+		
+		private bool LevelPassToday() {
+			var now = DateTimeOffset.Now;
+			var z = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset);
+			return lastPassTime >= z;
 		}
 		
 		// This function is called when the object becomes enabled and active.
@@ -105,6 +145,8 @@ namespace SpringMatch {
 			}
 			else {
 				passDialog.SetActive(true);
+				lastPassTime = DateTimeOffset.Now;
+				PlayerPrefs.SetString("lastPassTime", DateTimeOffset.Now.ToString());
 			}
 		}
 		
@@ -176,10 +218,42 @@ namespace SpringMatch {
 			Pending = false;
 			failedNum = 0;
 			Destroy(currLevel.gameObject);
+			Utils.ClearChildren(numInfoRoot);
 			Instantiate(levelPrefab);
 			Level.Inst.Load(levels[currLevelIndex]);
 			currLevel = Level.Inst;
 			levelProgress.Restart();
+		}
+		
+		public void ShowSetting() {
+			GameObject o = GameStart ? settingDialogInGame : settingDialogHome;
+			o.SetActive(true);
+		}
+		
+		[Button]
+		public void ShowTips(string info) {
+			tips.ShowTips(info);
+		}
+		
+		// Update is called every frame, if the MonoBehaviour is enabled.
+		protected void Update()
+		{
+			if (GameStart) {
+				return;
+			}
+			if (LevelPassToday()) {
+				startGameButton.gameObject.SetActive(false);
+				levelPassButton.gameObject.SetActive(true);
+				var dt = DateTimeOffset.Now;
+				var z = new DateTimeOffset(dt.Year, dt.Month, dt.Day, 0, 0, 0, dt.Offset);
+				z = z.AddDays(1);
+				var d = z - dt;
+				levelPassInfo.text = $"{d.Hours:D2}:{d.Minutes:D2}:{d.Seconds:D2} left";
+			}
+			else {
+				startGameButton.gameObject.SetActive(true);
+				levelPassButton.gameObject.SetActive(false);
+			}
 		}
 	}
 }

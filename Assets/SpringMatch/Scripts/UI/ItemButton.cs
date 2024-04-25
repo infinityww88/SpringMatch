@@ -43,7 +43,9 @@ namespace SpringMatch.UI {
 		
 		public void OnClick() {
 			if (ItemUsed) {
+				ShakeButton();
 				//_itemUsedUpInfo.gameObject.SetActive(true);
+				GameLogic.Inst.ShowTips("无法重复使用");
 				return;
 			}
 			ScaleButton();
@@ -55,7 +57,7 @@ namespace SpringMatch.UI {
 		}
 		
 		public void OnGetItem() {
-			ShakeButton();
+			ScaleButton();
 			_supText.text = "1";
 			_num = 1;
 		}
