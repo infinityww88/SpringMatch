@@ -30,6 +30,7 @@ namespace SpringMatch {
 		public int y0;
 		public int x1;
 		public int y1;
+		public int area;
 		public int heightStep;
 		public bool hideWhenCovered;
 		public int followNum;

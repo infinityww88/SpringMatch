@@ -82,6 +82,30 @@ namespace SpringMatchEditor {
 			}
 		}
 		
+		public int TotalAreaANum() {
+			return _springs.Select(e => e.AreaID == 0 ? 1 : 0).Sum();
+		}
+		
+		public int TotalAreaBNum() {
+			return _springs.Select(e => e.AreaID == 1 ? 1 : 0).Sum();
+		}
+		
+		public int TotalColorANum() {
+			int sum = 0;
+			for (int i = 0; i < 5; i++) {
+				sum += _colorNums[i].num;
+			}
+			return sum;
+		}
+		
+		public int TotalColorBNum() {
+			int sum = 0;
+			for (int i = 5; i < _colorNums.Count; i++) {
+				sum += _colorNums[i].num;
+			}
+			return sum;
+		}
+		
 		public int TotalSpringNum() {
 			return _springs.Select(e => ES(e).followNum + 1).Sum();
 		}
@@ -130,6 +154,7 @@ namespace SpringMatchEditor {
 				sd.y0 = spring.GridPos0.y;
 				sd.x1 = spring.GridPos1.x;
 				sd.y1 = spring.GridPos1.y;
+				sd.area = spring.AreaID;
 				sd.followNum = ES(spring).followNum;
 				sd.heightStep = es.heightStep;
 				sd.hideWhenCovered = spring.HideWhenCovered;
@@ -218,13 +243,14 @@ namespace SpringMatchEditor {
 			grid.GenerateGrid(levelData.row, levelData.col);
 			levelData.springs.ForEach(data => {
 				int idx = UnityEngine.Random.Range(0, _colors.Count);
-				PutSpring(data.x0, data.y0, data.x1, data.y1, idx, data.heightStep, data.hideWhenCovered, data.followNum);
+				PutSpring(data.x0, data.y0, data.x1, data.y1, idx, data.heightStep, data.hideWhenCovered, data.followNum, data.area);
 				if (data.followNum > 0) {
 					grid.MakeHole(data.x0, data.y0, data.followNum);
 				}
 			});
 			CalcOverlay();
 			editorUI.UpdateNumInfo();
+			editorUI.UpdateAreaNum();
 			RandomColor();
 		}
 		
@@ -327,17 +353,17 @@ namespace SpringMatchEditor {
 			SetCellColor(startCell?.gameObject, cellColor);
 			SetCellColor(currCell?.gameObject, cellColor);
 			if (startCell != null && currCell != null) {
-				SelectedSpring = PutSpring(grid.GetCellCoord(startCell), grid.GetCellCoord(currCell), 0, -1, false, 0);
+				SelectedSpring = PutSpring(grid.GetCellCoord(startCell), grid.GetCellCoord(currCell), 0, -1, false, 0, editorUI.CurrAreaID);
 				_editorState = EditorState.EditSpring;
 				CalcOverlay();
 			}
 		}
 		
-		Spring PutSpring(Vector2Int pos0, Vector2Int pos1, int type, int heightStep, bool hideWhenCovered, int followNum) {
-			return PutSpring(pos0.x, pos0.y, pos1.x, pos1.y, type, heightStep, hideWhenCovered, followNum);
+		Spring PutSpring(Vector2Int pos0, Vector2Int pos1, int type, int heightStep, bool hideWhenCovered, int followNum, int areaId) {
+			return PutSpring(pos0.x, pos0.y, pos1.x, pos1.y, type, heightStep, hideWhenCovered, followNum, areaId);
 		}
 		
-		Spring PutSpring(int x0, int y0, int x1, int y1, int type, int heightStep, bool hideWhenCovered, int followNum) {
+		Spring PutSpring(int x0, int y0, int x1, int y1, int type, int heightStep, bool hideWhenCovered, int followNum, int areaId) {
 			Transform startCell = grid.GetCell(x0, y0);
 			Transform currCell = grid.GetCell(x1, y1);
 			var spring = Instantiate(springPrefab);
@@ -350,7 +376,7 @@ namespace SpringMatchEditor {
 			}
 			spring.GridPos0 = new	Vector2Int(x0, y0);
 			spring.GridPos1 = new	Vector2Int(x1, y1);
-			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered);
+			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered, areaId);
 			spring.Type = type;
 			spring.Color = _colors[type];
 			spring.GeneratePickupColliders(spring.Config.colliderRadius);
@@ -361,6 +387,7 @@ namespace SpringMatchEditor {
 			spring.HideWhenCovered = hideWhenCovered; // && !editorUI.ViewWithoutHide;
 			_springs.Add(spring);
 			editorUI.UpdateNumInfo();
+			editorUI.UpdateAreaNum();
 			return spring;
 		}
 		
@@ -425,7 +452,8 @@ namespace SpringMatchEditor {
 				_editedSpring.Foot1Pos,
 				editorSpring.heightStep * scrollHeightFactor,
 				_editedSpring.Type,
-				_editedSpring.HideWhenCovered);
+				_editedSpring.HideWhenCovered,
+				_editedSpring.AreaID);
 			Utils.RunNextFrame(() => {
 				_editedSpring.GeneratePickupColliders(config.colliderRadius);
 			}, 2);
