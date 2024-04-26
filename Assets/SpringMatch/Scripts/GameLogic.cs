@@ -46,7 +46,7 @@ namespace SpringMatch {
 		{
 			Level.Inst.Load(LevelEditor.CurrEditLevel);
 			currLevel = Level.Inst;
-			LoadCameraView();
+			//LoadCameraView();
 		}
 		
 		void LoadCameraView() {

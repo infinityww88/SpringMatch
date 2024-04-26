@@ -25,7 +25,7 @@
                 <ui:TextField picking-mode="Ignore" label="Text Field" value="13" text="13" name="RowInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:VisualElement style="flex-direction: row;">
+                <ui:VisualElement style="flex-direction: row; display: none;">
                     <ui:Button text="RandomColor" display-tooltip-when-elided="true" name="RandomColorButton" style="flex-shrink: 1; font-size: 12px; -unity-font-style: normal;" />
                     <ui:Button text="ResetView" display-tooltip-when-elided="true" name="ResetViewButton" style="flex-shrink: 1;" />
                     <ui:Button text="SaveView" display-tooltip-when-elided="true" name="SaveViewButton" style="flex-shrink: 1;" />

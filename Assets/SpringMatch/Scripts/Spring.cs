@@ -95,6 +95,7 @@ namespace SpringMatch {
 				return _color;
 			}
 			set {
+				Debug.Log("set color " + value);
 				_color = value;
 				_SetColor();
 			}

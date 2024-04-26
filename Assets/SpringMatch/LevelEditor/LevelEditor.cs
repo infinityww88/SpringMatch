@@ -66,9 +66,11 @@ namespace SpringMatchEditor {
 		
 		private List<Color> _colors;
 		
-		private List<ColorNums> _colorNums = new List<ColorNums>();
+		private List<ColorNums> _colorNumsA = new List<ColorNums>();
+		private List<ColorNums> _colorNumsB = new List<ColorNums>();
 		
-		public List<ColorNums> ColorNums => _colorNums;
+		public List<ColorNums> ColorNumsA => _colorNumsA;
+		public List<ColorNums> ColorNumsB => _colorNumsB;
 		
 		public static LevelEditor Inst;
 		
@@ -92,26 +94,22 @@ namespace SpringMatchEditor {
 		
 		public int TotalColorANum() {
 			int sum = 0;
-			for (int i = 0; i < 5; i++) {
-				sum += _colorNums[i].num;
+			for (int i = 0; i < _colorNumsA.Count; i++) {
+				sum += _colorNumsA[i].num;
 			}
 			return sum;
 		}
 		
 		public int TotalColorBNum() {
 			int sum = 0;
-			for (int i = 5; i < _colorNums.Count; i++) {
-				sum += _colorNums[i].num;
+			for (int i = 0; i < _colorNumsB.Count; i++) {
+				sum += _colorNumsB[i].num;
 			}
 			return sum;
 		}
 		
 		public int TotalSpringNum() {
 			return _springs.Select(e => ES(e).followNum + 1).Sum();
-		}
-		
-		public int TotalColorNum() {
-			return _colorNums.Select(e => e.num).Sum();
 		}
 		
 		[SerializeField]
@@ -126,9 +124,16 @@ namespace SpringMatchEditor {
 		}
 		
 		public void LoadColors() {
-			_colorNums.Clear();
+			_colorNumsA.Clear();
 			foreach (var c in _colors) {
-				_colorNums.Add(new ColorNums {
+				_colorNumsA.Add(new ColorNums {
+					color = c,
+					num = 0
+				});
+			}
+			_colorNumsB.Clear();
+			foreach (var c in _colors) {
+				_colorNumsB.Add(new ColorNums {
 					color = c,
 					num = 0
 				});
@@ -160,14 +165,20 @@ namespace SpringMatchEditor {
 				sd.hideWhenCovered = spring.HideWhenCovered;
 				ld.springs.Add(sd);
 			}
-			ld.colorNums = _colorNums;
+			ld.colorNumsA = _colorNumsA;
+			ld.colorNumsB = _colorNumsB;
 			ld.row = grid.Row;
 			ld.col = grid.Col;
 			return ld;
 		}
 		
-		public void SetColorNum(int index, int num) {
-			_colorNums[index].num = num;
+		public void SetColorNum(int areaId, int index, int num) {
+			if (areaId == 0) {
+				_colorNumsA[index].num = num;
+			}
+			else {
+				_colorNumsB[index].num = num;
+			}
 		}
 		
 		// Start is called before the first frame update
@@ -193,9 +204,10 @@ namespace SpringMatchEditor {
 		protected void Start()
 		{
 			LoadLevel(CurrEditLevel);
-			editorUI.LoadCameraView();
+			//editorUI.LoadCameraView();
 		}
 		
+		/*
 		public void RandomColor() {
 			List<ValueTuple<Color, int>> colorTypes = new	List<ValueTuple<Color, int>>();
 			int i = 0;
@@ -217,6 +229,7 @@ namespace SpringMatchEditor {
 				i++;
 			}
 		}
+		*/
 		
 		public void LoadLevel(string fn) {
 			if (string.IsNullOrEmpty(fn) || !File.Exists(Path.GetFullPath($"{fn}"))) {
@@ -236,8 +249,8 @@ namespace SpringMatchEditor {
 			
 			var levelData = JsonConvert.DeserializeObject<LevelData>(json);
 			
-			_colorNums = levelData.colorNums;
-			Debug.Log(JsonConvert.SerializeObject(_colorNums, new ColorConvert()));
+			_colorNumsA = levelData.colorNumsA;
+			_colorNumsB = levelData.colorNumsB;
 			editorUI.UpdateColorNum();
 			
 			grid.GenerateGrid(levelData.row, levelData.col);
@@ -251,7 +264,7 @@ namespace SpringMatchEditor {
 			CalcOverlay();
 			editorUI.UpdateNumInfo();
 			editorUI.UpdateAreaNum();
-			RandomColor();
+			//RandomColor();
 		}
 		
 		[Button]
@@ -288,7 +301,7 @@ namespace SpringMatchEditor {
 				spring.CalcSpringOverlay();
 			}
 			foreach (Spring spring in _springs) {
-				spring.Color = _colors[spring.Type];
+				spring.Color = spring.AreaID == 0 ? new Color(0.8f, 0, 0) : new Color(0.8f, 0, 0.8f); //_colors[spring.Type];
 				spring.GetComponent<EditorSpring>().IsValid = true;
 				if (!spring.IsTop) {
 					spring.Darker();
@@ -378,7 +391,7 @@ namespace SpringMatchEditor {
 			spring.GridPos1 = new	Vector2Int(x1, y1);
 			spring.Init(startCell.position, currCell.position, height, type, hideWhenCovered, areaId);
 			spring.Type = type;
-			spring.Color = _colors[type];
+			spring.Color = areaId == 0 ? new Color(1, 0, 0) : new Color(1, 0, 1) ; //_colors[type];
 			spring.GeneratePickupColliders(spring.Config.colliderRadius);
 			var editorSpring = spring.gameObject.AddComponent<EditorSpring>();
 			editorSpring.heightStep = heightStep;
@@ -522,6 +535,7 @@ namespace SpringMatchEditor {
 					_springs.Remove(_editedSpring);
 					CalcOverlay();
 					editorUI.UpdateNumInfo();
+					editorUI.UpdateAreaNum();
 				}
 				SelectedSpring = null;
 				editorUI.Inspector(null);

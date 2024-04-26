@@ -85,8 +85,8 @@ namespace SpringMatch {
 				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
 				
 				grid.GenerateGrid(levelData.row, levelData.col);
-				var colorTypeEnumeratorA = CreateColorTypeGenerator(levelData.colorNums.GetRange(0, 5));
-				var colorTypeEnumeratorB = CreateColorTypeGenerator(levelData.colorNums.GetRange(5, levelData.colorNums.Count - 5));
+				var colorTypeEnumeratorA = CreateColorTypeGenerator(levelData.colorNumsA);
+				var colorTypeEnumeratorB = CreateColorTypeGenerator(levelData.colorNumsB);
 				int i = 0;
 				int holeId = 0;
 				foreach (var sd in levelData.springs) {

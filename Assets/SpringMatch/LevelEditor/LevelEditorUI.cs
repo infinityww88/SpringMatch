@@ -103,7 +103,7 @@ namespace SpringMatchEditor {
 		{
 			Utils.InitUTK(this);
 			_dialog = GetComponent<DialogUI>();
-			yield return UniTask.WaitUntil(() => levelEditor.ColorNums.Count > 0).ToCoroutine();
+			yield return UniTask.WaitUntil(() => levelEditor.ColorNumsA.Count > 0).ToCoroutine();
 			SetupColorNums();
 			SetupHeightInputField();
 			SetupHideWhenCoveredToggle();
@@ -116,7 +116,7 @@ namespace SpringMatchEditor {
 				System.Diagnostics.Process.Start("explorer.exe", Path.GetFullPath("."));
 			});
 			saveButton.RegisterCallback<ClickEvent>(SaveLevel);
-			randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
+			//randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
 			playButton.RegisterCallback<ClickEvent>(OnPlay);
 			loadButton.RegisterCallback<ClickEvent>(OnLoad);
 			resetViewButton.RegisterCallback<ClickEvent>(OnResetView);
@@ -138,7 +138,13 @@ namespace SpringMatchEditor {
 		}
 		
 		public void UpdateNumInfo() {
-			numInfo.text = $"{levelEditor.TotalSpringNum()} / {levelEditor.TotalColorNum()}";
+			if (CurrAreaID == 0) {
+				numInfo.text = $"{levelEditor.TotalAreaANum()} / {levelEditor.TotalColorANum()}";
+			}
+			else {
+				numInfo.text = $"{levelEditor.TotalAreaBNum()} / {levelEditor.TotalColorBNum()}";
+			}
+			
 		}
 		
 		public void SetInputLevelNumber(string number) {
@@ -177,11 +183,14 @@ namespace SpringMatchEditor {
 			
 		}
 		
+		List<ColorNums> CurrColorNums => CurrAreaID == 0 ? levelEditor.ColorNumsA : levelEditor.ColorNumsB;
+		
 		public void UpdateColorNum() {
+			var colorNums = CurrColorNums;
 			for (int i = 0; i < colorNumGroup.childCount; i++) {
 				var tf = (TextField)colorNumGroup[i];
 				int idx = (int)tf.userData;
-				var cn = levelEditor.ColorNums[idx];
+				var cn = colorNums[idx];
 				tf.SetValueWithoutNotify($"{cn.num}");
 			}
 		}
@@ -204,13 +213,14 @@ namespace SpringMatchEditor {
 		}
 		
 		void SetupColorNums() {
-			for(int i = 0; i < levelEditor.ColorNums.Count; i++) {
-				var cn = levelEditor.ColorNums[i];
+			var colorNums = CurrColorNums;
+			for(int i = 0; i < colorNums.Count; i++) {
+				var cn = colorNums[i];
 				TextField tf = new	TextField();
 				tf.userData = i;
 				tf.Q(className: "unity-text-field__input").style.backgroundColor = cn.color;
 				tf.AddToClassList("color-num-input");
-				tf.SetValueWithoutNotify(levelEditor.ColorNums[i].num.ToString());
+				tf.SetValueWithoutNotify(colorNums[i].num.ToString());
 				tf.RegisterCallback<ChangeEvent<string>>(OnColorNumChange);
 				colorNumGroup.Add(tf);
 			}
@@ -235,10 +245,8 @@ namespace SpringMatchEditor {
 		#region callback
 		
 		void OnAreaRadioChagne(ChangeEvent<int> evt) {
-			if (levelEditor.SelectedSpring != null) {
-				levelEditor.SelectedSpring.AreaID = evt.newValue;
-				UpdateAreaNum();
-			}
+			UpdateColorNum();
+			UpdateNumInfo();
 		}
 		
 		public void LoadCameraView() {
@@ -276,6 +284,7 @@ namespace SpringMatchEditor {
 			UnityEngine.SceneManagement.SceneManager.LoadScene(1);
 		}
 		
+		/*
 		void OnRandomColorClick(ClickEvent evt) {
 			if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
 				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)");
@@ -284,6 +293,7 @@ namespace SpringMatchEditor {
 				levelEditor.RandomColor();
 			}
 		}
+		*/
 		
 		void OnGridSizeChange(ChangeEvent<string> evt) {
 			int v = 0;
@@ -316,7 +326,7 @@ namespace SpringMatchEditor {
 			var e = (TextField)evt.target;
 			var index = (int)(e.userData);
 			e.SetValueWithoutNotify($"{num}");
-			levelEditor.SetColorNum(index, num);
+			levelEditor.SetColorNum(CurrAreaID, index, num);
 			UpdateNumInfo();
 		}
 		
@@ -366,7 +376,7 @@ namespace SpringMatchEditor {
 			var editorSpring = spring.GetComponent<EditorSpring>();
 			holeNumInputField.SetValueWithoutNotify($"{editorSpring.followNum}");
 			hideWhenCoveredToggle.SetValueWithoutNotify(spring.HideWhenCovered);
-			areaRadioGroup.SetValueWithoutNotify(spring.AreaID);
+			//areaRadioGroup.SetValueWithoutNotify(spring.AreaID);
 		}
 	}
 

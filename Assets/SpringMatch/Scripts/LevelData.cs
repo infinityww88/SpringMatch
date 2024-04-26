@@ -47,7 +47,8 @@ namespace SpringMatch {
 	{
 		public int row;
 		public int col;
-		public List<ColorNums> colorNums;
+		public List<ColorNums> colorNumsA;
+		public List<ColorNums> colorNumsB;
 		public List<SpringData> springs = new List<SpringData>();
 	}
 }
