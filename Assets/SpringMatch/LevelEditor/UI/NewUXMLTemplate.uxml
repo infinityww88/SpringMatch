@@ -25,16 +25,23 @@
                 <ui:TextField picking-mode="Ignore" label="Text Field" value="13" text="13" name="RowInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:VisualElement style="flex-direction: row;">
+                <ui:VisualElement style="flex-direction: row; display: none;">
                     <ui:Button text="RandomColor" display-tooltip-when-elided="true" name="RandomColorButton" style="flex-shrink: 1; font-size: 12px; -unity-font-style: normal;" />
                     <ui:Button text="ResetView" display-tooltip-when-elided="true" name="ResetViewButton" style="flex-shrink: 1;" />
                     <ui:Button text="SaveView" display-tooltip-when-elided="true" name="SaveViewButton" style="flex-shrink: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement>
+                    <ui:VisualElement style="flex-direction: row;">
+                        <ui:Label text="Label" display-tooltip-when-elided="true" name="AreaAInfo" style="flex-grow: 1; color: rgb(255, 255, 255); -unity-font-style: bold;" />
+                        <ui:Label text="Label" display-tooltip-when-elided="true" name="AreaBInfo" style="flex-shrink: 1; flex-grow: 1; color: rgb(255, 255, 255); -unity-font-style: bold;" />
+                    </ui:VisualElement>
+                    <ui:RadioButtonGroup label="Area" value="-1" name="AreaRadioGroup" style="color: rgb(255, 255, 255); font-size: 14px; -unity-font-style: bold;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Dialog" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.64); display: none;">
-        <ui:Label text="Label" display-tooltip-when-elided="true" name="DialogDesc" style="position: absolute; top: 176px; left: 350px; height: 207px; width: 345px; -unity-text-align: middle-center; font-size: 24px; color: rgb(255, 255, 255);" />
-        <ui:Button text="OK" display-tooltip-when-elided="true" name="DialogOkButton" style="position: absolute; top: 453px; left: 456px; width: 145px;" />
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="DialogDesc" style="position: absolute; top: 198px; left: 193px; height: 207px; width: 345px; -unity-text-align: middle-center; font-size: 24px; color: rgb(255, 255, 255); white-space: normal;" />
+        <ui:Button text="OK" display-tooltip-when-elided="true" name="DialogOkButton" style="position: absolute; top: 488px; left: 299px; width: 145px;" />
     </ui:VisualElement>
 </ui:UXML>

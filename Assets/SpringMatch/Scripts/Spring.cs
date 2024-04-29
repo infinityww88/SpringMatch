@@ -95,6 +95,7 @@ namespace SpringMatch {
 				return _color;
 			}
 			set {
+				Debug.Log("set color " + value);
 				_color = value;
 				_SetColor();
 			}
@@ -118,6 +119,8 @@ namespace SpringMatch {
 		public int LastExtraSlotIndex { get; set; }
 		
 		public bool End { get; set; }
+	
+		public int AreaID { get; set; }
 	
 		public void RemoveOverlaySpring(Spring spring) {
 			_overlaySpring.Remove(spring);
@@ -156,7 +159,7 @@ namespace SpringMatch {
 			Debug.Break();
 		}
 	
-		public void Init(Vector3 pos0, Vector3 pos1, float height, int type, bool hideWhenCovered) {
+		public void Init(Vector3 pos0, Vector3 pos1, float height, int type, bool hideWhenCovered, int areaId) {
 			End = false;
 			Type = type;
 			Foot0Pos = pos0;
@@ -170,6 +173,7 @@ namespace SpringMatch {
 			LastExtraSlotIndex = -1;
 			EliminateTargetSlotIndex = -1;
 			HideWhenCovered = hideWhenCovered;
+			AreaID = areaId;
 			Utils.AlignCollider(_springCollider, pos0, pos1, height, Config.colliderLengthOffset);
 		}
 		

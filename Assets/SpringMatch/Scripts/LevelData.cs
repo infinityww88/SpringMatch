@@ -30,6 +30,7 @@ namespace SpringMatch {
 		public int y0;
 		public int x1;
 		public int y1;
+		public int area;
 		public int heightStep;
 		public bool hideWhenCovered;
 		public int followNum;
@@ -46,7 +47,8 @@ namespace SpringMatch {
 	{
 		public int row;
 		public int col;
-		public List<ColorNums> colorNums;
+		public List<ColorNums> colorNumsA;
+		public List<ColorNums> colorNumsB;
 		public List<SpringData> springs = new List<SpringData>();
 	}
 }

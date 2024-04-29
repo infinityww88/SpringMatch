@@ -123,8 +123,8 @@
 }
 
 .color-num-input > .unity-base-field__input {
-    color: rgba(255, 255, 255, 255);
-    background-color: rgba(236, 86, 30, 255);
+    color: rgb(255, 255, 255);
+    background-color: rgb(236, 86, 30);
     -unity-font-style: bold;
     -unity-text-align: middle-center;
 }
@@ -132,4 +132,8 @@
 .color-num-input {
     width: 50px;
     height: 40px;
+}
+
+#AreaRadioGroup > .unity-base-field__input {
+    flex-direction: row;
 }

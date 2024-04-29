@@ -57,13 +57,29 @@ namespace SpringMatch {
 		}
 		
 		public void RandomAllSpringTypes() {
-			List<Spring> t = new List<Spring>();
-			t.AddRange(_springs);
+			List<Spring> a = new List<Spring>();
+			List<Spring> b = new List<Spring>();
+			foreach (var s in _springs) {
+				if (s.AreaID == 0) {
+					a.Add(s);
+				}
+				else {
+					b.Add(s);
+				}
+			}
 			foreach (var e in _holes) {
 				SpringHole hole = e.Value;
-				hole.ForeachSpring(s => t.Add(s));
+				hole.ForeachSpring(s => {
+					if (s.AreaID == 0){
+						a.Add(s);
+					}
+					else {
+						b.Add(s);
+					}
+				});
 			}
-			RandomType(t);
+			RandomType(a);
+			RandomType(b);
 		}
 
 		public void Load(string levelFile) {
@@ -72,10 +88,12 @@ namespace SpringMatch {
 				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
 				
 				grid.GenerateGrid(levelData.row, levelData.col);
-				var colorTypeEnumerator = CreateColorTypeGenerator(levelData.colorNums);
+				var colorTypeEnumeratorA = CreateColorTypeGenerator(levelData.colorNumsA);
+				var colorTypeEnumeratorB = CreateColorTypeGenerator(levelData.colorNumsB);
 				int i = 0;
 				int holeId = 0;
 				foreach (var sd in levelData.springs) {
+					var colorTypeEnumerator = sd.area == 0 ? colorTypeEnumeratorA : colorTypeEnumeratorB;
 					colorTypeEnumerator.MoveNext();
 					var colorType = colorTypeEnumerator.Current;
 					var s = NewSpring(sd.x0, sd.y0,
@@ -85,7 +103,8 @@ namespace SpringMatch {
 						colorType.Item2,
 						colorType.Item1,
 						sd.IsHole ? holeId : -1,
-						sd.hideWhenCovered);
+						sd.hideWhenCovered,
+						sd.area);
 						
 					s.transform.SetParent(_springsRoot);
 					s.EnableRender(false);
@@ -110,7 +129,8 @@ namespace SpringMatch {
 								colorType.Item2,
 								colorType.Item1,
 								hole.ID,
-								sd.hideWhenCovered);
+								sd.hideWhenCovered,
+								sd.area);
 							s.transform.SetParent(_springsRoot);
 							s.EnableRender(false);
 							s.gameObject.SetActive(false);
@@ -165,7 +185,7 @@ namespace SpringMatch {
 		}
 		
 		[Button]
-		Spring NewSpring(int x0, int y0, int x1, int y1, float height, string name, int type, Color color, int holeId, bool hideWhenCovered) {
+		Spring NewSpring(int x0, int y0, int x1, int y1, float height, string name, int type, Color color, int holeId, bool hideWhenCovered, int areaID) {
 			var springCurve = Instantiate(holeId >= 0 ? holeSpringPrefab : springPrefab);
 			springCurve.name = name;
 			var pos0 = grid.GetCell(x0, y0).position;
@@ -178,7 +198,7 @@ namespace SpringMatch {
 			}
 			spring.GridPos0 = new	Vector2Int(x0, y0);
 			spring.GridPos1 = new	Vector2Int(x1, y1);
-			spring.Init(pos0, pos1, height, type, hideWhenCovered);
+			spring.Init(pos0, pos1, height, type, hideWhenCovered, areaID);
 			spring.Color = color;
 			return spring;
 		}
@@ -253,7 +273,7 @@ namespace SpringMatch {
 			newSpring.GetComponent<Hole2BoardState>().enabled = true;
 			var pos0 = grid.GetCell(newSpring.GridPos0.x, newSpring.GridPos0.y).position;
 			var pos1 = grid.GetCell(newSpring.GridPos1.x, newSpring.GridPos1.y).position;
-			newSpring.Init(pos0, pos1, newSpring.Height, newSpring.Type, newSpring.HideWhenCovered);
+			newSpring.Init(pos0, pos1, newSpring.Height, newSpring.Type, newSpring.HideWhenCovered, newSpring.AreaID);
 			newSpring.Deformer.Shrink(pos0);
 			_springs.Add(newSpring);
 			CalcOverlay(newSpring);

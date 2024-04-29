@@ -74,10 +74,21 @@ namespace SpringMatchEditor {
 		[MyUTKElementAttr("ColInput")]
 		private TextField colInputField;
 		
+		[MyUTKElementAttr("AreaAInfo")]
+		private Label areaAInfo;
+		
+		[MyUTKElementAttr("AreaBInfo")]
+		private Label areaBInfo;
+		
+		[MyUTKElementAttr("AreaRadioGroup")]
+		private RadioButtonGroup areaRadioGroup;
+		
 		[SerializeField]
 		private LevelEditor levelEditor;
 		
 		private DialogUI _dialog;
+		
+		public int CurrAreaID => areaRadioGroup.value;
 		
 		//public bool ViewWithoutHide => viewWithoutHideToggle.value;
 		
@@ -92,19 +103,20 @@ namespace SpringMatchEditor {
 		{
 			Utils.InitUTK(this);
 			_dialog = GetComponent<DialogUI>();
-			yield return UniTask.WaitUntil(() => levelEditor.ColorNums.Count > 0).ToCoroutine();
+			yield return UniTask.WaitUntil(() => levelEditor.ColorNumsA.Count > 0).ToCoroutine();
 			SetupColorNums();
 			SetupHeightInputField();
 			SetupHideWhenCoveredToggle();
 			//SetupViewWithoutHideToggle();
 			SetupHoleNumInputField();
 			SetupGridSizeInput();
+			SetupAreaRadioGroup();
 			newLevelButton.RegisterCallback<ClickEvent>(OnNewLevelButtonClick);
 			openButton.RegisterCallback<ClickEvent>(evt => {
 				System.Diagnostics.Process.Start("explorer.exe", Path.GetFullPath("."));
 			});
 			saveButton.RegisterCallback<ClickEvent>(SaveLevel);
-			randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
+			//randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
 			playButton.RegisterCallback<ClickEvent>(OnPlay);
 			loadButton.RegisterCallback<ClickEvent>(OnLoad);
 			resetViewButton.RegisterCallback<ClickEvent>(OnResetView);
@@ -112,8 +124,27 @@ namespace SpringMatchEditor {
 		}
 		#endregion
 		
+		public int AreaColorNum(int areaId) {
+			int sum = 0;
+			int s = areaId == 0 ? 0 : 5;
+			int e = areaId == 0 ? 5 : colorNumGroup.childCount;
+			for (int i = s; i < e; i++) {
+				TextField tf = colorNumGroup[i] as TextField;
+				int num = 0;
+				int.TryParse(tf.value, out num);
+				sum += num;
+			}
+			return sum;
+		}
+		
 		public void UpdateNumInfo() {
-			numInfo.text = $"{levelEditor.TotalSpringNum()} / {levelEditor.TotalColorNum()}";
+			if (CurrAreaID == 0) {
+				numInfo.text = $"{levelEditor.TotalAreaANum()} / {levelEditor.TotalColorANum()}";
+			}
+			else {
+				numInfo.text = $"{levelEditor.TotalAreaBNum()} / {levelEditor.TotalColorBNum()}";
+			}
+			
 		}
 		
 		public void SetInputLevelNumber(string number) {
@@ -135,8 +166,11 @@ namespace SpringMatchEditor {
 			if (GetInputLevelNumber() == "") {
 				_dialog.Show($"<color=red>No Level Number</color>");
 			}
-			else if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
-				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)");
+			else if (levelEditor.TotalAreaANum() > levelEditor.TotalColorANum()) {
+				_dialog.Show($"<color=red>Area A Spring number ({levelEditor.TotalAreaANum()}) > Area A color number ({levelEditor.TotalColorANum()})</color>");
+			}
+			else if (levelEditor.TotalAreaBNum() > levelEditor.TotalColorBNum()) {
+				_dialog.Show($"<color=red>Area B Spring number ({levelEditor.TotalAreaBNum()}) > Area B color number ({levelEditor.TotalColorBNum()})</color>");
 			}
 			else {
 				string levelFile = $"level_{GetInputLevelNumber()}.json";
@@ -149,16 +183,25 @@ namespace SpringMatchEditor {
 			
 		}
 		
+		List<ColorNums> CurrColorNums => CurrAreaID == 0 ? levelEditor.ColorNumsA : levelEditor.ColorNumsB;
+		
 		public void UpdateColorNum() {
+			var colorNums = CurrColorNums;
 			for (int i = 0; i < colorNumGroup.childCount; i++) {
 				var tf = (TextField)colorNumGroup[i];
 				int idx = (int)tf.userData;
-				var cn = levelEditor.ColorNums[idx];
+				var cn = colorNums[idx];
 				tf.SetValueWithoutNotify($"{cn.num}");
 			}
 		}
 		
 		#region setup
+		
+		void SetupAreaRadioGroup() {
+			areaRadioGroup.choices = new List<String>(){"A", "B"};
+			areaRadioGroup.RegisterValueChangedCallback<int>(OnAreaRadioChagne);
+			areaRadioGroup.value = 0;
+		}
 		
 		void SetupGridSizeInput() {
 			rowInputField.RegisterCallback<ChangeEvent<string>>(OnGridSizeChange);
@@ -170,13 +213,14 @@ namespace SpringMatchEditor {
 		}
 		
 		void SetupColorNums() {
-			for(int i = 0; i < levelEditor.ColorNums.Count; i++) {
-				var cn = levelEditor.ColorNums[i];
+			var colorNums = CurrColorNums;
+			for(int i = 0; i < colorNums.Count; i++) {
+				var cn = colorNums[i];
 				TextField tf = new	TextField();
 				tf.userData = i;
 				tf.Q(className: "unity-text-field__input").style.backgroundColor = cn.color;
 				tf.AddToClassList("color-num-input");
-				tf.SetValueWithoutNotify(levelEditor.ColorNums[i].num.ToString());
+				tf.SetValueWithoutNotify(colorNums[i].num.ToString());
 				tf.RegisterCallback<ChangeEvent<string>>(OnColorNumChange);
 				colorNumGroup.Add(tf);
 			}
@@ -199,6 +243,11 @@ namespace SpringMatchEditor {
 		#endregion
 	
 		#region callback
+		
+		void OnAreaRadioChagne(ChangeEvent<int> evt) {
+			UpdateColorNum();
+			UpdateNumInfo();
+		}
 		
 		public void LoadCameraView() {
 			var path = Path.GetFullPath("cameraConfig.json");
@@ -235,6 +284,7 @@ namespace SpringMatchEditor {
 			UnityEngine.SceneManagement.SceneManager.LoadScene(1);
 		}
 		
+		/*
 		void OnRandomColorClick(ClickEvent evt) {
 			if (levelEditor.TotalSpringNum() > levelEditor.TotalColorNum()) {
 				_dialog.Show($"<color=red>Spring number ({levelEditor.TotalSpringNum()}) > total color number ({levelEditor.TotalColorNum()}</color>)");
@@ -243,6 +293,7 @@ namespace SpringMatchEditor {
 				levelEditor.RandomColor();
 			}
 		}
+		*/
 		
 		void OnGridSizeChange(ChangeEvent<string> evt) {
 			int v = 0;
@@ -261,7 +312,7 @@ namespace SpringMatchEditor {
 		void OnHoleNumChange(ChangeEvent<string> evt) {
 			int num = 0;
 			int.TryParse(evt.newValue, out num);
-			num = Mathf.Clamp(num, 0, 100);
+			//num = Mathf.Clamp(num, 0, 100);
 			var e = (TextField)evt.target;
 			e.SetValueWithoutNotify($"{num}");
 			levelEditor.SetHoleSpringNum(num);
@@ -271,11 +322,11 @@ namespace SpringMatchEditor {
 		void OnColorNumChange(ChangeEvent<string> evt) {
 			int num = 0;
 			int.TryParse(evt.newValue, out num);
-			num = Mathf.Clamp(num, 0, 100);
+			//num = Mathf.Clamp(num, 0, 100);
 			var e = (TextField)evt.target;
 			var index = (int)(e.userData);
 			e.SetValueWithoutNotify($"{num}");
-			levelEditor.SetColorNum(index, num);
+			levelEditor.SetColorNum(CurrAreaID, index, num);
 			UpdateNumInfo();
 		}
 		
@@ -312,6 +363,11 @@ namespace SpringMatchEditor {
 				levelEditor.SelectedSpring.GetComponent<EditorSpring>().heightStep.ToString());
 		}
 		
+		public void UpdateAreaNum() {
+			areaAInfo.text = $"A: {levelEditor.TotalAreaANum()}";
+			areaBInfo.text = $"B: {levelEditor.TotalAreaBNum()}";
+		}
+		
 		public void Inspector(Spring spring) {
 			if (spring == null) {
 				return;
@@ -320,6 +376,7 @@ namespace SpringMatchEditor {
 			var editorSpring = spring.GetComponent<EditorSpring>();
 			holeNumInputField.SetValueWithoutNotify($"{editorSpring.followNum}");
 			hideWhenCoveredToggle.SetValueWithoutNotify(spring.HideWhenCovered);
+			//areaRadioGroup.SetValueWithoutNotify(spring.AreaID);
 		}
 	}
 
