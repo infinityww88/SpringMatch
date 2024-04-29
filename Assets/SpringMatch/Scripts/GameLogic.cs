@@ -58,7 +58,7 @@ namespace SpringMatch {
 		[SerializeField]
 		private Tips tips;
 		
-		public bool Pending { get; set; } = true;
+		public static bool Pending { get; set; } = true;
 		
 		private int currLevelIndex = 0;
 		
@@ -74,7 +74,6 @@ namespace SpringMatch {
 		protected void Awake()
 		{
 			Inst = this;
-			//Screen.SetResolution(450, 900, false);
 			var dt = System.DateTime.Now;
 			dateLabel.text = $"{dt.Month}-{dt.Day}";
 			

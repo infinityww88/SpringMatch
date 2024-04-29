@@ -279,6 +279,10 @@ namespace SpringMatch {
 			CalcOverlay(newSpring);
 		}
 		
+		public void OnClickRestoreLastPickupSpring() {
+			RestoreLastPickupSpring();
+		}
+		
 		[Button]
 		public bool RestoreLastPickupSpring() {
 			if (lastPickupSpring == null) {
@@ -311,6 +315,10 @@ namespace SpringMatch {
 			
 			lastPickupSpring = null;
 			return true;
+		}
+		
+		public void OnClickShift3() {
+			Shift3ToExtra();
 		}
 		
 		[Button]
