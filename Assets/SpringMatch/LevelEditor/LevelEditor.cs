@@ -85,11 +85,11 @@ namespace SpringMatchEditor {
 		}
 		
 		public int TotalAreaANum() {
-			return _springs.Select(e => e.AreaID == 0 ? 1 : 0).Sum();
+			return _springs.Select(e => e.AreaID == 0 ? 1 + ES(e).followNum : 0).Sum();
 		}
 		
 		public int TotalAreaBNum() {
-			return _springs.Select(e => e.AreaID == 1 ? 1 : 0).Sum();
+			return _springs.Select(e => e.AreaID == 1 ? 1 + ES(e).followNum : 0).Sum();
 		}
 		
 		public int TotalColorANum() {
