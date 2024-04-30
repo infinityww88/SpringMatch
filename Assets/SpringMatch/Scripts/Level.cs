@@ -81,83 +81,87 @@ namespace SpringMatch {
 			RandomType(a);
 			RandomType(b);
 		}
-
-		public void Load(string levelFile) {
-			try {				
-				string levelJson = File.ReadAllText(Path.GetFullPath(levelFile));
-				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
+		
+		public void LoadLevel(string levelJson) {
+			var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
 				
-				grid.GenerateGrid(levelData.row, levelData.col);
-				var colorTypeEnumeratorA = CreateColorTypeGenerator(levelData.colorNumsA);
-				var colorTypeEnumeratorB = CreateColorTypeGenerator(levelData.colorNumsB);
-				int i = 0;
-				int holeId = 0;
-				foreach (var sd in levelData.springs) {
-					var colorTypeEnumerator = sd.area == 0 ? colorTypeEnumeratorA : colorTypeEnumeratorB;
-					colorTypeEnumerator.MoveNext();
-					var colorType = colorTypeEnumerator.Current;
-					var s = NewSpring(sd.x0, sd.y0,
-						sd.x1, sd.y1,
-						sd.heightStep * stepHeight,
-						$"spring {i++}",
-						colorType.Item2,
-						colorType.Item1,
-						sd.IsHole ? holeId : -1,
-						sd.hideWhenCovered,
-						sd.area);
+			grid.GenerateGrid(levelData.row, levelData.col);
+			var colorTypeEnumeratorA = CreateColorTypeGenerator(levelData.colorNumsA);
+			var colorTypeEnumeratorB = CreateColorTypeGenerator(levelData.colorNumsB);
+			int i = 0;
+			int holeId = 0;
+			foreach (var sd in levelData.springs) {
+				var colorTypeEnumerator = sd.area == 0 ? colorTypeEnumeratorA : colorTypeEnumeratorB;
+				colorTypeEnumerator.MoveNext();
+				var colorType = colorTypeEnumerator.Current;
+				var s = NewSpring(sd.x0, sd.y0,
+					sd.x1, sd.y1,
+					sd.heightStep * stepHeight,
+					$"spring {i++}",
+					colorType.Item2,
+					colorType.Item1,
+					sd.IsHole ? holeId : -1,
+					sd.hideWhenCovered,
+					sd.area);
 						
-					s.transform.SetParent(_springsRoot);
-					s.EnableRender(false);
+				s.transform.SetParent(_springsRoot);
+				s.EnableRender(false);
 					
-					if (sd.IsHole) {
-						SpringHole hole = new SpringHole();
-						hole.ID = holeId++;
+				if (sd.IsHole) {
+					SpringHole hole = new SpringHole();
+					hole.ID = holeId++;
+					s.gameObject.SetActive(false);
+					hole.AddSpring(s);
+						
+					grid.MakeHole(sd.x0, sd.y0, sd.followNum);
+						
+					s.gameObject.name = $"hole {hole.ID} spring 0";
+						
+					for (int j = 0; j < sd.followNum; j++) {
+						colorTypeEnumerator.MoveNext();
+						colorType = colorTypeEnumerator.Current;
+						s = NewSpring(sd.x0, sd.y0,
+							sd.x1, sd.y1,
+							sd.heightStep * stepHeight,
+							$"hole {hole.ID} spring {j+1}",
+							colorType.Item2,
+							colorType.Item1,
+							hole.ID,
+							sd.hideWhenCovered,
+							sd.area);
+						s.transform.SetParent(_springsRoot);
+						s.EnableRender(false);
 						s.gameObject.SetActive(false);
 						hole.AddSpring(s);
-						
-						grid.MakeHole(sd.x0, sd.y0, sd.followNum);
-						
-						s.gameObject.name = $"hole {hole.ID} spring 0";
-						
-						for (int j = 0; j < sd.followNum; j++) {
-							colorTypeEnumerator.MoveNext();
-							colorType = colorTypeEnumerator.Current;
-							s = NewSpring(sd.x0, sd.y0,
-								sd.x1, sd.y1,
-								sd.heightStep * stepHeight,
-								$"hole {hole.ID} spring {j+1}",
-								colorType.Item2,
-								colorType.Item1,
-								hole.ID,
-								sd.hideWhenCovered,
-								sd.area);
-							s.transform.SetParent(_springsRoot);
-							s.EnableRender(false);
-							s.gameObject.SetActive(false);
-							hole.AddSpring(s);
-						}
-						_holes[hole.ID] = hole;
 					}
-					else {
-						s.GetComponent<BoardState>().enabled = true;
-						_springs.Add(s);
-					}
+					_holes[hole.ID] = hole;
 				}
-				
-				RandomAllSpringTypes();
-				
-				foreach (var entry in _holes) {
-					var hole = entry.Value;
-					var s = hole.PopSpring();
+				else {
 					s.GetComponent<BoardState>().enabled = true;
 					_springs.Add(s);
 				}
-				Utils.RunNextFrame(() => {
-					CalcOverlay();
-					foreach (var s in _springs) {
-						s.EnableRender(true);
-					}
-				}, 2);
+			}
+				
+			RandomAllSpringTypes();
+				
+			foreach (var entry in _holes) {
+				var hole = entry.Value;
+				var s = hole.PopSpring();
+				s.GetComponent<BoardState>().enabled = true;
+				_springs.Add(s);
+			}
+			Utils.RunNextFrame(() => {
+				CalcOverlay();
+				foreach (var s in _springs) {
+					s.EnableRender(true);
+				}
+			}, 2);
+		}
+
+		public void Load(string levelFile) {
+			try {			
+				string levelJson = File.ReadAllText(Path.GetFullPath(levelFile));
+				LoadLevel(levelJson);
 			}
 			catch (Exception e) {
 				Debug.LogError(e);

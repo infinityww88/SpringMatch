@@ -31,7 +31,7 @@ namespace SpringMatch {
 		[SerializeField]
 		private TextMeshProUGUI dateLabel;
 		[SerializeField]
-		private string[] levels;
+		private LevelConfig levelConfig;
 		[SerializeField]
 		private GameObject settingDialogHome;
 		[SerializeField]
@@ -75,7 +75,7 @@ namespace SpringMatch {
 		{
 			Inst = this;
 			var dt = System.DateTime.Now;
-			dateLabel.text = $"{dt.Month}-{dt.Day}";
+			dateLabel.text = $"{dt.Month}月{dt.Day}号";
 			
 			var s = PlayerPrefs.GetString("lastPassTime", "");
 			if (s != "") {
@@ -92,9 +92,12 @@ namespace SpringMatch {
 		}
 		
 		private bool LevelPassToday() {
+			/*
 			var now = DateTimeOffset.Now;
 			var z = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset);
 			return lastPassTime >= z;
+			*/
+			return false;
 		}
 		
 		// This function is called when the object becomes enabled and active.
@@ -119,7 +122,7 @@ namespace SpringMatch {
 		protected void Start()
 		{
 			//Level.Inst.Load(SpringMatchEditor.LevelEditor.CurrEditLevel);
-			Level.Inst.Load(levels[currLevelIndex]);
+			Level.Inst.LoadLevel(levelConfig.levels[0].text);
 			currLevel = Level.Inst;
 			//LoadCameraView();
 		}
@@ -158,23 +161,22 @@ namespace SpringMatch {
 			}
 			failedNum++;
 		}
-		
+
 		[Button]
 		public async UniTaskVoid SwitchLevel() {
 			await UniTask.WaitForSeconds(2f);
 			currLevel.Done();
 			var token = gameObject.GetCancellationTokenOnDestroy();
 			var nextLevel = Instantiate(levelPrefab);
-			//nextLevel.Load(SpringMatchEditor.LevelEditor.CurrEditLevel);
 			currLevelIndex++;
-			if (currLevelIndex >= levels.Length) {
+			if (currLevelIndex >= levelConfig.levels.Count) {
 				Debug.Log("LevelPass");
 				return;
 			}
 			
 			levelProgress.NexLevel();
 			
-			nextLevel.Load(levels[currLevelIndex]);
+			nextLevel.LoadLevel(levelConfig.levels[0].text);
 			
 			var offset = left.transform.position.x;
 			currLevel.transform.Translate(Vector3.right * offset, Space.World);
@@ -219,7 +221,7 @@ namespace SpringMatch {
 			Destroy(currLevel.gameObject);
 			Utils.ClearChildren(numInfoRoot);
 			Instantiate(levelPrefab);
-			Level.Inst.Load(levels[currLevelIndex]);
+			Level.Inst.LoadLevel(levelConfig.levels[currLevelIndex].text);
 			currLevel = Level.Inst;
 			levelProgress.Restart();
 		}
@@ -247,12 +249,16 @@ namespace SpringMatch {
 				var z = new DateTimeOffset(dt.Year, dt.Month, dt.Day, 0, 0, 0, dt.Offset);
 				z = z.AddDays(1);
 				var d = z - dt;
-				levelPassInfo.text = $"{d.Hours:D2}:{d.Minutes:D2}:{d.Seconds:D2} left";
+				levelPassInfo.text = $"{d.Hours:D2}:{d.Minutes:D2}:{d.Seconds:D2}后重置";
 			}
 			else {
 				startGameButton.gameObject.SetActive(true);
 				levelPassButton.gameObject.SetActive(false);
 			}
+		}
+		
+		public void ShareMessage() {
+			SDKManager.Share();
 		}
 	}
 }

@@ -33,7 +33,7 @@ namespace SpringMatch.UI {
 			OnToggleChange.Invoke(_on);
 			_fill.DOFillAmount(_on ? 1 : 0, duration).SetTarget(gameObject);
 			//_handle.anchorMin = _handle.anchorMax =  new Vector2(_on ? 1 : 0, 0.5f);
-			_handle.DOAnchorPosX(_on ? 0 : -70, duration).SetTarget(gameObject);
+			_handle.DOAnchorPosX(_on ? 0 : -60, duration).SetTarget(gameObject);
 		}
 	}
 
