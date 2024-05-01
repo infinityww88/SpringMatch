@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using YooAsset;
 
-namespace SpringMatch.HotUpdate {
+namespace SpringMatch.HotRes {
 	
 	public class RemoteServices : IRemoteServices
 	{

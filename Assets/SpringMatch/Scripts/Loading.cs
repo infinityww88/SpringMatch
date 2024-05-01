@@ -4,9 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using DG.Tweening;
-using SpringMatch.HotUpdate;
+using SpringMatch.HotRes;
 using YooAsset;
 using QFSW.QC;
+using HybridCLR;
+using System.Reflection;
+using System;
+using Cysharp.Threading.Tasks;
 
 namespace SpringMatch {
 	
@@ -21,18 +25,26 @@ namespace SpringMatch {
 			_progressBar.value = 0;
 		}
 		
-		[Button]
 		[Command]
 		private void TestProgress() {
 			HotResManager.Inst.UpdateResource(OnDownloadProgress);
 		}
 		
-		[Button]
 		[Command]
 		private void TestRes() {
-			var handle = YooAssets.LoadAssetSync("Levels_level_1.json");
+			var handle = YooAssets.LoadAssetSync("HotUpdate_HotUpdateAssembly.dll");
 			TextAsset textAsset = handle.AssetObject as TextAsset;
-			Debug.Log(textAsset.text);
+			var data = textAsset.bytes;
+			Assembly assembly = Assembly.Load(data);
+			Type type = assembly.GetType("SpringMatch.HotUpdate.TestHotUpdate");
+			type.GetMethod("Info").Invoke(null, null);
+		}
+		
+		[Command]
+		private async UniTaskVoid TestHotScene() {
+			var handle = YooAssets.LoadSceneAsync("HotScene_TestHotScene");
+			await handle;
+			Debug.Log("Loaded Test Hot Scene");
 		}
 		
 		void OnDownloadProgress(

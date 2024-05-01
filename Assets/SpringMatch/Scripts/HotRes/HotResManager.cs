@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
 
-namespace SpringMatch.HotUpdate {
+namespace SpringMatch.HotRes {
 	
 	public class HotResManager : MonoBehaviour
 	{
