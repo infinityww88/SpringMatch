@@ -57,9 +57,11 @@ namespace SpringMatch.UI {
 		}
 		
 		public void OnGetItem() {
-			ScaleButton();
-			_supText.text = "1";
-			_num = 1;
+			SDKManager.CreateRewardedAd(() => {
+				ScaleButton();
+				_supText.text = "1";
+				_num = 1;
+			});
 		}
 	}
 

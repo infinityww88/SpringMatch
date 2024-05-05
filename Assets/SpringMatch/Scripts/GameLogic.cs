@@ -77,18 +77,10 @@ namespace SpringMatch {
 			var dt = System.DateTime.Now;
 			dateLabel.text = $"{dt.Month}月{dt.Day}号";
 			
-			var s = PlayerPrefs.GetString("lastPassTime", "");
+			var s = SDKManager.GetPrefsString("lastPassTime", "");
 			if (s != "") {
 				lastPassTime = DateTimeOffset.Parse(s);
 			}
-		}
-		
-		[Button]
-		void Test(int secOffset) {
-			var now = DateTimeOffset.Now;
-			var z = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset);
-			z = z.AddSeconds(secOffset);
-			PlayerPrefs.SetString("lastPassTime", z.ToString());
 		}
 		
 		private bool LevelPassToday() {
@@ -148,7 +140,7 @@ namespace SpringMatch {
 			else {
 				passDialog.SetActive(true);
 				lastPassTime = DateTimeOffset.Now;
-				PlayerPrefs.SetString("lastPassTime", DateTimeOffset.Now.ToString());
+				SDKManager.SetPrefsString("lastPassTime", DateTimeOffset.Now.ToString());
 			}
 		}
 		
@@ -204,8 +196,10 @@ namespace SpringMatch {
 		}
 		
 		public void Recover() {
-			Pending = false;
-			Level.Inst.Shift3ToExtra();
+			SDKManager.CreateRewardedAd(() => {
+				Pending = false;
+				Level.Inst.Shift3ToExtra();
+			});
 		}
 		
 		public void Home() {
@@ -257,8 +251,38 @@ namespace SpringMatch {
 			}
 		}
 		
+		public void NavSideBar() {
+			SDKManager.NavSideBar();
+		}
+		
 		public void ShareMessage() {
 			SDKManager.Share();
 		}
+		
+		public void StartRecord() {
+			if (!SDKManager.InRecord) {
+				SDKManager.StartRecord();
+			}
+		}
+		
+		public void StopRecord() {
+			if (SDKManager.InRecord) {
+				SDKManager.StopRecord();
+			}
+		}
+		
+		// This function is called when the MonoBehaviour will be destroyed.
+		protected void OnDestroy()
+		{
+			StopRecord();
+			SDKManager.PendingShare = false;
+		}
+		
+		public void ShareVideo() {
+			if (SDKManager.PendingShare) {
+				SDKManager.ShareRecord();
+			}
+		}
+		
 	}
 }

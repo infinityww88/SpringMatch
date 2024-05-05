@@ -1211,11 +1211,23 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 800394575}
     - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 120140746}
+    - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
@@ -1223,11 +1235,23 @@ PrefabInstance:
       value: SetActive
       objectReference: {fileID: 0}
     - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShareMessage
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: SpringMatch.GameLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814131639586, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 203312814131639590, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
@@ -1325,6 +1349,38 @@ PrefabInstance:
     - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 120140746}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 120140746}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShareMessage
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShareMessage
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SpringMatch.GameLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: SpringMatch.GameLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 203312814582474109, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -1568,7 +1624,55 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 264004304}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 120140746}
+        m_TargetAssemblyTypeName: SpringMatch.GameLogic, Assembly-CSharp
+        m_MethodName: StartRecord
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 120140746}
+        m_TargetAssemblyTypeName: SpringMatch.GameLogic, Assembly-CSharp
+        m_MethodName: set_GameStart
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1627704010}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2124296833}
+        m_TargetAssemblyTypeName: SpringMatch.EffectManager, Assembly-CSharp
+        m_MethodName: PlayStartGameSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &264004304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2071,16 +2175,36 @@ PrefabInstance:
       value: 153.67
       objectReference: {fileID: 0}
     - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 120140746}
     - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 503175680}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Recover
       objectReference: {fileID: 0}
     - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: SpringMatch.GameLogic, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 203312814567312671, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 203312814582474108, guid: f72ab712a335cbb4aa332b9ec30c8298, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2374,7 +2498,7 @@ GameObject:
   - component: {fileID: 503845928}
   - component: {fileID: 503845927}
   m_Layer: 5
-  m_Name: Button
+  m_Name: RestartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4723,7 +4847,7 @@ GameObject:
   - component: {fileID: 834750344}
   - component: {fileID: 834750343}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: HomeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6196,7 +6320,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 120140746}
         m_TargetAssemblyTypeName: SpringMatch.GameLogic, Assembly-CSharp
-        m_MethodName: ShareMessage
+        m_MethodName: NavSideBar
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9319,7 +9443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 55270036001388275, guid: a881ab3529f14c14fa04d2bc3c555c80, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -44.725315
+      value: -44.72531
       objectReference: {fileID: 0}
     - target: {fileID: 55270036165122361, guid: a881ab3529f14c14fa04d2bc3c555c80, type: 3}
       propertyPath: m_Type
@@ -9899,7 +10023,7 @@ GameObject:
   - component: {fileID: 2042548500}
   - component: {fileID: 2042548499}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: ShareButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
