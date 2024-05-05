@@ -9,31 +9,23 @@ using UnityEngine.Events;
 
 namespace SpringMatch.UI {
 	
-	public class ToggleButton : MonoBehaviour, IPointerClickHandler
+	public class ToggleButton : MonoBehaviour
 	{
-		public RectTransform _handle;
-		public Image _fill;
-		public bool _on = true;
-		public float duration;
-		public UnityEvent<bool> OnToggleChange;
+		public RectTransform _fill;
 		
-		public void OnPointerClick(PointerEventData evt) {
-			Debug.Log("Click Toggle");
-			Toggle();
-		}
-		
-		public void OnToggle(bool val) {
-			Debug.Log($"Toggle {val}");
-		}
+		public bool Enabled { get; set; } = true;
 		
 		[Button]
 		public void Toggle() {
-			DOTween.Kill(gameObject, true);
-			_on = !_on;
-			OnToggleChange.Invoke(_on);
-			_fill.DOFillAmount(_on ? 1 : 0, duration).SetTarget(gameObject);
-			//_handle.anchorMin = _handle.anchorMax =  new Vector2(_on ? 1 : 0, 0.5f);
-			_handle.DOAnchorPosX(_on ? 0 : -100, duration).SetTarget(gameObject);
+			Enabled = !Enabled;
+			this.DOKill(true);
+			var rect = _fill.parent.GetComponent<RectTransform>().rect;
+			float t = 0;
+			DOTween.To(() => t, v => {
+				t = v;
+				float f = Enabled ? (1 - t) : t;
+				_fill.offsetMax = new Vector2(-rect.width * f, 0);
+			}, 1f, 0.3f).SetTarget(this);
 		}
 	}
 
