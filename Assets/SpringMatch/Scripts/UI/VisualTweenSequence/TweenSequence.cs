@@ -28,11 +28,22 @@ namespace VisualTweenSequence {
 		private List<EventItem> events;
 		
 		[Button]
+		public void Preview() {
+		}
+		
+		[Button]
+		public void Kill() {
+			foreach (var t in GetComponentsInChildren<TweenBase>()) {
+				DOTween.Kill(t, true);
+			}
+		}
+		
+		[Button]
 		public void Play() {
 			this.DOKill(true);
-			var seq = DOTween.Sequence();
+			var seq = DOTween.Sequence().SetTarget(this);
 			foreach (var t in tweens) {
-				seq.Insert(t.delay, t.tweener.Tween()).SetTarget(this);
+				seq.Insert(t.delay, t.tweener.Tween());
 			}
 			foreach (var e in events) {
 				seq.InsertCallback(e.delay, () => e.evt?.Invoke());

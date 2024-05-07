@@ -13,7 +13,7 @@ namespace VisualTweenSequence {
 	
 	public abstract class TweenBase<T> : TweenBase
 	{
-		public bool useStartValue;
+		public bool useStartValue = true;
 		public T startValue;
 		public T endValue;
 		public float duration = 1;
@@ -39,7 +39,7 @@ namespace VisualTweenSequence {
 				.OnComplete(() => onComplete?.Invoke())
 				.OnPlay(() => onPlay?.Invoke())
 				.SetAutoKill(true)
-				.SetTarget(this);
+				.SetId(this);
 		
 			if (autoPlay) {
 				tweener.Play();
