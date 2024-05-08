@@ -27,6 +27,10 @@ namespace SpringMatch {
 			Inst = this;
 		}
 		
+		public int Count() {
+			return _extraSprings.Count(e => e != null);
+		}
+		
 		public bool Contains(Spring spring) {
 			return _extraSprings.Contains(spring);
 		}
@@ -87,6 +91,11 @@ namespace SpringMatch {
 		
 		public void RemoveSpring(int index) {
 			_extraSprings[index] = null;
+			
+			if (Level.Inst.Count() == 0 && Count() == 0) {
+				EffectManager.Inst.PlayLevelPassEffect();
+				Level.OnLevelPass?.Invoke();
+			}
 		}
 		
 		public bool Available() {

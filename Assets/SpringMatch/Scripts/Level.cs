@@ -258,7 +258,7 @@ namespace SpringMatch {
 			
 			SlotManager.Inst.AddSpring(spring);
 			
-			if (_springs.Count == 0) {
+			if (_springs.Count == 0 && ExtraSlotManager.Inst.Count() == 0) {
 				EffectManager.Inst.PlayLevelPassEffect();
 				OnLevelPass?.Invoke();
 			}
@@ -323,6 +323,10 @@ namespace SpringMatch {
 		
 		public void OnClickShift3() {
 			Shift3ToExtra();
+		}
+		
+		public int Count() {
+			return _springs.Count;
 		}
 		
 		[Button]
