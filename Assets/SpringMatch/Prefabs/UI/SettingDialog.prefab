@@ -712,6 +712,7 @@ GameObject:
   - component: {fileID: 7077422021603622164}
   - component: {fileID: 7077422021603622166}
   - component: {fileID: 4400583189352298385}
+  - component: {fileID: -5945892717756021230}
   m_Layer: 5
   m_Name: SettingDialog
   m_TagString: Untagged
@@ -844,6 +845,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72228fef7becde54f9ed6b5b6b0f4487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5945892717756021230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077422021603622162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf19df3f0c435148af6b4612da8d891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7077422021655390978

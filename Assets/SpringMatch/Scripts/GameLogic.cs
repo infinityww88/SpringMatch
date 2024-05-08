@@ -138,6 +138,7 @@ namespace SpringMatch {
 				SwitchLevel();
 			}
 			else {
+				StopRecord();
 				passDialog.SetActive(true);
 				lastPassTime = DateTimeOffset.Now;
 				SDKManager.SetPrefsString("lastPassTime", DateTimeOffset.Now.ToString());
@@ -261,12 +262,14 @@ namespace SpringMatch {
 		
 		public void StartRecord() {
 			if (!SDKManager.InRecord) {
+				Debug.Log($"-- Start Record PendingShare {SDKManager.PendingShare} InRecord {SDKManager.InRecord}");
 				SDKManager.StartRecord();
 			}
 		}
 		
 		public void StopRecord() {
 			if (SDKManager.InRecord) {
+				Debug.Log($"-- Stop Record PendingShare {SDKManager.PendingShare} InRecord {SDKManager.InRecord}");
 				SDKManager.StopRecord();
 			}
 		}
@@ -279,9 +282,14 @@ namespace SpringMatch {
 		}
 		
 		public void ShareVideo() {
+			Debug.Log($"-- Share Record PendingShare {SDKManager.PendingShare} InRecord {SDKManager.InRecord}");
 			if (SDKManager.PendingShare) {
 				SDKManager.ShareRecord();
 			}
+		}
+		
+		public void ShowAd() {
+			SDKManager.CreateRewardedAd(() => {});
 		}
 		
 	}

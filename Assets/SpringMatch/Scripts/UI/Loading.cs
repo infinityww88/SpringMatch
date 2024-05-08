@@ -15,9 +15,6 @@ namespace SpringMatch.UI {
 		private Button _playButton;
 		
 		[SerializeField]
-		private TextMeshProUGUI _declareNote;
-		
-		[SerializeField]
 		private Image _loadingBar;
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.

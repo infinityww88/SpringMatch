@@ -47,6 +47,9 @@ namespace SpringMatch {
 				startCallback: () => {
 					InRecord = true;
 					PendingShare = true;
+				},
+				errorCallback: (code, err) => {
+					Debug.Log($"Start Record {code} {err}");
 				}
 			);
 		}
@@ -60,18 +63,25 @@ namespace SpringMatch {
 			PendingShare = false;
 			StarkSDK.API.GetStarkGameRecorder().ShareVideo(
 				dict => {},
-				errorMsg => {},
+				errorMsg => { Debug.Log($"share error {errorMsg}"); },
 				() => {}
 			);
 		}
 		
 		public static void CreateRewardedAd(Action onComplete) {
-			StarkSDK.API.GetStarkAdManager().ShowVideoAdWithId("",
-				ret => {
+			onComplete?.Invoke();
+			/*
+			StarkSDK.API.GetStarkAdManager().ShowVideoAdWithId("36nk6gsn5k2vqatsma",
+				closeCallback: ret => {
 					if (ret) {
 						onComplete?.Invoke();
 					}
-				});
+				},
+				errCallback: (code, errMsg) => {
+					Debug.Log($"Rewarded Ad {code} {errMsg}");
+				}
+			);
+			*/
 		}
 		
 		public static string GetPrefsString(string key, string defaultValue) {

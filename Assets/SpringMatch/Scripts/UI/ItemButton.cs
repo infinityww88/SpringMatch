@@ -27,12 +27,13 @@ namespace SpringMatch.UI {
 		
 		public void ShakeButton() {
 			this.DOKill(true);
-			GetComponent<RectTransform>().DOPunchRotation(new Vector3(0, 0, 30f), 0.3f).SetTarget(this);
+			//GetComponent<RectTransform>().DOPunchRotation(new Vector3(0, 0, 30f), 0.3f).SetTarget(this);
+			transform.DOScale(0.88f, 0.1f).SetLoops(2, LoopType.Yoyo).SetTarget(this);
 		}
 		
 		public void ScaleButton() {
 			this.DOKill(true);
-			transform.DOScale(1.2f, 0.1f).SetLoops(2, LoopType.Yoyo).SetTarget(this);
+			transform.DOScale(0.88f, 0.1f).SetLoops(2, LoopType.Yoyo).SetTarget(this);
 		}
 		
 		public void UseItem() {
