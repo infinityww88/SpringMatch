@@ -16,11 +16,11 @@ namespace SpringMatch {
 			NumInfo.GetComponentInChildren<TextMeshProUGUI>().text = $"{totalNum}";
 		}
 		
-		public void SetNumInfoPos(Canvas canvas) {
+		public void SetNumInfoPos(RectTransform rect) {
 			var screenPos = Camera.main.WorldToScreenPoint(transform.GetChild(2).position);
 			Vector2 pos;
 			RectTransformUtility.ScreenPointToLocalPointInRectangle(
-				canvas.GetComponent<RectTransform>(),
+				rect,
 				screenPos,
 				null,
 				out pos);
