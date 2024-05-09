@@ -606,7 +606,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _handle: {fileID: 7077422022479816367}
   _fill: {fileID: 7077422021655390980}
-  _on: 1
   duration: 0.2
   OnToggleChange:
     m_PersistentCalls:
@@ -711,8 +710,6 @@ GameObject:
   - component: {fileID: 7077422021603622165}
   - component: {fileID: 7077422021603622164}
   - component: {fileID: 7077422021603622166}
-  - component: {fileID: 4400583189352298385}
-  - component: {fileID: -5945892717756021230}
   m_Layer: 5
   m_Name: SettingDialog
   m_TagString: Untagged
@@ -762,7 +759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.79607844}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -835,30 +832,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4400583189352298385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7077422021603622162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72228fef7becde54f9ed6b5b6b0f4487, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-5945892717756021230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7077422021603622162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf19df3f0c435148af6b4612da8d891, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7077422021655390978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1102,6 +1075,7 @@ GameObject:
   - component: {fileID: 7077422021880388050}
   - component: {fileID: 7077422021880388052}
   - component: {fileID: 2430049032132858207}
+  - component: {fileID: 4856244087098341866}
   m_Layer: 5
   m_Name: SettingDialog
   m_TagString: Untagged
@@ -1224,6 +1198,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72228fef7becde54f9ed6b5b6b0f4487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundToggle: {fileID: 7077422022299243632}
+  musicToggle: {fileID: 7077422021398640421}
+  vibrateToggle: {fileID: 7077422022609187779}
+--- !u!114 &4856244087098341866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7077422021880388048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf19df3f0c435148af6b4612da8d891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7077422021900165314
@@ -1623,7 +1612,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _handle: {fileID: 7077422022142557610}
   _fill: {fileID: 7077422021918316990}
-  _on: 1
   duration: 0.2
   OnToggleChange:
     m_PersistentCalls:
@@ -1809,7 +1797,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _handle: {fileID: 7077422021384382039}
   _fill: {fileID: 7077422021585172627}
-  _on: 1
   duration: 0.2
   OnToggleChange:
     m_PersistentCalls:

@@ -10,6 +10,7 @@ using System;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.Events;
+using DG.Tweening;
 
 namespace SpringMatch {
 	
@@ -259,8 +260,13 @@ namespace SpringMatch {
 			SlotManager.Inst.AddSpring(spring);
 			
 			if (_springs.Count == 0 && ExtraSlotManager.Inst.Count() == 0) {
-				EffectManager.Inst.PlayLevelPassEffect();
-				OnLevelPass?.Invoke();
+				DOTween.Sequence().AppendInterval(1)
+					.AppendCallback(() => {
+						EffectManager.Inst.PlayLevelPassEffect();
+						OnLevelPass?.Invoke();
+					})
+					.SetTarget(this);
+				
 			}
 		}
 		

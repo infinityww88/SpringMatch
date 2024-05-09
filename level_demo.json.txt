@@ -4,55 +4,55 @@
   "colorNumsA": [
     {
       "color": "#D03D39",
-      "num": 0
+      "num": 9
     },
     {
       "color": "#FD6B25",
-      "num": 3
+      "num": 18
     },
     {
       "color": "#FAC522",
-      "num": 3
+      "num": 18
     },
     {
       "color": "#BFFA22",
-      "num": 3
+      "num": 18
     },
     {
       "color": "#39FA22",
-      "num": 0
+      "num": 9
     },
     {
       "color": "#22FABE",
-      "num": 0
+      "num": 9
     },
     {
       "color": "#22ADFA",
-      "num": 0
+      "num": 18
     },
     {
       "color": "#2247FA",
-      "num": 0
+      "num": 9
     },
     {
       "color": "#8122FA",
-      "num": 3
+      "num": 18
     },
     {
       "color": "#D322FA",
-      "num": 0
+      "num": 9
     },
     {
       "color": "#FA22B7",
-      "num": 0
+      "num": 9
     },
     {
       "color": "#FA227C",
-      "num": 0
+      "num": 18
     },
     {
       "color": "#FF5774",
-      "num": 0
+      "num": 18
     }
   ],
   "colorNumsB": [
@@ -111,54 +111,153 @@
   ],
   "springs": [
     {
-      "x0": 2,
+      "x0": 1,
       "y0": 1,
-      "x1": 5,
+      "x1": 2,
       "y1": 1,
       "area": 0,
-      "heightStep": 13,
+      "heightStep": 4,
       "hideWhenCovered": false,
       "followNum": 0,
       "IsHole": false
     },
     {
-      "x0": 2,
+      "x0": 1,
       "y0": 2,
-      "x1": 5,
+      "x1": 2,
       "y1": 2,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 3,
+      "y0": 1,
+      "x1": 4,
+      "y1": 1,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 3,
+      "y0": 2,
+      "x1": 4,
+      "y1": 2,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 5,
+      "y0": 1,
+      "x1": 6,
+      "y1": 1,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 5,
+      "y0": 2,
+      "x1": 6,
+      "y1": 2,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 1,
+      "x1": 8,
+      "y1": 1,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 2,
+      "x1": 8,
+      "y1": 2,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 1,
+      "y0": 0,
+      "x1": 1,
+      "y1": 3,
       "area": 0,
       "heightStep": 13,
       "hideWhenCovered": false,
-      "followNum": 3,
+      "followNum": 5,
       "IsHole": true
     },
     {
       "x0": 2,
-      "y0": 3,
+      "y0": 0,
+      "x1": 2,
+      "y1": 3,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 3,
+      "y0": 0,
+      "x1": 3,
+      "y1": 3,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 4,
+      "y0": 0,
+      "x1": 4,
+      "y1": 3,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 5,
+      "y0": 0,
       "x1": 5,
       "y1": 3,
       "area": 0,
       "heightStep": 13,
       "hideWhenCovered": false,
-      "followNum": 3,
+      "followNum": 5,
       "IsHole": true
     },
     {
-      "x0": 2,
-      "y0": 4,
-      "x1": 5,
-      "y1": 4,
-      "area": 0,
-      "heightStep": 13,
-      "hideWhenCovered": false,
-      "followNum": 0,
-      "IsHole": false
-    },
-    {
       "x0": 6,
-      "y0": 8,
+      "y0": 0,
       "x1": 6,
-      "y1": 11,
+      "y1": 3,
       "area": 0,
       "heightStep": 13,
       "hideWhenCovered": false,
@@ -167,9 +266,548 @@
     },
     {
       "x0": 7,
+      "y0": 0,
+      "x1": 7,
+      "y1": 3,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 8,
+      "y0": 0,
+      "x1": 8,
+      "y1": 3,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 0,
+      "y0": 1,
+      "x1": 9,
+      "y1": 1,
+      "area": 0,
+      "heightStep": 22,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 0,
+      "y0": 2,
+      "x1": 9,
+      "y1": 2,
+      "area": 0,
+      "heightStep": 22,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 1,
+      "y0": 5,
+      "x1": 2,
+      "y1": 5,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 1,
+      "y0": 6,
+      "x1": 2,
+      "y1": 6,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 3,
+      "y0": 5,
+      "x1": 4,
+      "y1": 5,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 3,
+      "y0": 6,
+      "x1": 4,
+      "y1": 6,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 5,
+      "y0": 5,
+      "x1": 6,
+      "y1": 5,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 5,
+      "y0": 6,
+      "x1": 6,
+      "y1": 6,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 5,
+      "x1": 8,
+      "y1": 5,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 6,
+      "x1": 8,
+      "y1": 6,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 1,
+      "y0": 4,
+      "x1": 1,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 2,
+      "y0": 4,
+      "x1": 2,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 3,
+      "y0": 4,
+      "x1": 3,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 4,
+      "y0": 4,
+      "x1": 4,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 3,
+      "IsHole": true
+    },
+    {
+      "x0": 5,
+      "y0": 4,
+      "x1": 5,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 2,
+      "IsHole": true
+    },
+    {
+      "x0": 6,
+      "y0": 4,
+      "x1": 6,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 4,
+      "x1": 7,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 8,
+      "y0": 4,
+      "x1": 8,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 1,
+      "y0": 8,
+      "x1": 1,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 2,
+      "y0": 8,
+      "x1": 2,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 3,
+      "y0": 8,
+      "x1": 3,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 1,
+      "y0": 10,
+      "x1": 1,
+      "y1": 11,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 2,
+      "y0": 10,
+      "x1": 2,
+      "y1": 11,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 3,
+      "y0": 10,
+      "x1": 3,
+      "y1": 11,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 0,
+      "y0": 8,
+      "x1": 4,
+      "y1": 8,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 0,
+      "y0": 9,
+      "x1": 4,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 0,
+      "y0": 10,
+      "x1": 4,
+      "y1": 10,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 0,
+      "y0": 11,
+      "x1": 4,
+      "y1": 11,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 6,
+      "y0": 8,
+      "x1": 6,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
       "y0": 8,
       "x1": 7,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 8,
+      "y0": 8,
+      "x1": 8,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 6,
+      "y0": 10,
+      "x1": 6,
       "y1": 11,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 10,
+      "x1": 7,
+      "y1": 11,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 8,
+      "y0": 10,
+      "x1": 8,
+      "y1": 11,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 5,
+      "y0": 8,
+      "x1": 9,
+      "y1": 8,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 5,
+      "y0": 9,
+      "x1": 9,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 5,
+      "y0": 10,
+      "x1": 9,
+      "y1": 10,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 5,
+      "y0": 11,
+      "x1": 9,
+      "y1": 11,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 5,
+      "IsHole": true
+    },
+    {
+      "x0": 0,
+      "y0": 4,
+      "x1": 0,
+      "y1": 5,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 0,
+      "y0": 3,
+      "x1": 0,
+      "y1": 6,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 8,
+      "IsHole": true
+    },
+    {
+      "x0": 9,
+      "y0": 4,
+      "x1": 9,
+      "y1": 5,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 9,
+      "y0": 3,
+      "x1": 9,
+      "y1": 6,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 8,
+      "IsHole": true
+    },
+    {
+      "x0": 0,
+      "y0": 7,
+      "x1": 4,
+      "y1": 12,
+      "area": 0,
+      "heightStep": 29,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 5,
+      "y0": 12,
+      "x1": 9,
+      "y1": 7,
+      "area": 0,
+      "heightStep": 29,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 1,
+      "y0": 12,
+      "x1": 2,
+      "y1": 12,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 6,
+      "y0": 12,
+      "x1": 9,
+      "y1": 12,
+      "area": 0,
+      "heightStep": 13,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 12,
+      "x1": 8,
+      "y1": 12,
+      "area": 0,
+      "heightStep": 4,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 0,
+      "y0": 12,
+      "x1": 3,
+      "y1": 12,
       "area": 0,
       "heightStep": 13,
       "hideWhenCovered": false,

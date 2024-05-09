@@ -14,6 +14,7 @@ namespace SpringMatch {
 		public AudioClip invalidClip;
 		public AudioClip validClip;
 		public AudioClip startGameClip;
+		public AudioClip passClip;
 		public AudioSource audioSource;
 		
 		public static EffectManager Inst;
@@ -62,6 +63,13 @@ namespace SpringMatch {
 			audioSource.PlayOneShot(startGameClip);
 		}
 		
+		public void PlayPassSound() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.PlayOneShot(passClip);
+		}
+		
 		[SerializeField]
 		private GameObject levelPassEffect, mergeEffectPrefab;
 		
@@ -70,27 +78,24 @@ namespace SpringMatch {
 		{
 			Inst = this;
 			
-			SoundOn = PlayerPrefs.GetInt("SoundOn", 1) == 1;
-			MusicOn = PlayerPrefs.GetInt("MusicOn", 1) == 1;
-			VibrateOn = PlayerPrefs.GetInt("VibrateOn", 1) == 1;
+			SoundOn = SDKManager.GetPrefsInt("SoundOn", 1) == 1;
+			MusicOn = SDKManager.GetPrefsInt("MusicOn", 1) == 1;
+			VibrateOn = SDKManager.GetPrefsInt("VibrateOn", 1) == 1;
 		}
 		
 		public void EnableSound(bool on) {
 			SoundOn = on;
-			PlayerPrefs.SetInt("SoundOn", on ? 1 : 0);
-			PlayerPrefs.Save();
+			SDKManager.SetPrefInt("SoundOn", on ? 1 : 0);
 		}
 		
 		public void EnableMusic(bool on) {
 			MusicOn = on;
-			PlayerPrefs.SetInt("MusicOn", on ? 1 : 0);
-			PlayerPrefs.Save();
+			SDKManager.SetPrefInt("MusicOn", on ? 1 : 0);
 		}
 		
 		public void EnableVibrate(bool on) {
 			VibrateOn = on;
-			PlayerPrefs.SetInt("VibrateOn", on ? 1 : 0);
-			PlayerPrefs.Save();
+			SDKManager.SetPrefInt("VibrateOn", on ? 1 : 0);
 		}
 		
 		public void PlayMergeEffect(Vector3 pos) {
@@ -104,6 +109,11 @@ namespace SpringMatch {
 		}
 
 		public void VibratePickup() {
+			Debug.Log($"VibratePickup {VibrateOn}");	
+			if(!VibrateOn) {
+				return;
+			}
+			Debug.Log("VibratePickup");	
 			StarkSDK.API.Vibrate(shortPattern, -1);
 		}
 		

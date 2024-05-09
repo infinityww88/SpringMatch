@@ -13,13 +13,34 @@ namespace SpringMatch.UI {
 	{
 		public RectTransform _handle;
 		public Image _fill;
-		public bool _on = true;
+		private bool _on = true;
 		public float duration;
 		public UnityEvent<bool> OnToggleChange;
 		
 		public void OnPointerClick(PointerEventData evt) {
 			Debug.Log("Click Toggle");
 			Toggle();
+		}
+		
+		public bool On {
+			get {
+				return _on;
+			}
+			set {
+				_on = value;
+				if (_on) {
+					_fill.fillAmount = 1;
+					var p = _handle.anchoredPosition;
+					p.x = 0;
+					_handle.anchoredPosition = p;
+				}
+				else {
+					_fill.fillAmount = 0;
+					var p = _handle.anchoredPosition;
+					p.x = -60;
+					_handle.anchoredPosition = p;
+				}
+			}
 		}
 		
 		public void OnToggle(bool val) {

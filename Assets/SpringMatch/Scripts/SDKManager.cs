@@ -85,11 +85,21 @@ namespace SpringMatch {
 		}
 		
 		public static string GetPrefsString(string key, string defaultValue) {
-			return StarkSDK.API.PlayerPrefs.GetString("key", defaultValue);
+			return StarkSDK.API.PlayerPrefs.GetString(key, defaultValue);
 		}
 		
 		public static void SetPrefsString(string key, string value) {
 			StarkSDK.API.PlayerPrefs.SetString(key, value);
+			StarkSDK.API.PlayerPrefs.Save();
+		}
+		
+		public static int GetPrefsInt(string key, int defaultValue) {
+			return StarkSDK.API.PlayerPrefs.GetInt(key, defaultValue);
+		}
+		
+		public static void SetPrefInt(string key, int value) {
+			StarkSDK.API.PlayerPrefs.SetInt(key, value);
+			StarkSDK.API.PlayerPrefs.Save();
 		}
 	}
 

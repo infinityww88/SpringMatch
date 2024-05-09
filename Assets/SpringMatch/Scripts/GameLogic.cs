@@ -74,22 +74,26 @@ namespace SpringMatch {
 		protected void Awake()
 		{
 			Inst = this;
+			Pending = true;
 			var dt = System.DateTime.Now;
 			dateLabel.text = $"{dt.Month}月{dt.Day}号";
 			
 			var s = SDKManager.GetPrefsString("lastPassTime", "");
+			Debug.Log($"lastPassTime {s}");
 			if (s != "") {
 				lastPassTime = DateTimeOffset.Parse(s);
 			}
 		}
 		
+		[Button]
+		void ResetLastLevelPassTime() {
+			SDKManager.SetPrefsString("lastPassTime", "");
+		}
+		
 		private bool LevelPassToday() {
-			/*
 			var now = DateTimeOffset.Now;
 			var z = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset);
 			return lastPassTime >= z;
-			*/
-			return false;
 		}
 		
 		// This function is called when the object becomes enabled and active.
@@ -134,6 +138,7 @@ namespace SpringMatch {
 		}
 		
 		public void OnLevelPass() {
+			EffectManager.Inst.PlayPassSound();
 			if (currLevelIndex == 0) {
 				SwitchLevel();
 			}
@@ -249,6 +254,16 @@ namespace SpringMatch {
 			else {
 				startGameButton.gameObject.SetActive(true);
 				levelPassButton.gameObject.SetActive(false);
+			}
+		}
+		
+		public void FailShare() {
+			if (SDKManager.PendingShare) {
+				Debug.Log("Share Video");
+				ShareVideo();
+			} else {
+				Debug.Log("Share Message");
+				ShareMessage();
 			}
 		}
 		

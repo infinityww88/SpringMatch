@@ -1,0 +1,202 @@
+{
+  "row": 13,
+  "col": 10,
+  "colorNumsA": [
+    {
+      "color": "#D03D39",
+      "num": 0
+    },
+    {
+      "color": "#FD6B25",
+      "num": 3
+    },
+    {
+      "color": "#FAC522",
+      "num": 0
+    },
+    {
+      "color": "#BFFA22",
+      "num": 3
+    },
+    {
+      "color": "#39FA22",
+      "num": 0
+    },
+    {
+      "color": "#22FABE",
+      "num": 0
+    },
+    {
+      "color": "#22ADFA",
+      "num": 0
+    },
+    {
+      "color": "#2247FA",
+      "num": 3
+    },
+    {
+      "color": "#8122FA",
+      "num": 0
+    },
+    {
+      "color": "#D322FA",
+      "num": 0
+    },
+    {
+      "color": "#FA22B7",
+      "num": 0
+    },
+    {
+      "color": "#FA227C",
+      "num": 3
+    },
+    {
+      "color": "#FF5774",
+      "num": 0
+    }
+  ],
+  "colorNumsB": [
+    {
+      "color": "#D03D39",
+      "num": 0
+    },
+    {
+      "color": "#FD6B25",
+      "num": 0
+    },
+    {
+      "color": "#FAC522",
+      "num": 0
+    },
+    {
+      "color": "#BFFA22",
+      "num": 0
+    },
+    {
+      "color": "#39FA22",
+      "num": 0
+    },
+    {
+      "color": "#22FABE",
+      "num": 0
+    },
+    {
+      "color": "#22ADFA",
+      "num": 0
+    },
+    {
+      "color": "#2247FA",
+      "num": 0
+    },
+    {
+      "color": "#8122FA",
+      "num": 0
+    },
+    {
+      "color": "#D322FA",
+      "num": 0
+    },
+    {
+      "color": "#FA22B7",
+      "num": 0
+    },
+    {
+      "color": "#FA227C",
+      "num": 0
+    },
+    {
+      "color": "#FF5774",
+      "num": 0
+    }
+  ],
+  "springs": [
+    {
+      "x0": 2,
+      "y0": 2,
+      "x1": 4,
+      "y1": 2,
+      "area": 0,
+      "heightStep": 9,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 2,
+      "y0": 3,
+      "x1": 4,
+      "y1": 3,
+      "area": 0,
+      "heightStep": 9,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 2,
+      "y0": 4,
+      "x1": 4,
+      "y1": 4,
+      "area": 0,
+      "heightStep": 9,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 6,
+      "y0": 7,
+      "x1": 6,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 9,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 7,
+      "y0": 7,
+      "x1": 7,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 9,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 8,
+      "y0": 7,
+      "x1": 8,
+      "y1": 9,
+      "area": 0,
+      "heightStep": 9,
+      "hideWhenCovered": false,
+      "followNum": 0,
+      "IsHole": false
+    },
+    {
+      "x0": 5,
+      "y0": 8,
+      "x1": 9,
+      "y1": 8,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 2,
+      "IsHole": true
+    },
+    {
+      "x0": 3,
+      "y0": 5,
+      "x1": 3,
+      "y1": 1,
+      "area": 0,
+      "heightStep": 18,
+      "hideWhenCovered": false,
+      "followNum": 2,
+      "IsHole": true
+    }
+  ]
+}

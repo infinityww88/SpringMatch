@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DG.Tweening;
 
 namespace SpringMatch {
 	
@@ -91,10 +92,13 @@ namespace SpringMatch {
 		
 		public void RemoveSpring(int index) {
 			_extraSprings[index] = null;
-			
 			if (Level.Inst.Count() == 0 && Count() == 0) {
-				EffectManager.Inst.PlayLevelPassEffect();
-				Level.OnLevelPass?.Invoke();
+				DOTween.Sequence().AppendInterval(1)
+					.AppendCallback(() => {
+						EffectManager.Inst.PlayLevelPassEffect();
+						Level.OnLevelPass?.Invoke();
+					})
+					.SetTarget(this);
 			}
 		}
 		
