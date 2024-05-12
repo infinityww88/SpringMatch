@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using Coffee.UIExtensions;
 
 namespace SpringMatch {
 	
@@ -25,6 +26,10 @@ namespace SpringMatch {
 		private float moveDuration;
 		[SerializeField]
 		private Level levelPrefab;
+		[SerializeField]
+		private UIParticle mergeEffect;
+		[SerializeField]
+		private UIParticle levelPassEffect;
 		
 		private Level currLevel = null;
 		
@@ -33,6 +38,28 @@ namespace SpringMatch {
 		{
 			Inst = this;
 			Screen.SetResolution(450, 900, false);
+		}
+		
+		// This function is called when the object becomes enabled and active.
+		protected void OnEnable()
+		{
+			//MsgBus.onSpringMerge += OnSpringMerge;
+			MsgBus.onLevelPass += OnLevelPass;
+		}
+		
+		// This function is called when the behaviour becomes disabled () or inactive.
+		protected void OnDisable()
+		{
+			MsgBus.onLevelPass -= OnLevelPass;
+			//MsgBus.onSpringMerge -= OnSpringMerge;
+		}
+		
+		public void OnSpringMerge() {
+			//mergeEffect.Play();
+		}
+		
+		public void OnLevelPass() {
+			levelPassEffect.Play();
 		}
 		
 		public void BackToEditor() {
@@ -44,10 +71,6 @@ namespace SpringMatch {
 		{
 			Level.Inst.Load();
 			currLevel = Level.Inst;
-		}
-		
-		public void PreLoadLevel() {
-			
 		}
 		
 		[Button]
@@ -86,6 +109,15 @@ namespace SpringMatch {
 		
 		public void OnGetRandomItem() {
 			Debug.Log("Get Random Item");
+		}
+		
+		public void PlayEliminateEffect(Vector3 pos) {
+			Vector2 screenPos = Camera.main.WorldToScreenPoint(pos);
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(
+				mergeEffect.rectTransform.parent.GetComponent<RectTransform>(),
+				screenPos, null, out Vector2 localPosition);
+			mergeEffect.rectTransform.anchoredPosition = localPosition;
+			mergeEffect.Play();
 		}
 	}
 

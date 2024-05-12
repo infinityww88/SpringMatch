@@ -38,11 +38,12 @@ namespace SpringMatch {
 				if (_cts.IsCancellationRequested) {
 					return;
 				}
+				Vector3 pos = slotMgr.GetSlotPos(spring.SlotIndex);
+				GameLogic.Inst.PlayEliminateEffect(pos);
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
 				Destroy(spring.gameObject);
 				Destroy(spring.EliminateCompanySpring0.gameObject);
 				Destroy(spring.EliminateCompanySpring1.gameObject);
-				// Play Eliminate Effect
 			}
 			
 			spring.End = true;

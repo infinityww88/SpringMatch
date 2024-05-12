@@ -230,6 +230,10 @@ namespace SpringMatch {
 			SlotManager.Inst.AddSpring(spring);
 		}
 		
+		public int RemainSpring() {
+			return _springs.Count;
+		}
+		
 		void NextSpring(Spring spring) {
 			var newSpring = _holes[spring.HoleSpring.HoleId].PopSpring();
 			

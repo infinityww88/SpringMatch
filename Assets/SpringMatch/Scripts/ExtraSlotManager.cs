@@ -27,6 +27,10 @@ namespace SpringMatch {
 			Inst = this;
 		}
 		
+		public int RemainSpring() {
+			return _extraSprings.Count(e => e != null);
+		}
+		
 		public bool Contains(Spring spring) {
 			return _extraSprings.Contains(spring);
 		}
