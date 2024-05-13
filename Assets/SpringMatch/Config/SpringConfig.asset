@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSlotMoveDuration: 0.3
   girdSlotShrinkDuration: 0.3
-  slotSlotDuration: 0.2
+  slotSlotDuration: 0.14
   slotExtraMoveDuration: 0.2
   slotExtraShrinkDuration: 0.3
   holeGridDuration: 0.3

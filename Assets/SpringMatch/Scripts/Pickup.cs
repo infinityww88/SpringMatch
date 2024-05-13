@@ -46,8 +46,10 @@ namespace SpringMatch {
 	
 	    // Update is called once per frame
 	    void Update()
-	    {
-		    UpdateMouse();
+		{
+			if (!GameLogic.Inst.PendInteract && !GameLogic.Inst.GameOver) {
+				UpdateMouse();
+			}
 	    }
 	}
 	

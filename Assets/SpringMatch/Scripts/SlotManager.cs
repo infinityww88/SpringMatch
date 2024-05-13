@@ -52,6 +52,8 @@ namespace SpringMatch {
 						MsgBus.onLevelPass?.Invoke();
 					}
 				}, 2);
+			} else if (IsFull()) {
+				MsgBus.onLevelFailed?.Invoke();
 			}
 		}
 		

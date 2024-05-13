@@ -19,13 +19,13 @@ namespace SpringMatch.UI {
 		public void Toggle() {
 			Enabled = !Enabled;
 			this.DOKill(true);
-			var rect = _fill.parent.GetComponent<RectTransform>().rect;
+			var width = _fill.parent.GetComponent<RectTransform>().rect.width - _fill.GetChild(0).GetComponent<RectTransform>().rect.width;
 			float t = 0;
 			DOTween.To(() => t, v => {
 				t = v;
 				float f = Enabled ? (1 - t) : t;
-				_fill.offsetMax = new Vector2(-rect.width * f, 0);
-			}, 1f, 0.3f).SetTarget(this);
+				_fill.offsetMax = new Vector2(-width * f, 0);
+			}, 1f, 0.1f).SetTarget(this);
 		}
 	}
 

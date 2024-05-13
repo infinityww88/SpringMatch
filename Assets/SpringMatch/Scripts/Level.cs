@@ -30,13 +30,6 @@ namespace SpringMatch {
 		private HashSet<Spring> _springs = new HashSet<Spring>();
 		private Dictionary<int, SpringHole> _holes = new Dictionary<int, SpringHole>();
 		
-		private bool _done = false;
-		
-		public void Done() {
-			_done = true;
-			GetComponentInChildren<Pickup>().enabled = false;
-		}
-		
 		IEnumerator<ValueTuple<Color, int>> CreateColorTypeGenerator(List<ColorNums> colorNums) {
 			for (int i = 0; i < colorNums.Count; i++) {
 				for (int j = 0; j < colorNums[i].num; j++) {

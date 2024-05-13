@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using StarkSDKSpace;
+using Coffee.UIExtensions;
 using Cysharp.Threading.Tasks;
 
 namespace SpringMatch {
@@ -9,8 +9,17 @@ namespace SpringMatch {
 	public class EffectManager : MonoBehaviour
 	{
 		public static EffectManager Inst;
-		public int repeatNum = 25;
-		public float delayMSecs = 35f;
+		
+		[SerializeField]
+		private int repeatNum = 25;
+		[SerializeField]
+		private float delayMSecs = 35f;
+		[SerializeField]
+		private GameObject eliminateEffect, levelPassEffect;
+		[SerializeField]
+		private RectTransform effectRoot;
+		[SerializeField]
+		private float levelPassEffectDelay = 1.5f;
 		
 		private long[] shortPattern = new long[] {500};
 		private long[] longPattern = new long[] {1000};
@@ -22,19 +31,30 @@ namespace SpringMatch {
 		}
 
 		public void VibratePickup() {
-			//StarkSDK.API.Vibrate(shortPattern, -1);
+			
 		}
 		
 		public async UniTaskVoid VibrateMerge() {
 			for (int i = 0; i < repeatNum; i++) {
-				Debug.Log($"VibrateMerge {i}");
-				//StarkSDK.API.Vibrate(shortPattern, -1);
 				await UniTask.WaitForSeconds(delayMSecs / 1000f);
 			}
 		}
 		
 		public void VibrateLevelPass() {
-			//StarkSDK.API.Vibrate(longPattern, -1);
+		}
+		
+		public void PlayEliminateEffect(Vector3 pos) {
+			Vector2 screenPos = Camera.main.WorldToScreenPoint(pos);
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(
+				effectRoot,
+				screenPos, null, out Vector2 localPosition);
+			var effect = Instantiate(eliminateEffect, effectRoot);
+			DestroyObject(effect, 2);
+			effect.GetComponent<RectTransform>().anchoredPosition = localPosition;
+		}
+		
+		public void PlayLevelPassEffect() {
+			Utils.CallDelay(levelPassEffect.GetComponent<UIParticle>().Play, levelPassEffectDelay);
 		}
 	}
 

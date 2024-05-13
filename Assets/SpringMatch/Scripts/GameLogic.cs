@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using Coffee.UIExtensions;
+using System.Threading;
 
 namespace SpringMatch {
 	
@@ -21,17 +22,18 @@ namespace SpringMatch {
 		[SerializeField]
 		private Transform left;
 		[SerializeField]
-		private Transform right;
-		[SerializeField]
 		private float moveDuration;
 		[SerializeField]
 		private Level levelPrefab;
-		[SerializeField]
-		private UIParticle mergeEffect;
-		[SerializeField]
-		private UIParticle levelPassEffect;
+		
+		private int goldNum;
+		private int heartNum;
 		
 		private Level currLevel = null;
+		
+		public bool PendInteract { get; set; } = false;
+		
+		public bool GameOver { get; private set; } = false;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
@@ -43,23 +45,25 @@ namespace SpringMatch {
 		// This function is called when the object becomes enabled and active.
 		protected void OnEnable()
 		{
-			//MsgBus.onSpringMerge += OnSpringMerge;
 			MsgBus.onLevelPass += OnLevelPass;
+			MsgBus.onLevelFailed += OnLevelFailed;
 		}
 		
 		// This function is called when the behaviour becomes disabled () or inactive.
 		protected void OnDisable()
 		{
 			MsgBus.onLevelPass -= OnLevelPass;
-			//MsgBus.onSpringMerge -= OnSpringMerge;
+			MsgBus.onLevelFailed -= OnLevelFailed;
 		}
 		
-		public void OnSpringMerge() {
-			//mergeEffect.Play();
+		public void OnLevelFailed() {
+			Debug.Log("Level Failed");
+			GameOver = true;
 		}
 		
 		public void OnLevelPass() {
-			levelPassEffect.Play();
+			EffectManager.Inst.PlayLevelPassEffect();
+			SwitchLevel();
 		}
 		
 		public void BackToEditor() {
@@ -75,16 +79,19 @@ namespace SpringMatch {
 		
 		[Button]
 		public async UniTaskVoid SwitchLevel() {
-			currLevel.Done();
-			var token = gameObject.GetCancellationTokenOnDestroy();
-			var nextLevel = Instantiate(levelPrefab, right.position, right.rotation);
+			await UniTask.Delay(3000);
+			Debug.Log("hello, world");
+			currLevel.transform.Translate(left.localPosition, Space.Self);
+			Camera.main.transform.Translate(left.localPosition, Space.Self);
+			var nextLevel = Instantiate(levelPrefab);
 			nextLevel.Load();
-			await currLevel.transform.DOMoveX(left.position.x, moveDuration)
+			
+			var token = gameObject.GetCancellationTokenOnDestroy();
+			
+			await Camera.main.transform.DOLocalMoveX(0, moveDuration)
 				.WithCancellation(token);
 			Destroy(currLevel.gameObject);
 			currLevel = nextLevel;
-			await currLevel.transform.DOMoveX(0, moveDuration)
-				.WithCancellation(token);
 		}
 		
 		public void OnRequestRevokeItem() {
@@ -109,15 +116,6 @@ namespace SpringMatch {
 		
 		public void OnGetRandomItem() {
 			Debug.Log("Get Random Item");
-		}
-		
-		public void PlayEliminateEffect(Vector3 pos) {
-			Vector2 screenPos = Camera.main.WorldToScreenPoint(pos);
-			RectTransformUtility.ScreenPointToLocalPointInRectangle(
-				mergeEffect.rectTransform.parent.GetComponent<RectTransform>(),
-				screenPos, null, out Vector2 localPosition);
-			mergeEffect.rectTransform.anchoredPosition = localPosition;
-			mergeEffect.Play();
 		}
 	}
 

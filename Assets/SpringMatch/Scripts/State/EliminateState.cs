@@ -39,7 +39,8 @@ namespace SpringMatch {
 					return;
 				}
 				Vector3 pos = slotMgr.GetSlotPos(spring.SlotIndex);
-				GameLogic.Inst.PlayEliminateEffect(pos);
+				
+				EffectManager.Inst.PlayEliminateEffect(pos);
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
 				Destroy(spring.gameObject);
 				Destroy(spring.EliminateCompanySpring0.gameObject);
