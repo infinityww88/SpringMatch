@@ -9,6 +9,7 @@ namespace VisualTweenSequence {
 	
 	public abstract class TweenBase : MonoBehaviour {
 		public abstract Tweener Tween();
+		protected abstract Object GetTarget();
 	}
 	
 	public abstract class TweenBase<T> : TweenBase
@@ -21,7 +22,17 @@ namespace VisualTweenSequence {
 		public Ease ease =	Ease.Linear;
 		public LoopType loopType =	LoopType.Yoyo;
 		public bool autoPlay = true;
+		public bool playOnAwake = false;
 		public bool autoKill = true;
+		
+		// Awake is called when the script instance is being loaded.
+		protected void Awake()
+		{
+			if (playOnAwake) {
+				autoPlay = true;
+				Tween();
+			}
+		}
 	
 		protected abstract Tweener CreateTween();
 	
@@ -38,8 +49,9 @@ namespace VisualTweenSequence {
 				.OnKill(() => onKill?.Invoke())
 				.OnComplete(() => onComplete?.Invoke())
 				.OnPlay(() => onPlay?.Invoke())
-				.SetAutoKill(true)
-				.SetId(this);
+				.SetAutoKill(autoKill)
+				.SetId(this)
+				.SetTarget(GetTarget());
 		
 			if (autoPlay) {
 				tweener.Play();

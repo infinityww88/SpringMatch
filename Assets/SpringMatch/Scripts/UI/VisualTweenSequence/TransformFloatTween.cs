@@ -25,6 +25,10 @@ namespace VisualTweenSequence {
 		
 		[SerializeField]
 		private Transform target;
+		
+		protected override Object GetTarget() {
+			return target.gameObject;
+		}
 	
 		protected override float Getter()
 		{

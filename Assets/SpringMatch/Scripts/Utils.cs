@@ -88,4 +88,14 @@ public static class Utils
 		self.z = v;
 		return self;
 	}
+	
+	public static Vector2 SetX(this Vector2 self, float v) {
+		self.x = v;
+		return self;
+	}
+	
+	public static Vector2 SetY(this Vector2 self, float v) {
+		self.y = v;
+		return self;
+	}
 }

@@ -12,10 +12,45 @@ namespace VisualTweenSequence {
 			LocalScale
 		}
 		
+		[ContextMenu("Copy Start Attribute")]
+		void CopyStartAttribute() {
+			switch (attr) {
+			case Attr.LocalMove:
+				startValue = target.localPosition;
+				break;
+			case Attr.LocalEulerAngles:
+				startValue = target.localEulerAngles;
+				break;
+			case Attr.LocalScale:
+				startValue = target.localScale;
+				break;
+			}
+		}
+		
+		[ContextMenu("Copy End Attribute")]
+		void CopyEndAttribute() {
+			switch (attr) {
+			case Attr.LocalMove:
+				endValue = target.localPosition;
+				break;
+			case Attr.LocalEulerAngles:
+				endValue = target.localEulerAngles;
+				break;
+			case Attr.LocalScale:
+				endValue = target.localScale;
+				break;
+			}
+		}
+		
 		public Attr attr;
 		
 		[SerializeField]
 		private Transform target;
+		
+		protected override Object GetTarget()
+		{
+			return target.gameObject;
+		}
 		
 		protected override Vector3 Getter()
 		{

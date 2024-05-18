@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Test/New Scene.unity
-    guid: 3d7f63f7d9cb7bc48b91aaed765d935c
+    path: Assets/SpringMatch/Scenes/Loading.unity
+    guid: 795b2f31d4551d24586dd86bbcaa79c3
   m_configObjects: {}

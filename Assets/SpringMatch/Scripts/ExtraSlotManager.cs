@@ -8,9 +8,6 @@ namespace SpringMatch {
 	public class ExtraSlotManager : MonoBehaviour
 	{
 		public static ExtraSlotManager Inst { get; private set; }
-	
-		[SerializeField]
-		private float _footWidth = 2;
 		
 		private List<Spring> _extraSprings = new	List<Spring>();
 		
@@ -69,7 +66,7 @@ namespace SpringMatch {
 				_extraSprings[i].LastExtraSlotIndex = _extraSprings[i].ExtraSlotIndex = i;
 				Vector3 pos0, pos1;
 				GetSlotPos(i, totalNum, out pos0, out pos1);
-				_extraSprings[i].GetComponent<ExtraState>().ShiftPosition(pos0, pos1);
+				_extraSprings[i].GetComponent<ExtraState>().ShiftPosition(pos0, pos1).Forget();
 			}
 			
 			int n = _extraSprings.Count;

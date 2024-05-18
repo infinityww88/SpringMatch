@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
-using Coffee.UIExtensions;
 using System.Threading;
+using SpringMatch;
+using System.IO;
 
 namespace SpringMatch {
 	
@@ -14,32 +15,31 @@ namespace SpringMatch {
 	{
 		public static GameLogic Inst;
 		[SerializeField]
-		private RectTransform _requestRevokeItemDialog;
-		[SerializeField]
-		private RectTransform _requestShiftItemDialog;
-		[SerializeField]
-		private RectTransform _requestRandomItemDialog;
-		[SerializeField]
 		private Transform left;
 		[SerializeField]
 		private float moveDuration;
 		[SerializeField]
 		private Level levelPrefab;
+		[SerializeField]
+		private UI.LevelProgress levelProgress;
+		private int levelIndex = 0;
 		
 		private int goldNum;
 		private int heartNum;
 		
 		private Level currLevel = null;
 		
-		public bool PendInteract { get; set; } = false;
-		
-		public bool GameOver { get; private set; } = false;
-		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
 			Inst = this;
-			Screen.SetResolution(450, 900, false);
+			Global.PendInteract = true;
+			Global.GameOver = true;
+		}
+		
+		public void StartPlay() {
+			Global.PendInteract = false;
+			Global.GameOver = false;
 		}
 		
 		// This function is called when the object becomes enabled and active.
@@ -58,33 +58,39 @@ namespace SpringMatch {
 		
 		public void OnLevelFailed() {
 			Debug.Log("Level Failed");
-			GameOver = true;
+			Global.GameOver = true;
 		}
 		
 		public void OnLevelPass() {
 			EffectManager.Inst.PlayLevelPassEffect();
-			SwitchLevel();
-		}
-		
-		public void BackToEditor() {
-			UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+			SwitchLevel().Forget();
 		}
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			Level.Inst.Load();
+			var path = Path.Join(Application.persistentDataPath, "levels", "level.json");
+			Debug.Log($"Load level {path}");
+			var text = File.ReadAllText(path);
+			Level.Inst.LoadJson(text);
 			currLevel = Level.Inst;
 		}
 		
 		[Button]
 		public async UniTaskVoid SwitchLevel() {
 			await UniTask.Delay(3000);
-			Debug.Log("hello, world");
+			if (levelIndex == 0) {
+				levelProgress.ToLevel2();
+			} else if (levelIndex == 1) {
+				levelProgress.ToLevel3();
+			}
+			levelIndex++;
+			
 			currLevel.transform.Translate(left.localPosition, Space.Self);
 			Camera.main.transform.Translate(left.localPosition, Space.Self);
 			var nextLevel = Instantiate(levelPrefab);
-			nextLevel.Load();
+			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
+			nextLevel.LoadJson(text);
 			
 			var token = gameObject.GetCancellationTokenOnDestroy();
 			
@@ -93,30 +99,5 @@ namespace SpringMatch {
 			Destroy(currLevel.gameObject);
 			currLevel = nextLevel;
 		}
-		
-		public void OnRequestRevokeItem() {
-			_requestRevokeItemDialog.gameObject.SetActive(true);
-		}
-		
-		public void OnGetRevokeItem() {
-			Debug.Log("Get Revoke Item");
-		}
-		
-		public void OnRequestShiftItem() {
-			_requestShiftItemDialog.gameObject.SetActive(true);
-		}
-		
-		public void OnGetShiftItem() {
-			Debug.Log("Get Shift Item");
-		}
-		
-		public void OnRequestRandomItem() {
-			_requestRandomItemDialog.gameObject.SetActive(true);
-		}
-		
-		public void OnGetRandomItem() {
-			Debug.Log("Get Random Item");
-		}
 	}
-
 }

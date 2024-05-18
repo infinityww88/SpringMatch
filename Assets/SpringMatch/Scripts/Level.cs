@@ -46,6 +46,7 @@ namespace SpringMatch {
 			}
 		}
 		
+		[Button]
 		public void RandomAllSpringTypes() {
 			List<Spring> t = new List<Spring>();
 			t.AddRange(_springs);
@@ -55,10 +56,9 @@ namespace SpringMatch {
 			}
 			RandomType(t);
 		}
-
-		public void Load() {
-			try {				
-				string levelJson = File.ReadAllText(Path.GetFullPath("level.json"));
+		
+		public void LoadJson(string levelJson) {
+			try {
 				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
 				
 				grid.GenerateGrid(levelData.row, levelData.col);
@@ -127,11 +127,17 @@ namespace SpringMatch {
 					foreach (var s in _springs) {
 						s.EnableRender(true);
 					}
-				}, 2);
+				}, 2).Forget();
 			}
-			catch (Exception e) {
-				Debug.LogError(e);
-			}
+				catch (Exception e) {
+					Debug.LogError(e);
+				}
+		}
+
+		public void LoadFile() {
+			string levelJson = File.ReadAllText(Path.GetFullPath("level.json"));
+			Debug.Log($"LoadFile\n{levelJson}");
+			LoadJson(levelJson);
 		}
 		
 		[Button]

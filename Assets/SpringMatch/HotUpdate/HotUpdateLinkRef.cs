@@ -55,8 +55,6 @@ public class HotUpdateLinkRef : MonoBehaviour
 	PointerEventData.InputButton pointerEventDataInputButton;
 	RaycastResult raycastResult;
 	StandaloneInputModule standaloneInputModule;
-	StandaloneInputModule.InputMode standaloneInputModuleInputMode;
-	TouchInputModule touchInputModule;
 	UIBehaviour uIBehaviour;
 #endregion
 
@@ -226,19 +224,19 @@ public class HotUpdateLinkRef : MonoBehaviour
 	Bounds bounds;
 	BoundsInt boundsInt;
 	BoxCollider boxCollider;
-	Camera camera;
+	Camera cameraV;
 	Canvas canvas;
 	CanvasGroup canvasGroup;
 	CanvasRenderer canvasRenderer;
 	CapsuleCollider capsuleCollider;
-	Collider collider;
+	Collider colliderV;
 	ColliderHit colliderHit;
 	Collision collision;
 	Color color;
 	Color32 color32;
 	ColorUtility colorUtility;
 	Component component;
-	ConstantForce constantForce;
+	ConstantForce constantForceV;
 	ContactPoint contactPoint;
 	ControllerColliderHit controllerColliderHit;
 	Coroutine coroutine;
@@ -246,19 +244,19 @@ public class HotUpdateLinkRef : MonoBehaviour
 	Debug debug;
 	Event evt;
 	FixedJoint fixedJoint;
-	GameObject gameObject;
+	GameObject go;
 	GeometryUtility geometryUtility;
 	Gizmos gizmos;
 	Gradient gradient;
 	GradientAlphaKey gradientAlphaKey;
 	GradientColorKey gradientColorKey;
 	Hash128 hash128;
-	HingeJoint hingeJoint;
+	HingeJoint hingeJointV;
 	Input input;
 	Joint joint;
 	Keyframe keyframe;
 	LayerMask layerMask;
-	Light light;
+	Light lightV;
 	LineRenderer lineRenderer;
 	LineUtility lineUtility;
 	Material material;
@@ -272,7 +270,7 @@ public class HotUpdateLinkRef : MonoBehaviour
 	MonoBehaviour monoBehaviour;
 	Object obj;
 	ParticleCollisionEvent particleCollisionEvent;
-	ParticleSystem particleSystem;
+	ParticleSystem particleSystemV;
 	ParticleSystemForceField particleSystemForceField;
 	ParticleSystemRenderer particleSystemRenderer;
 	PhysicMaterial physicMaterial;
@@ -293,12 +291,12 @@ public class HotUpdateLinkRef : MonoBehaviour
 	RectOffset rectOffset;
 	RectTransform rectTransform;
 	RectTransformUtility rectTransformUtility;
-	Renderer renderer;
+	Renderer rendererV;
 	RenderTexture renderTexture;
 	RenderTextureDescriptor renderTextureDescriptor;
 	Resolution resolution;
 	Resources resources;
-	Rigidbody rigidbody;
+	Rigidbody rigidbodyV;
 	Screen screen;
 	ScriptableObject scriptableObject;
 	Shader shader;
@@ -318,7 +316,7 @@ public class HotUpdateLinkRef : MonoBehaviour
 	Touch touch;
 	TouchScreenKeyboard touchScreenKeyboard;
 	TrailRenderer trailRenderer;
-	Transform transform;
+	Transform trans;
 	Vector2 vector2;
 	Vector2Int vector2Int;
 	Vector3 vector3;
@@ -334,8 +332,6 @@ public class HotUpdateLinkRef : MonoBehaviour
 	WheelFrictionCurve wheelFrictionCurve;
 	WheelHit wheelHit;
 	WindZone windZone;
-	WWW www;
-	WWWForm wwwForm;
 	YieldInstruction yieldInstruction;
 #endregion
 	

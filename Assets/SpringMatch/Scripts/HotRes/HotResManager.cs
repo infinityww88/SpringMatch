@@ -5,6 +5,8 @@ using YooAsset;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
+using System.IO;
+using UnityEngine.Networking;
 
 namespace SpringMatch.HotRes {
 	
@@ -15,11 +17,6 @@ namespace SpringMatch.HotRes {
 		public ResourcePackage DefaultPkg { get; private set; }
 		
 		public const string DEFAULT_PKG = "DefaultPackage";
-		
-		[SerializeField]
-		private string serverHost = "127.0.0.1";
-		
-		string CDNAddr => $"http://{serverHost}:7777";
 		
 		// Start is called before the first frame update
 		void Awake()
@@ -32,11 +29,11 @@ namespace SpringMatch.HotRes {
 			Init();
 		}
 		
-		public async UniTask UpdateResource(DownloaderOperation.OnDownloadProgress onProgress) {
+		public async UniTask UpdateResource(string resVersion, DownloaderOperation.OnDownloadProgress onProgress) {
 			#if UNITY_EDITOR
 			await InitPkgEditor(DEFAULT_PKG);
 			#else
-			await InitRemote(DEFAULT_PKG);
+			await InitRemote(resVersion, DEFAULT_PKG);
 			#endif
 			string version = await UpdatePackageVersion(DEFAULT_PKG);
 			await UpdatePackageManifest(DEFAULT_PKG, version);
@@ -69,11 +66,11 @@ namespace SpringMatch.HotRes {
 			await pkg.InitializeAsync(initParameters);
 		}
 		
-		private async UniTask InitRemote(string pkgName) {
+		private async UniTask InitRemote(string resVersion, string pkgName) {
 			var pkg = YooAssets.GetPackage(pkgName);
 			var initParameters = new HostPlayModeParameters();
 			initParameters.BuildinQueryServices = new BuildinQueryServices();
-			initParameters.RemoteServices = new RemoteServices(CDNAddr);
+			initParameters.RemoteServices = new RemoteServices(new Uri(new Uri(Global.CDN), resVersion).ToString());
 			var initOperation = pkg.InitializeAsync(initParameters);
 			await initOperation;
 			if (initOperation.Status == EOperationStatus.Succeed) {

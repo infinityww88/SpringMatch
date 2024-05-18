@@ -9,6 +9,11 @@ namespace VisualTweenSequence {
 		[SerializeField]
 		private CanvasGroup target;
 		
+		protected override Object GetTarget()
+		{
+			return target.gameObject;
+		}
+		
 		protected override float Getter() {
 			return target.alpha;
 		}

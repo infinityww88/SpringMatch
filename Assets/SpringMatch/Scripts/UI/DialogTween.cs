@@ -15,7 +15,7 @@ namespace SpringMatch.UI {
 		// This function is called when the object becomes enabled and active.
 		protected void OnEnable()
 		{
-			GameLogic.Inst.PendInteract = true;
+			Global.PendInteract = true;
 			transform.localScale = Vector3.one * 0.5f;
 			transform.DOScale(targetScale.Value, duration.Value).SetEase(Ease.OutBack);
 		}
@@ -23,7 +23,7 @@ namespace SpringMatch.UI {
 		// This function is called when the behaviour becomes disabled () or inactive.
 		protected void OnDisable()
 		{
-			GameLogic.Inst.PendInteract = false;
+			Global.PendInteract = false;
 		}
 	}
 }

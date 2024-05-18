@@ -49,12 +49,12 @@ namespace SpringMatch {
 				effectRoot,
 				screenPos, null, out Vector2 localPosition);
 			var effect = Instantiate(eliminateEffect, effectRoot);
-			DestroyObject(effect, 2);
+			Destroy(effect, 2);
 			effect.GetComponent<RectTransform>().anchoredPosition = localPosition;
 		}
 		
 		public void PlayLevelPassEffect() {
-			Utils.CallDelay(levelPassEffect.GetComponent<UIParticle>().Play, levelPassEffectDelay);
+			Utils.CallDelay(levelPassEffect.GetComponent<UIParticle>().Play, levelPassEffectDelay).Forget();
 		}
 	}
 

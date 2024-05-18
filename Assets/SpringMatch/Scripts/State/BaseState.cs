@@ -21,7 +21,7 @@ namespace SpringMatch {
 		protected void OnEnable()
 		{
 			_cts = new	CancellationTokenSource();
-			_Update();
+			_Update().Forget();
 		}
 		
 		protected virtual async UniTaskVoid _Update() {

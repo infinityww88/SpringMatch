@@ -4,7 +4,6 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Assertions;
 using Cysharp.Threading.Tasks;
-using UnityEngine.Assertions;
 
 namespace SpringMatch {
 	
@@ -51,7 +50,7 @@ namespace SpringMatch {
 					if (Level.Inst.RemainSpring() == 0 && ExtraSlotManager.Inst.RemainSpring() == 0) {
 						MsgBus.onLevelPass?.Invoke();
 					}
-				}, 2);
+				}, 2).Forget();
 			} else if (IsFull()) {
 				MsgBus.onLevelFailed?.Invoke();
 			}

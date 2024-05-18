@@ -12,7 +12,7 @@ public class CaptureCamera : MonoBehaviour
 	string GetCaptureGameObjectName() {
 		for (int i = 0; i < transform.childCount; i++) {
 			var o = transform.GetChild(i).gameObject;
-			if (o.active) {
+			if (o.activeInHierarchy) {
 				return o.name;
 			}
 		}

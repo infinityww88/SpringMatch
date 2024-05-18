@@ -145,7 +145,6 @@ namespace SpringMatch {
 			_springBinder.NormalLength = 0.03f;
 			float height = (pos0 - pos1).magnitude * autoHeightFactor;
 			SetPose(pos0, pos1, Mathf.Min(height, _spring.Config.shrinkToShrinkMaxHeight));
-			float t = 0.03f;
 			await TweenSpringLen(0.03f, 1, duration, false).WithCancellation(ct);
 			await TweenSpringLen(1, 0.03f, duration, true).WithCancellation(ct);
 		}

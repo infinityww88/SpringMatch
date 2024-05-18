@@ -7,7 +7,6 @@ using SpringMatch;
 using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using System;
 
@@ -28,9 +27,6 @@ namespace SpringMatchEditor {
 		public Color cellColor;
 		public Spring springPrefab;
 		public SpringConfig config;
-		
-		[SerializeField]
-		private EditorState _editorState;
 		
 		[SerializeField]
 		private Spring _editedSpring;
@@ -64,6 +60,8 @@ namespace SpringMatchEditor {
 		private List<ColorNums> _colorNums = new List<ColorNums>();
 		
 		public List<ColorNums> ColorNums => _colorNums;
+		
+		private EditorState _editorState;
 		
 		public Spring SelectedSpring {
 			get {
@@ -146,7 +144,7 @@ namespace SpringMatchEditor {
 				json = File.ReadAllText(path);
 				_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
 			}
-			catch (Exception e) {
+			catch (Exception) {
 				json = "[\"#AA0000\",\"#00AA00\",\"#004BAA\",\"#A40B88\"]";
 				File.WriteAllText(path, json);
 				_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
@@ -215,7 +213,7 @@ namespace SpringMatchEditor {
 					grid.MakeHole(data.x0, data.y0, data.followNum);
 				}
 			});
-			CalcOverlay();
+			CalcOverlay().Forget();
 			editorUI.UpdateNumInfo();
 			RandomColor();
 		}
@@ -321,7 +319,7 @@ namespace SpringMatchEditor {
 			if (startCell != null && currCell != null) {
 				SelectedSpring = PutSpring(grid.GetCellCoord(startCell), grid.GetCellCoord(currCell), 0, -1, false, 0);
 				_editorState = EditorState.EditSpring;
-				CalcOverlay();
+				CalcOverlay().Forget();
 			}
 		}
 		
@@ -420,8 +418,8 @@ namespace SpringMatchEditor {
 				_editedSpring.HideWhenCovered);
 			Utils.RunNextFrame(() => {
 				_editedSpring.GeneratePickupColliders(config.colliderRadius);
-			}, 2);
-			CalcOverlay();
+			}, 2).Forget();
+			CalcOverlay().Forget();
 		}
 		
 		public void SetHeightStepDelta(int stepDelta) {
@@ -461,10 +459,10 @@ namespace SpringMatchEditor {
 				}
 				var cell = PickupCell(Input.mousePosition);
 				if (cell != null) {
-					DrawSpring();
+					DrawSpring().Forget();
 					return;
 				}
-				RotateView();
+				RotateView().Forget();
 			}
 			if (Input.mouseScrollDelta.y != 0 && _editedSpring != null) {
 				SetHeightStepDelta((int)Input.mouseScrollDelta.y);
@@ -475,7 +473,7 @@ namespace SpringMatchEditor {
 				if (_editedSpring != null) {
 					Destroy(_editedSpring.gameObject);
 					_springs.Remove(_editedSpring);
-					CalcOverlay();
+					CalcOverlay().Forget();
 					editorUI.UpdateNumInfo();
 				}
 				SelectedSpring = null;

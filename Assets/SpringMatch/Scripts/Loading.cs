@@ -7,44 +7,116 @@ using DG.Tweening;
 using SpringMatch.HotRes;
 using YooAsset;
 using QFSW.QC;
-using HybridCLR;
 using System.Reflection;
 using System;
+using System.IO;
+using System.IO.Compression;
 using Cysharp.Threading.Tasks;
+using TMPro;
+using UnityEngine.Networking;
 
 namespace SpringMatch {
 	
 	public class Loading : MonoBehaviour
 	{
 		[SerializeField]
-		private Slider _progressBar;
+		private TextMeshProUGUI _loadingText;
+		
+		private Tween loadingTextTween;
+		
+		[SerializeField]
+		private VisualTweenSequence.RectTransformFloatTween slideTween;
+		
+		private string resVersion;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
-			_progressBar.value = 0;
+			TweenLoadingText();
+			Load().Forget();
 		}
 		
-		[Command]
-		private void TestProgress() {
-			HotResManager.Inst.UpdateResource(OnDownloadProgress);
+		void TweenLoadingText() {
+			string[] texts = new string[] {
+				"Loading", "Loading.", "Loading..", "Loading..."
+			};
+			int index = 0;
+			loadingTextTween = DOTween.Sequence()
+				.AppendCallback(() => {
+					_loadingText.text = texts[index++];
+					index = index % texts.Length;
+				})
+				.AppendInterval(0.5f)
+				.SetLoops(-1, LoopType.Restart)
+				.SetTarget(_loadingText.gameObject);
 		}
 		
-		[Command]
-		private void TestRes() {
-			var handle = YooAssets.LoadAssetSync("HotUpdate_HotUpdateAssembly.dll");
+		async UniTask DownloadRes(string path) {
+			var uri = new Uri(new Uri(Global.CDN), path);
+			Debug.Log(uri);
+			var request = UnityWebRequest.Get(uri);
+			request.downloadHandler = new DownloadHandlerFile(Path.Join(Application.persistentDataPath, path));
+			await request.SendWebRequest();
+			if (request.result != UnityWebRequest.Result.Success) {
+				throw new Exception($"DownloadRes {path} failed {request.error}");
+			}
+		}
+		
+		[Button]
+		async UniTask DownloadContent() {
+			try {
+				var path = Path.Join(Application.persistentDataPath, "meta.json");
+				await DownloadRes("meta.json");
+				var text = File.ReadAllText(path);
+				Debug.Log(text);
+				MetaInfo meta = JsonUtility.FromJson<MetaInfo>(text);
+				Debug.Log($"resVersion {meta.resVersion}");
+				resVersion = meta.resVersion;
+				int localVersion = PrefsManager.GetInt(PrefsManager.VERSION, 0);
+				Debug.Log($"online version {meta.version}, local version {localVersion}");
+				if (meta.version > localVersion) {
+					await DownloadLevels();
+					PrefsManager.SetInt(PrefsManager.VERSION, meta.version);
+				}
+			} catch (Exception e) {
+				Debug.Log(e);
+			}
+		}
+		
+		[Button]
+		async UniTask DownloadLevels() {
+			var path = Path.Join(Application.persistentDataPath, "levels.zip");
+			await DownloadRes("levels.zip");
+			var dir = Path.Join(Application.persistentDataPath, "levels");
+			if (Directory.Exists(dir)) {
+				Directory.Delete(dir, true);
+			}
+			ZipFile.ExtractToDirectory(path, Path.GetDirectoryName(path), true);
+		}
+		
+		async UniTaskVoid Load() {
+			await DownloadContent();
+			Debug.Log("Loaded Content");
+			
+			await HotResManager.Inst.UpdateResource(resVersion, OnDownloadProgress);
+			
+			var handle = YooAssets.LoadAssetAsync("HotUpdate_HotUpdateAssembly.dll");
+			await handle;
 			TextAsset textAsset = handle.AssetObject as TextAsset;
 			var data = textAsset.bytes;
 			Assembly assembly = Assembly.Load(data);
-			Type type = assembly.GetType("SpringMatch.HotUpdate.TestHotUpdate");
-			type.GetMethod("Info").Invoke(null, null);
+			
+			Debug.Log("Loaded assembly");
+			
+			/*
+			var sceneHandle = YooAssets.LoadSceneAsync("HotScene_Play");
+			await sceneHandle;
+			Debug.Log("Loaded Play Scene");
+			*/
 		}
 		
-		[Command]
-		private async UniTaskVoid TestHotScene() {
-			var handle = YooAssets.LoadSceneAsync("HotScene_TestHotScene");
-			await handle;
-			Debug.Log("Loaded Test Hot Scene");
+		public void Play() {
+			YooAssets.LoadSceneAsync("HotScene_Play");
 		}
 		
 		void OnDownloadProgress(

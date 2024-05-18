@@ -22,7 +22,7 @@ namespace SpringMatch.UI {
 		private float buttonScale;
 		
 		[Button]
-		private async UniTaskVoid Animate() {
+		private void Animate() {
 			this.DOKill(true);
 			goldInfo.alpha = nextButton.alpha = adButton.alpha = 0;
 			
