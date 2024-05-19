@@ -15,6 +15,13 @@ namespace SpringMatch.UI {
 		public float duration;
 		
 		[Button]
+		public void ToLevel0() {
+			_fill.fillAmount = 0;
+			_level2Desc.gameObject.SetActive(false);
+			_level3Desc.gameObject.SetActive(false);
+		}
+		
+		[Button]
 		public void ToLevel2() {
 			DOTween.Kill(gameObject, true);
 			var seq = DOTween.Sequence();

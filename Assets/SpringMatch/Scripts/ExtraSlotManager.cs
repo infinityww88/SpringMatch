@@ -28,6 +28,10 @@ namespace SpringMatch {
 			return _extraSprings.Count(e => e != null);
 		}
 		
+		public IEnumerable<Spring> GetSprings() {
+			return _extraSprings.Where(e => e != null);
+		}
+		
 		public bool Contains(Spring spring) {
 			return _extraSprings.Contains(spring);
 		}

@@ -46,7 +46,6 @@ namespace SpringMatch {
 				Utils.RunNextFrame(() => {
 					EliminateTriple(index);
 					usedSlotsNum -= 3;
-					MsgBus.onSpringMerge?.Invoke();
 					if (Level.Inst.RemainSpring() == 0 && ExtraSlotManager.Inst.RemainSpring() == 0) {
 						MsgBus.onLevelPass?.Invoke();
 					}

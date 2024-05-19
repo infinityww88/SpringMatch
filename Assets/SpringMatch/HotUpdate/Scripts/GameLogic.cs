@@ -8,6 +8,8 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using SpringMatch;
 using System.IO;
+using ScriptableObjectArchitecture;
+using YooAsset;
 
 namespace SpringMatch {
 	
@@ -22,6 +24,11 @@ namespace SpringMatch {
 		private Level levelPrefab;
 		[SerializeField]
 		private UI.LevelProgress levelProgress;
+		[SerializeField]
+		private IntVariable refillLiveInterval;
+		[SerializeField]
+		private VisualTweenSequence.TweenSequence startPlayEffect;
+		
 		private int levelIndex = 0;
 		
 		private int goldNum;
@@ -36,10 +43,17 @@ namespace SpringMatch {
 			Global.PendInteract = true;
 			Global.GameOver = true;
 		}
-		
+	
 		public void StartPlay() {
+			PrefsManager.UpdateHeartNum(refillLiveInterval.Value);
+			if (PrefsManager.HeartNum == 0) {
+				UI.UIVariable.Inst.outOfLifeStartDialog.gameObject.SetActive(true);
+				return;
+			}
+			PrefsManager.DecHeartNum();
 			Global.PendInteract = false;
 			Global.GameOver = false;
+			startPlayEffect.Play();
 		}
 		
 		// This function is called when the object becomes enabled and active.
@@ -47,6 +61,11 @@ namespace SpringMatch {
 		{
 			MsgBus.onLevelPass += OnLevelPass;
 			MsgBus.onLevelFailed += OnLevelFailed;
+			MsgBus.onElimiteString += onElimiteString;
+			MsgBus.onInvalidPick += onInvalidPick;
+			MsgBus.onToSlot += OnToSlot;
+			MsgBus.onRevoke += onRevoke;
+			MsgBus.onShift3 += onShift3;
 		}
 		
 		// This function is called when the behaviour becomes disabled () or inactive.
@@ -54,16 +73,57 @@ namespace SpringMatch {
 		{
 			MsgBus.onLevelPass -= OnLevelPass;
 			MsgBus.onLevelFailed -= OnLevelFailed;
+			MsgBus.onElimiteString -= onElimiteString;
+			MsgBus.onInvalidPick -= onInvalidPick;
+			MsgBus.onToSlot -= OnToSlot;
+			MsgBus.onRevoke -= onRevoke;
+			MsgBus.onShift3 -= onShift3;
 		}
 		
 		public void OnLevelFailed() {
-			Debug.Log("Level Failed");
-			Global.GameOver = true;
+			UI.UIVariable.Inst.outOfSpaceDialog.gameObject.SetActive(true);
 		}
 		
 		public void OnLevelPass() {
 			EffectManager.Inst.PlayLevelPassEffect();
 			SwitchLevel().Forget();
+		}
+		
+		public void onElimiteString(Spring spring) {
+			Debug.Log($"Eliminate {spring.Type}");
+		}
+		
+		public void onInvalidPick(Spring spring) {
+			Debug.Log("Invalid Pick");
+		}
+		
+		public void OnToSlot(Spring spring) {
+			Debug.Log("To Slot");
+		}
+		
+		public void onRevoke(Spring spring) {
+			Debug.Log($"On Revoke {spring.Type}");
+		}
+		
+		public void onShift3() {
+			Debug.Log($"On Shift3");
+		}
+		
+		public void BackHome() {
+			YooAssets.LoadSceneAsync("HotScene_Play");
+		}
+		
+		public void OnLoseLife() {
+			PrefsManager.UpdateHeartNum(refillLiveInterval.Value);
+			if (PrefsManager.HeartNum > 0) {
+				Replay();
+			} else {
+				UI.UIVariable.Inst.outOfLifeDialog.gameObject.SetActive(true);
+			}
+		}
+		
+		public void ShiftOut3() {
+			Level.Inst.Shift3ToExtra();
 		}
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
@@ -74,6 +134,17 @@ namespace SpringMatch {
 			var text = File.ReadAllText(path);
 			Level.Inst.LoadJson(text);
 			currLevel = Level.Inst;
+		}
+		
+		[Button]
+		public void Replay() {
+			Destroy(currLevel.gameObject);
+			var level = Instantiate(levelPrefab);
+			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
+			level.LoadJson(text);
+			currLevel = level;
+			levelProgress.ToLevel0();
+			PrefsManager.DecHeartNum();
 		}
 		
 		[Button]

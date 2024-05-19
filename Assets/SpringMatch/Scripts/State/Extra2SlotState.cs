@@ -19,6 +19,7 @@ namespace SpringMatch {
 				_cts.Token);
 			spring.SlotIndex = index;
 			this.enabled = false;
+			MsgBus.onToSlot?.Invoke(spring);
 			GetComponent<SlotState>().enabled = true;
 		}
 	}

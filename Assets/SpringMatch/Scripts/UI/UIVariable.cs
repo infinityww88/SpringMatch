@@ -18,6 +18,7 @@ namespace SpringMatch.UI {
 		public RectTransform itemRequestDialog;
 		public RectTransform refillLifeDialog;
 		public RectTransform outOfLifeDialog;
+		public RectTransform outOfLifeStartDialog;
 		public RectTransform outOfSpaceDialog;
 		public RectTransform giveupConfirmDialog;
 		public RectTransform SettingDialog;

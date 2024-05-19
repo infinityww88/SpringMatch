@@ -132,7 +132,8 @@ namespace SpringMatch {
 			_springBinder.NormalLength = 1;
 			var height = Mathf.Min(mag0, mag1);
 			//await MoveToTarget(pos, _springCurve.height, fixTail, moveDuration, ct);
-			await MoveToTarget(pos, ClampAutoHeight(height * autoHeightFactor), fixTail, moveDuration, ct);
+			//await MoveToTarget(pos, ClampAutoHeight(height * autoHeightFactor), fixTail, moveDuration, ct);
+			await MoveToTarget(pos, _springCurve.height + ClampAutoHeight(height * autoHeightFactor), fixTail, moveDuration, ct);
 			await TweenSpringLen(1, 0.03f, shrinkDuration, !fixTail).WithCancellation(ct);
 		}
 		

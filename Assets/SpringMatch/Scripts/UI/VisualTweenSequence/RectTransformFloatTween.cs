@@ -15,7 +15,9 @@ namespace VisualTweenSequence {
 			AnchorPos3DZ,
 			PivotX,
 			PivotY,
-			SizeDelta
+			SizeDelta,
+			SizeDeltaX,
+			SizeDeltaY
 		}
 		
 		[SerializeField]
@@ -58,6 +60,12 @@ namespace VisualTweenSequence {
 			case Attr.SizeDelta:
 				v = target.sizeDelta.x;
 				break;
+			case Attr.SizeDeltaX:
+				v = target.sizeDelta.x;
+				break;
+			case Attr.SizeDeltaY:
+				v = target.sizeDelta.y;
+				break;
 			}
 			return v;
 		}
@@ -89,6 +97,12 @@ namespace VisualTweenSequence {
 				break;
 			case Attr.SizeDelta:
 				target.sizeDelta = Vector2.one * v;
+				break;
+			case Attr.SizeDeltaX:
+				target.sizeDelta = target.sizeDelta.SetX(v);
+				break;
+			case Attr.SizeDeltaY:
+				target.sizeDelta = target.sizeDelta.SetY(v);
 				break;
 			}
 		}

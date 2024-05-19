@@ -27,7 +27,7 @@ MonoBehaviour:
   handHeightOffset: 1
   shrinkToShrinkMaxHeight: 2
   shrinkHeight: 0.4
-  gridSlotAutoHeightFactor: 0.5
+  gridSlotAutoHeightFactor: 0.2
   extraSlotAutoHeightFactor: 1
   slotSlotAutoHeightFactor: 1.5
   maxAutoHeight: 3

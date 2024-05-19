@@ -202,6 +202,9 @@ namespace SpringMatch {
 			}
 			EffectManager.Inst.VibratePickup();
 			if (SlotManager.Inst.IsFull() || !spring.IsTop) {
+				if (!SlotManager.Inst.IsFull() && !spring.IsTop) {
+					MsgBus.onInvalidPick?.Invoke(spring);
+				}
 				spring.Shake();
 				return;
 			}
@@ -229,6 +232,10 @@ namespace SpringMatch {
 			SlotManager.Inst.AddSpring(spring);
 		}
 		
+		public IEnumerable<Spring> GetSprings() {
+			return _springs;
+		}
+		
 		public int RemainSpring() {
 			return _springs.Count;
 		}
@@ -252,6 +259,8 @@ namespace SpringMatch {
 			if (lastPickupSpring == null) {
 				return;
 			}
+			
+			MsgBus.onRevoke?.Invoke(lastPickupSpring);
 			
 			if (lastPickupSpring.LastExtraSlotIndex < 0) {
 				_springs.Add(lastPickupSpring);
@@ -291,6 +300,7 @@ namespace SpringMatch {
 				s.HoleSpring = null;
 			}
 			ExtraSlotManager.Inst.AddSprings(springs);
+			MsgBus.onShift3?.Invoke();
 		}
 		
 		public void RemoveSpring(Spring spring) {

@@ -90,5 +90,18 @@ namespace VisualTweenSequence {
 			return DOTween.To(Getter, Setter, endValue, duration);
 		}
 	}
+	
+	public abstract class Vector2TweenBase : TweenBase<Vector2>
+	{
+		protected abstract Vector2 Getter();
+		protected abstract void Setter(Vector2 v);
+	
+		protected override Tweener CreateTween() {
+			if (useStartValue) {
+				Setter(startValue);
+			}
+			return DOTween.To(Getter, Setter, endValue, duration);
+		}
+	}
 }
 

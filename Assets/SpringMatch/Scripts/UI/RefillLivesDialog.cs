@@ -23,6 +23,9 @@ namespace SpringMatch.UI {
 		[SerializeField]
 		private IntVariable refillLiveInterval;
 		
+		[SerializeField]
+		private UnityEngine.Events.UnityEvent OnLifeAvailable;
+		
 		private Tween updateSeq;
 	
 		public void SetHeartNum(int num) {
@@ -42,26 +45,18 @@ namespace SpringMatch.UI {
 			return System.TimeSpan.FromSeconds(refillLiveInterval.Value) - (System.DateTime.Now - PrefsManager.LastRefillLifeTime);
 		}
 		
-		public void UpdateHeartNum() {
-			System.TimeSpan timeSpan = System.DateTime.Now - PrefsManager.LastRefillLifeTime;
-			int seconds = (int)timeSpan.TotalSeconds;
-			int shortNum = Mathf.Clamp(5 - PrefsManager.HeartNum, 0, 5);
-			int refillNum = seconds / refillLiveInterval.Value;
-			int fillNum = Mathf.Min(shortNum, refillNum);
-			if (fillNum > 0) {
-				PrefsManager.HeartNum += fillNum;
-				PrefsManager.LastRefillLifeTime = PrefsManager.LastRefillLifeTime + new System.TimeSpan(0, 0, fillNum * refillLiveInterval.Value);
-			}
-		}
-		
 		// This function is called when the object becomes enabled and active.
 		protected void OnEnable()
 		{
 			updateSeq = DOTween.Sequence().AppendCallback(() => {
-				UpdateHeartNum();
+				var oldNum = PrefsManager.HeartNum;
+				PrefsManager.UpdateHeartNum(refillLiveInterval.Value);
 				SetHeartNum(PrefsManager.HeartNum);
 				var remain = GetRemainRefillTime();
 				timeInfo.text = $"{remain.Minutes:D2}:{remain.Seconds:D2}";
+				if (oldNum == 0 && PrefsManager.HeartNum > 0) {
+					OnLifeAvailable.Invoke();
+				}
 			}).AppendInterval(0.2f).SetLoops(-1, LoopType.Restart).SetTarget(this);
 		}
 		
