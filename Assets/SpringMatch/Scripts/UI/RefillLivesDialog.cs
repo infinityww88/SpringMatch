@@ -6,6 +6,7 @@ using TMPro;
 using Sirenix.OdinInspector;
 using DG.Tweening;
 using ScriptableObjectArchitecture;
+using TMPro;
 
 namespace SpringMatch.UI {
 	
@@ -24,9 +25,18 @@ namespace SpringMatch.UI {
 		private IntVariable refillLiveInterval;
 		
 		[SerializeField]
-		private UnityEngine.Events.UnityEvent OnLifeAvailable;
+		private IntVariable heartGoldCost;
 		
-		private Tween updateSeq;
+		[SerializeField]
+		private float refillEffectInterval = 0.7f;
+		
+		[SerializeField]
+		private TextMeshProUGUI goldCostText;
+		
+		private Tween updateSeq = null;
+		
+		[SerializeField]
+		private UnityEngine.Events.UnityEvent OnLifeAvailable;
 	
 		public void SetHeartNum(int num) {
 			int n = Mathf.Clamp(num, 0, hearts.Length);
@@ -35,6 +45,40 @@ namespace SpringMatch.UI {
 			}
 			for (int i = n; i < hearts.Length; i++) {
 				hearts[i].sprite = gray;
+			}
+		}
+		
+		[Button]
+		public void TestHearts(int num) {
+			PrefsManager.DecHeartNum(num);
+		}
+		
+		[Button]
+		public void RefillHearts() {
+			if (PrefsManager.HeartNum == 5) {
+				return;
+			}
+			updateSeq.Pause();
+			var oldNum = PrefsManager.HeartNum;
+			int startIndex = PrefsManager.HeartNum;
+			PrefsManager.RefillLives();
+			if (oldNum == 0 && PrefsManager.HeartNum > 0) {
+				OnLifeAvailable.Invoke();
+			}
+			var seq = DOTween.Sequence();
+			for (int i = startIndex; i < hearts.Length; i++) {
+				var heart = hearts[i].GetComponent<Image>();
+				var effect = heart.GetComponentInChildren<ParticleSystem>();
+				seq.AppendCallback(() => {
+					heart.sprite = normal;
+					Debug.Log($"{effect}");
+					effect.Stop();
+					effect.Play();
+					EffectManager.Inst.PlaySoundRefillHeart();
+				})
+					.AppendInterval(refillEffectInterval)
+					.OnComplete(() => updateSeq.Play())
+					.SetTarget(this);
 			}
 		}
 		
@@ -54,16 +98,17 @@ namespace SpringMatch.UI {
 				SetHeartNum(PrefsManager.HeartNum);
 				var remain = GetRemainRefillTime();
 				timeInfo.text = $"{remain.Minutes:D2}:{remain.Seconds:D2}";
+				goldCostText.text = $"{heartGoldCost.Value * (5 - PrefsManager.HeartNum)}";
 				if (oldNum == 0 && PrefsManager.HeartNum > 0) {
 					OnLifeAvailable.Invoke();
 				}
-			}).AppendInterval(0.2f).SetLoops(-1, LoopType.Restart).SetTarget(this);
+			}).AppendInterval(0.5f).SetLoops(-1, LoopType.Restart).SetTarget(this);
 		}
 		
 		// This function is called when the behaviour becomes disabled () or inactive.
 		protected void OnDisable()
 		{
-			updateSeq.Kill();
+			DOTween.Kill(this);
 			updateSeq = null;
 		}
 	}

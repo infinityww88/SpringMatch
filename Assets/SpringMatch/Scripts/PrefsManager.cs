@@ -39,7 +39,8 @@ namespace SpringMatch {
 			HeartNum = 5;
 		}
 
-		public static void DecHeartNum() {
+		public static void DecHeartNum(int n=1) {
+			n = Mathf.Min(Mathf.Clamp(n, 0, 5), PrefsManager.HeartNum);
 			//UpdateHeartNum();
 			if (HeartNum == 0) {
 				return;
@@ -47,7 +48,7 @@ namespace SpringMatch {
 			if (HeartNum == 5) {
 				LastRefillLifeTime = System.DateTime.Now;
 			}
-			HeartNum--;
+			HeartNum -= n;
 		}
 		
 		public static void UpdateHeartNum(int refillLiveInterval) {

@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Coffee.UIExtensions;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 
 namespace SpringMatch {
 	
 	public class EffectManager : MonoBehaviour
 	{
 		public static EffectManager Inst;
+		
+		[TabGroup("Audio")]
+		[SerializeField]
+		private AudioClip refillHeart, dialogOpen;
 		
 		[SerializeField]
 		private int repeatNum = 25;
@@ -24,14 +29,22 @@ namespace SpringMatch {
 		private long[] shortPattern = new long[] {500};
 		private long[] longPattern = new long[] {1000};
 		
+		private AudioSource audioSource;
+		
 		// Start is called before the first frame update
 		void Awake()
 		{
 			Inst = this;
+			audioSource = GetComponent<AudioSource>();
 		}
 
 		public void VibratePickup() {
 			
+		}
+		
+		[Button]
+		public void PlaySoundRefillHeart() {
+			audioSource.PlayOneShot(refillHeart);
 		}
 		
 		public async UniTaskVoid VibrateMerge() {

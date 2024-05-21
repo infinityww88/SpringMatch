@@ -18,6 +18,8 @@ namespace VisualTweenSequence {
 		[System.Serializable]
 		public class EventItem {
 			public float delay;
+			public int repeat = 1;
+			public float duration = 1f;
 			public UltEvent evt;
 		}
 		
@@ -46,7 +48,16 @@ namespace VisualTweenSequence {
 				seq.Insert(t.delay, t.tweener.Tween());
 			}
 			foreach (var e in events) {
-				seq.InsertCallback(e.delay, () => e.evt?.Invoke());
+				if (e.repeat == 1) {
+					seq.InsertCallback(e.delay, () => e.evt?.Invoke());
+				}
+				else {
+					e.repeat = Mathf.Max(e.repeat, 1);
+					var evtSeq = DOTween.Sequence().AppendCallback(() => e.evt?.Invoke())
+						.AppendInterval(e.duration / e.repeat)
+						.SetLoops(e.repeat, LoopType.Restart).SetTarget(this);
+					seq.Insert(e.delay, evtSeq);
+				}
 			}
 		}
 	}
