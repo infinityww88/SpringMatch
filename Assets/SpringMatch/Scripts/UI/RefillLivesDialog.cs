@@ -25,9 +25,6 @@ namespace SpringMatch.UI {
 		private IntVariable refillLiveInterval;
 		
 		[SerializeField]
-		private IntVariable heartGoldCost;
-		
-		[SerializeField]
 		private float refillEffectInterval = 0.7f;
 		
 		[SerializeField]
@@ -50,19 +47,25 @@ namespace SpringMatch.UI {
 		
 		[Button]
 		public void TestHearts(int num) {
-			PrefsManager.DecHeartNum(num);
+			PrefsManager.Inst.DecHeartNum(num);
 		}
 		
 		[Button]
 		public void RefillHearts() {
-			if (PrefsManager.HeartNum == 5) {
+			if (PrefsManager.Inst.HeartNum == 5) {
+				return;
+			}
+			var requestGold = (5 - PrefsManager.Inst.HeartNum) * UIVariable.Inst.heartGoldCost.Value;
+			if (requestGold > PrefsManager.Inst.GoldNum) {
+				UIVariable.Inst.shopDialog.gameObject.SetActive(true);
 				return;
 			}
 			updateSeq.Pause();
-			var oldNum = PrefsManager.HeartNum;
-			int startIndex = PrefsManager.HeartNum;
-			PrefsManager.RefillLives();
-			if (oldNum == 0 && PrefsManager.HeartNum > 0) {
+			var oldNum = PrefsManager.Inst.HeartNum;
+			int startIndex = PrefsManager.Inst.HeartNum;
+			PrefsManager.Inst.GoldNum -= requestGold;
+			PrefsManager.Inst.RefillLives();
+			if (oldNum == 0 && PrefsManager.Inst.HeartNum > 0) {
 				OnLifeAvailable.Invoke();
 			}
 			var seq = DOTween.Sequence();
@@ -83,23 +86,23 @@ namespace SpringMatch.UI {
 		}
 		
 		public System.TimeSpan GetRemainRefillTime() {
-			if (PrefsManager.HeartNum == 5) {
+			if (PrefsManager.Inst.HeartNum == 5) {
 				return System.TimeSpan.FromSeconds(0);
 			}
-			return System.TimeSpan.FromSeconds(refillLiveInterval.Value) - (System.DateTime.Now - PrefsManager.LastRefillLifeTime);
+			return System.TimeSpan.FromSeconds(refillLiveInterval.Value) - (System.DateTime.Now - PrefsManager.Inst.LastRefillLifeTime);
 		}
 		
 		// This function is called when the object becomes enabled and active.
 		protected void OnEnable()
 		{
 			updateSeq = DOTween.Sequence().AppendCallback(() => {
-				var oldNum = PrefsManager.HeartNum;
-				PrefsManager.UpdateHeartNum(refillLiveInterval.Value);
-				SetHeartNum(PrefsManager.HeartNum);
+				var oldNum = PrefsManager.Inst.HeartNum;
+				PrefsManager.Inst.UpdateHeartNum();
+				SetHeartNum(PrefsManager.Inst.HeartNum);
 				var remain = GetRemainRefillTime();
 				timeInfo.text = $"{remain.Minutes:D2}:{remain.Seconds:D2}";
-				goldCostText.text = $"{heartGoldCost.Value * (5 - PrefsManager.HeartNum)}";
-				if (oldNum == 0 && PrefsManager.HeartNum > 0) {
+				goldCostText.text = $"{UIVariable.Inst.heartGoldCost.Value * (5 - PrefsManager.Inst.HeartNum)}";
+				if (oldNum == 0 && PrefsManager.Inst.HeartNum > 0) {
 					OnLifeAvailable.Invoke();
 				}
 			}).AppendInterval(0.5f).SetLoops(-1, LoopType.Restart).SetTarget(this);

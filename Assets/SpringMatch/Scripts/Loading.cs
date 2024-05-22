@@ -72,11 +72,11 @@ namespace SpringMatch {
 				MetaInfo meta = JsonUtility.FromJson<MetaInfo>(text);
 				Debug.Log($"resVersion {meta.resVersion}");
 				resVersion = meta.resVersion;
-				int localVersion = PrefsManager.GetInt(PrefsManager.VERSION, 0);
+				int localVersion = PrefsManager.Inst.GetInt(PrefsManager.VERSION, 0);
 				Debug.Log($"online version {meta.version}, local version {localVersion}");
 				if (meta.version > localVersion) {
 					await DownloadLevels();
-					PrefsManager.SetInt(PrefsManager.VERSION, meta.version);
+					PrefsManager.Inst.SetInt(PrefsManager.VERSION, meta.version);
 				}
 			} catch (Exception e) {
 				Debug.Log(e);

@@ -4898,6 +4898,7 @@ GameObject:
   - component: {fileID: 8195548531611427068}
   - component: {fileID: 8556954485543187329}
   - component: {fileID: 553297473218748055}
+  - component: {fileID: 3341544009940855002}
   m_Layer: 5
   m_Name: GoldItem
   m_TagString: Untagged
@@ -4968,6 +4969,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3341544009940855002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331458895952720535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37666c1ca6c7127468cb6b465c7e17bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopConfig: {fileID: 11400000, guid: 41b64eaa90432374788ba142596c6be0, type: 2}
+  goldText: {fileID: 8607695786131587785}
+  revokeText: {fileID: 0}
+  shiftText: {fileID: 0}
+  randomText: {fileID: 0}
+  priceText: {fileID: 7808534529606630960}
 --- !u!1 &2855504616612693407
 GameObject:
   m_ObjectHideFlags: 0
@@ -10216,8 +10235,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -151}
-  m_SizeDelta: {x: 160, y: 74.4007}
+  m_AnchoredPosition: {x: -0.0000021458, y: -147}
+  m_SizeDelta: {x: 188.2173, y: 85.4861}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1342492280935277664
 CanvasRenderer:

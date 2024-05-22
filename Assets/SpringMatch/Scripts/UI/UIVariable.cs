@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ScriptableObjectArchitecture;
 
 namespace SpringMatch.UI {
 	
@@ -22,6 +23,7 @@ namespace SpringMatch.UI {
 		public RectTransform outOfSpaceDialog;
 		public RectTransform giveupConfirmDialog;
 		public RectTransform SettingDialog;
+		public IntVariable heartGoldCost;
 	}
 }
 

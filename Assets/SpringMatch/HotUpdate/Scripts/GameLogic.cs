@@ -45,12 +45,12 @@ namespace SpringMatch {
 		}
 	
 		public void StartPlay() {
-			PrefsManager.UpdateHeartNum(refillLiveInterval.Value);
-			if (PrefsManager.HeartNum == 0) {
+			PrefsManager.Inst.UpdateHeartNum();
+			if (PrefsManager.Inst.HeartNum == 0) {
 				UI.UIVariable.Inst.outOfLifeStartDialog.gameObject.SetActive(true);
 				return;
 			}
-			PrefsManager.DecHeartNum();
+			PrefsManager.Inst.DecHeartNum();
 			Global.PendInteract = false;
 			Global.GameOver = false;
 			startPlayEffect.Play();
@@ -114,8 +114,8 @@ namespace SpringMatch {
 		}
 		
 		public void OnLoseLife() {
-			PrefsManager.UpdateHeartNum(refillLiveInterval.Value);
-			if (PrefsManager.HeartNum > 0) {
+			PrefsManager.Inst.UpdateHeartNum();
+			if (PrefsManager.Inst.HeartNum > 0) {
 				Replay();
 			} else {
 				UI.UIVariable.Inst.outOfLifeDialog.gameObject.SetActive(true);
@@ -144,7 +144,7 @@ namespace SpringMatch {
 			level.LoadJson(text);
 			currLevel = level;
 			levelProgress.ToLevel0();
-			PrefsManager.DecHeartNum();
+			PrefsManager.Inst.DecHeartNum();
 		}
 		
 		[Button]

@@ -6,6 +6,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine.UI;
 using SpringMatch;
+using ScriptableObjectArchitecture;
 
 namespace SpringMatch.UI {
 	
@@ -15,13 +16,19 @@ namespace SpringMatch.UI {
 		private Sprite _grayBg, _normalBg;
 		
 		[SerializeField]
-		private TextMeshProUGUI _itemNumText;
+		private TextMeshProUGUI _itemNumText, _itemCostText;
 		
 		private int _itemNum;
 		private bool _valid = false;
 		
 		[SerializeField]
 		private string _saveKey;
+		
+		[SerializeField]
+		private IntVariable goldCost;
+		
+		[SerializeField]
+		private UnityEngine.Events.UnityEvent onGet;
 		
 		[Button]
 		public int ItemNum {
@@ -31,7 +38,7 @@ namespace SpringMatch.UI {
 			set {
 				_itemNum = value;
 				_itemNumText.text = $"{_itemNum}";
-				PrefsManager.SetInt(_saveKey, value);
+				PrefsManager.Inst.SetInt(_saveKey, value);
 			}
 		}
 		
@@ -51,15 +58,16 @@ namespace SpringMatch.UI {
 				Debug.Log($"Use a item");
 				ItemNum--;
 			} else {
-				UIVariable.Inst.itemRequestDialog.gameObject.SetActive(true);
+				UIVariable.Inst.itemRequestDialog.GetComponent<GetItemDialog>().Show(goldCost, onGet);
 			}
 		}
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Start()
 		{
-			_itemNum = PrefsManager.GetInt(_saveKey, 0);
+			_itemNum = PrefsManager.Inst.GetInt(_saveKey, 0);
 			_itemNumText.text = $"{_itemNum}";
+			_itemCostText.text = $"{goldCost.Value}";
 		}
 	}
 }
