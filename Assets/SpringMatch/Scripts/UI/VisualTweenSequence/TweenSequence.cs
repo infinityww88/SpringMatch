@@ -24,10 +24,16 @@ namespace VisualTweenSequence {
 		}
 		
 		[SerializeField]
+		private float delay = 0;
+		
+		[SerializeField]
 		private List<TweenItem> tweens;
 		
 		[SerializeField]
 		private List<EventItem> events;
+		
+		[SerializeField]
+		private UltEvent onComplete;
 		
 		[Button]
 		public void Preview() {
@@ -43,7 +49,10 @@ namespace VisualTweenSequence {
 		[Button]
 		public void Play() {
 			this.DOKill(true);
-			var seq = DOTween.Sequence().SetTarget(this);
+			var seq = DOTween.Sequence()
+				.SetTarget(this)
+				.SetDelay(delay, false)
+				.OnComplete(onComplete.Invoke);
 			foreach (var t in tweens) {
 				seq.Insert(t.delay, t.tweener.Tween());
 			}

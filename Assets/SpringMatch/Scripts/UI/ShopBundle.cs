@@ -12,6 +12,8 @@ namespace SpringMatch.UI {
 		[SerializeField]
 		private TMPro.TextMeshProUGUI goldText, revokeText, shiftText, randomText, priceText;
 		
+		public ShopBundleConfig BundleConfig => shopConfig;
+		
 		public void Show(ShopBundleConfig shopConfig) {
 			this.shopConfig = shopConfig;
 			gameObject.SetActive(true);

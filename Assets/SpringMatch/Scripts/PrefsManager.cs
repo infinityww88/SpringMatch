@@ -18,14 +18,17 @@ namespace SpringMatch {
 		public const string VERSION = "version";
 		public const string RES_VERSION = "resVersion";
 		
-		private Dictionary<string, int> intCache = new Dictionary<string, int>();
-		private Dictionary<string, float> floatCache = new Dictionary<string, float>();
-		private Dictionary<string, string> stringCache = new Dictionary<string, string>();
+		private static Dictionary<string, int> intCache = new Dictionary<string, int>();
+		private static Dictionary<string, float> floatCache = new Dictionary<string, float>();
+		private static Dictionary<string, string> stringCache = new Dictionary<string, string>();
 		
 		public static PrefsManager Inst;
 
 		[SerializeField]
 		private IntVariable refillLifeInterval;
+		
+		[SerializeField]
+		private IntGameEvent goldUpdate, heartUpdate, revokeUpdate, shiftUpdate, randomUpdate;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
@@ -55,15 +58,6 @@ namespace SpringMatch {
 		public void AddRandom(int num = 1) {
 			RandomItemNum += num;
 		}
-		
-		// This function is called when the MonoBehaviour will be destroyed.
-		protected void OnDestroy()
-		{
-			Inst = null;
-		}
-		
-		[SerializeField]
-		private IntGameEvent goldUpdate, heartUpdate, revokeUpdate, shiftUpdate, randomUpdate;
 		
 		public void DeleteAll() {
 			Debug.Log("Delete All Prefs");
@@ -177,38 +171,38 @@ namespace SpringMatch {
 			}
 		}
 	
-		public int GetInt(string key, int dafaultValue) {
+		public static int GetInt(string key, int dafaultValue) {
 			if (!intCache.ContainsKey(key)) {
 				intCache[key] = PlayerPrefs.GetInt(key, dafaultValue);
 			}
 			return intCache[key];
 		}
 	
-		public void SetInt(string key, int value) {
+		public static void SetInt(string key, int value) {
 			intCache[key] = value;
 			PlayerPrefs.SetInt(key, value);
 		}
 		
-		public float GetFloat(string key, float dafaultValue) {
+		public static float GetFloat(string key, float dafaultValue) {
 			if (!floatCache.ContainsKey(key)) {
 				floatCache[key] = PlayerPrefs.GetFloat(key, dafaultValue);
 			}
 			return floatCache[key];
 		}
 	
-		public void SetFloat(string key, float value) {
+		public static void SetFloat(string key, float value) {
 			floatCache[key] = value;
 			PlayerPrefs.SetFloat(key, value);
 		}
 		
-		public string GetString(string key, string dafaultValue) {
+		public static string GetString(string key, string dafaultValue) {
 			if (!stringCache.ContainsKey(key)) {
 				stringCache[key] = PlayerPrefs.GetString(key, dafaultValue);
 			}
 			return stringCache[key];
 		}
 	
-		public void SetString(string key, string value) {
+		public static void SetString(string key, string value) {
 			stringCache[key] = value;
 			PlayerPrefs.SetString(key, value);
 		}

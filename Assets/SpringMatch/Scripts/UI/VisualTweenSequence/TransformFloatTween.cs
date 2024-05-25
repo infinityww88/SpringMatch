@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 
 namespace VisualTweenSequence {
 	
@@ -25,6 +26,54 @@ namespace VisualTweenSequence {
 		
 		[SerializeField]
 		private Transform target;
+		
+		[SerializeField]
+		[ShowIf("@this._UseRef()")]
+		private Transform refStart, refEnd;
+		
+		private float GetRefValue(Transform refTarget) {
+			switch (tweenAttr) {
+			case Attr.LocalMoveX:
+				return refTarget.localPosition.x;
+				break;
+			case Attr.LocalMoveY:
+				return refTarget.localPosition.y;
+				break;
+			case Attr.LocalMoveZ:
+				return refTarget.localPosition.z;
+				break;
+			case Attr.LocalEulerAnglesX:
+				return refTarget.localEulerAngles.x;
+				break;
+			case Attr.LocalEulerAnglesY:
+				return refTarget.localEulerAngles.y;
+				break;
+			case Attr.LocalEulerAnglesZ:
+				return refTarget.localEulerAngles.z;
+				break;
+			case Attr.LocalScaleX:
+				return refTarget.localScale.x;
+				break;
+			case Attr.LocalScaleY:
+				return refTarget.localScale.y;
+				break;
+			case Attr.LocalScaleZ:
+				return refTarget.localScale.z;
+				break;
+			case Attr.LocalScale:
+				return refTarget.localScale.x;
+				break;
+			}
+			return default(float);
+		}
+		
+		protected override float GetRefStartValue() {
+			return GetRefValue(refStart);
+		}
+		
+		protected override float GetRefEndValue() {
+			return GetRefValue(refEnd);
+		}
 		
 		protected override Object GetTarget() {
 			return target.gameObject;

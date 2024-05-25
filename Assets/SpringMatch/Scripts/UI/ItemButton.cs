@@ -38,7 +38,7 @@ namespace SpringMatch.UI {
 			set {
 				_itemNum = value;
 				_itemNumText.text = $"{_itemNum}";
-				PrefsManager.Inst.SetInt(_saveKey, value);
+				PrefsManager.SetInt(_saveKey, value);
 			}
 		}
 		
@@ -65,7 +65,7 @@ namespace SpringMatch.UI {
 		// Awake is called when the script instance is being loaded.
 		protected void Start()
 		{
-			_itemNum = PrefsManager.Inst.GetInt(_saveKey, 0);
+			_itemNum = PrefsManager.GetInt(_saveKey, 0);
 			_itemNumText.text = $"{_itemNum}";
 			_itemCostText.text = $"{goldCost.Value}";
 		}

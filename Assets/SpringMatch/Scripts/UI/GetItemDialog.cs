@@ -16,7 +16,17 @@ namespace SpringMatch.UI {
 			gameObject.SetActive(true);
 		}
 		
-		public void Apply() {
+		public void BuyGold() {
+			Debug.Log($"{PrefsManager.Inst.GoldNum} {goldCost.Value}");
+			if (PrefsManager.Inst.GoldNum < goldCost.Value) {
+				UI.UIVariable.Inst.shopDialog.gameObject.SetActive(true);
+				return;
+			}
+			PrefsManager.Inst.GoldNum -= goldCost.Value;
+			onGet?.Invoke();
+		}
+		
+		public void BuyFree() {
 			onGet?.Invoke();
 		}
 	}

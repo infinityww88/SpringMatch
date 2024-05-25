@@ -9,6 +9,7 @@ namespace VisualTweenSequence {
 	
 	public abstract class TweenBase : MonoBehaviour {
 		public abstract Tweener Tween();
+		public abstract void Play();
 		protected abstract Object GetTarget();
 	}
 	
@@ -23,7 +24,21 @@ namespace VisualTweenSequence {
 		public LoopType loopType =	LoopType.Yoyo;
 		public bool autoPlay = true;
 		public bool playOnAwake = false;
+		public float delay = 0;
+		
 		public bool autoKill = true;
+		
+		[ShowIf("@this._UseRef()")]
+		public bool useRefStartValue = false;
+		[ShowIf("@this._UseRef()")]
+		public bool useRefEndValue = false;
+		
+		protected abstract T Getter();
+		protected abstract void Setter(T v);
+		
+		protected virtual bool _UseRef() {
+			return false;
+		}
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
@@ -33,17 +48,37 @@ namespace VisualTweenSequence {
 				Tween();
 			}
 		}
-	
+
 		protected abstract Tweener CreateTween();
+		
+		protected virtual T GetRefStartValue() {
+			return default(T);
+		}
+		
+		protected virtual T GetRefEndValue() {
+			return default(T);
+		}
 	
 		[Button]
 		public void Kill(bool complete = false) {
 			DOTween.Kill(this, complete);
 		}
+		
+		protected T StartValue => useRefStartValue ? GetRefStartValue() : startValue;
+		protected T EndValue => useRefEndValue ? GetRefEndValue() : endValue;
+		
+		public override void Play() {
+			Tween().Play();
+		}
 	
 		[Button]
 		public override Tweener Tween() {
+			if (useStartValue) {
+				Setter(StartValue);
+			}
+			
 			var tweener = CreateTween()
+				.SetDelay(delay)
 				.SetLoops(loop, loopType)
 				.SetEase(ease)
 				.OnKill(() => onKill?.Invoke())
@@ -67,40 +102,22 @@ namespace VisualTweenSequence {
 	
 	public abstract class FloatTweenBase : TweenBase<float>
 	{
-		protected abstract float Getter();
-		protected abstract void Setter(float v);
-	
 		protected override Tweener CreateTween() {
-			if (useStartValue) {
-				Setter(startValue);
-			}
-			return DOTween.To(Getter, Setter, endValue, duration);
+			return DOTween.To(Getter, Setter, EndValue, duration);
 		}
 	}
 	
 	public abstract class Vector3TweenBase : TweenBase<Vector3>
 	{
-		protected abstract Vector3 Getter();
-		protected abstract void Setter(Vector3 v);
-	
 		protected override Tweener CreateTween() {
-			if (useStartValue) {
-				Setter(startValue);
-			}
-			return DOTween.To(Getter, Setter, endValue, duration);
+			return DOTween.To(Getter, Setter, EndValue, duration);
 		}
 	}
 	
 	public abstract class Vector2TweenBase : TweenBase<Vector2>
 	{
-		protected abstract Vector2 Getter();
-		protected abstract void Setter(Vector2 v);
-	
 		protected override Tweener CreateTween() {
-			if (useStartValue) {
-				Setter(startValue);
-			}
-			return DOTween.To(Getter, Setter, endValue, duration);
+			return DOTween.To(Getter, Setter, EndValue, duration);
 		}
 	}
 }

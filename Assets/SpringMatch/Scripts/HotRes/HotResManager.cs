@@ -30,11 +30,11 @@ namespace SpringMatch.HotRes {
 		}
 		
 		public async UniTask UpdateResource(string resVersion, DownloaderOperation.OnDownloadProgress onProgress) {
-			#if UNITY_EDITOR
-			await InitPkgEditor(DEFAULT_PKG);
-			#else
+			//#if UNITY_EDITOR
+			//await InitPkgEditor(DEFAULT_PKG);
+			//#else
 			await InitRemote(resVersion, DEFAULT_PKG);
-			#endif
+			//#endif
 			string version = await UpdatePackageVersion(DEFAULT_PKG);
 			await UpdatePackageManifest(DEFAULT_PKG, version);
 			await DownloadPatch(DEFAULT_PKG,

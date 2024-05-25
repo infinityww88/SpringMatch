@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 
 namespace VisualTweenSequence {
 	
@@ -22,6 +23,34 @@ namespace VisualTweenSequence {
 		protected override Object GetTarget()
 		{
 			return target.gameObject;
+		}
+		
+		[SerializeField]
+		[ShowIf("@this._UseRef()")]
+		private RectTransform refStart, refEnd;
+		
+		private Vector2 GetRefValue(RectTransform refTarget) {
+			switch (tweenAttr)
+			{
+			case Attr.AnchorPos:
+				return refTarget.anchoredPosition;
+				break;
+			case Attr.Pivot:
+				return refTarget.pivot;
+				break;
+			case Attr.SizeDelta:
+				return refTarget.sizeDelta;
+				break;
+			}
+			return default(Vector2);
+		}
+		
+		protected override Vector2 GetRefStartValue() {
+			return GetRefValue(refStart);
+		}
+		
+		protected override Vector2 GetRefEndValue() {
+			return GetRefValue(refEnd);
 		}
 		
 		protected override Vector2 Getter()

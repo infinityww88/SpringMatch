@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 
 namespace VisualTweenSequence {
 	
@@ -25,6 +26,55 @@ namespace VisualTweenSequence {
 		
 		[SerializeField]
 		private RectTransform target;
+		
+		[SerializeField]
+		[ShowIf("@this._UseRef()")]
+		private RectTransform refStart, refEnd;
+		
+		private float GetRefValue(RectTransform refTarget) {
+			switch (tweenAttr)
+			{
+			case Attr.AnchorPosX:
+				return refTarget.anchoredPosition.x;
+				break;
+			case Attr.AnchorPosY:
+				return refTarget.anchoredPosition.y;
+				break;
+			case Attr.AnchorPos3DX:
+				return refTarget.anchoredPosition3D.x;
+				break;
+			case Attr.AnchorPos3DY:
+				return refTarget.anchoredPosition3D.y;
+				break;
+			case Attr.AnchorPos3DZ:
+				return refTarget.anchoredPosition3D.z;
+				break;
+			case Attr.PivotX:
+				return refTarget.pivot.x;
+				break;
+			case Attr.PivotY:
+				return refTarget.pivot.x;
+				break;
+			case Attr.SizeDelta:
+				return refTarget.sizeDelta.x;
+				break;
+			case Attr.SizeDeltaX:
+				return refTarget.sizeDelta.x;
+				break;
+			case Attr.SizeDeltaY:
+				return refTarget.sizeDelta.y;
+				break;
+			}
+			return default(float);
+		}
+		
+		protected override float GetRefStartValue() {
+			return GetRefValue(refStart);
+		}
+		
+		protected override float GetRefEndValue() {
+			return GetRefValue(refEnd);
+		}
 		
 		protected override Object GetTarget()
 		{
