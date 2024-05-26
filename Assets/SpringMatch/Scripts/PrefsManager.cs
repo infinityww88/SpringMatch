@@ -17,6 +17,7 @@ namespace SpringMatch {
 		public const string LAST_HEART_REFILL_TIME = "last_heart_refill_time";
 		public const string VERSION = "version";
 		public const string RES_VERSION = "resVersion";
+		public const string Store_LINK = "store_link";
 		
 		private static Dictionary<string, int> intCache = new Dictionary<string, int>();
 		private static Dictionary<string, float> floatCache = new Dictionary<string, float>();

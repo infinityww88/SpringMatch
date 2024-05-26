@@ -24,6 +24,8 @@ namespace SpringMatch.UI {
 		public RectTransform giveupConfirmDialog;
 		public RectTransform SettingDialog;
 		public IntVariable heartGoldCost;
+		public GetItemDialog getItemDialog;
+		public ShareDialog shareDialog;
 	}
 }
 

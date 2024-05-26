@@ -25,10 +25,10 @@ namespace SpringMatch.UI {
 		private string _saveKey;
 		
 		[SerializeField]
-		private IntVariable goldCost;
+		private ItemConfig itemConfig;
 		
 		[SerializeField]
-		private UnityEngine.Events.UnityEvent onGet;
+		private UnityEngine.Events.UnityEvent onRequestItem;
 		
 		[Button]
 		public int ItemNum {
@@ -58,7 +58,7 @@ namespace SpringMatch.UI {
 				Debug.Log($"Use a item");
 				ItemNum--;
 			} else {
-				UIVariable.Inst.itemRequestDialog.GetComponent<GetItemDialog>().Show(goldCost, onGet);
+				onRequestItem.Invoke();
 			}
 		}
 		
@@ -67,7 +67,7 @@ namespace SpringMatch.UI {
 		{
 			_itemNum = PrefsManager.GetInt(_saveKey, 0);
 			_itemNumText.text = $"{_itemNum}";
-			_itemCostText.text = $"{goldCost.Value}";
+			_itemCostText.text = $"{itemConfig.goldCost}";
 		}
 	}
 }

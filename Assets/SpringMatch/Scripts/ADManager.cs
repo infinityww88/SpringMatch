@@ -16,9 +16,6 @@ namespace SpringMatch {
 		
 		public static AdManager Inst;
 		
-		[SerializeField]
-		private UnityEvent onAdReward;
-		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
@@ -69,7 +66,7 @@ namespace SpringMatch {
 			});
 		}
 		[Command]
-		public void ShowRewardedAd() {
+		public void ShowRewardedAd(System.Action onReward) {
 			const string rewardMsg =
 				"Rewarded ad rewarded the user. Type: {0}, amount: {1}.";
 
@@ -79,7 +76,7 @@ namespace SpringMatch {
 				{
 					// TODO: Reward the user.
 					Debug.Log(string.Format(rewardMsg, reward.Type, reward.Amount));
-					onAdReward.Invoke();
+					onReward?.Invoke();
 				});
 			} else {
 				LoadRewardedAd();

@@ -16,17 +16,9 @@ namespace SpringMatch {
 			Inst = this;
 		}
 		
-		public void ShareGeneral() {
-			ShareSheet shareSheet = ShareSheet.CreateInstance();
-			shareSheet.AddText("Share the app");
-			shareSheet.AddScreenshot();
-			shareSheet.SetCompletionCallback((result, error) => {
-    Debug.Log("Share Sheet was closed. Result code: " + result.ResultCode);
-			});
-			shareSheet.Show();
-		}
+		public string StoreLink => PrefsManager.GetString(PrefsManager.Store_LINK, "");
 		
-		public void ShareTweet() {
+		public void ShareTwitter(System.Action onSuccess, System.Action onFailed) {
 			var available = SocialShareComposer.IsComposerAvailable(SocialShareComposerType.Twitter);
 			if (!available) {
 				Debug.Log("twitter share is not available");
@@ -34,9 +26,17 @@ namespace SpringMatch {
 			}
 			SocialShareComposer composer = SocialShareComposer.CreateInstance(SocialShareComposerType.Twitter);
 			composer.AddScreenshot();
-			composer.AddURL(URLString.URLWithPath("https://www.google.com"));
+			composer.AddURL(URLString.URLWithPath(StoreLink));
 			composer.SetCompletionCallback((result, error) => {
-				Debug.Log("Social Share Composer was closed, Result Code : " + result.ResultCode);
+				if (result.ResultCode == SocialShareComposerResultCode.Done) {
+					Debug.Log("Social Share Composer was Done");
+					onSuccess?.Invoke();
+				}
+				else {
+					Debug.Log("Social Share Composer was Cancel");
+					onFailed?.Invoke();
+				}
+				
 			});
 			composer.Show();
 		}
