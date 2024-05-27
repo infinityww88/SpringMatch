@@ -60,14 +60,14 @@ namespace SpringMatch.UI {
 				UIVariable.Inst.shopDialog.gameObject.SetActive(true);
 				return;
 			}
-			updateSeq.Pause();
-			var oldNum = PrefsManager.Inst.HeartNum;
+			updateSeq.Kill();
+			updateSeq = null;
+			bool heartAvailable = PrefsManager.Inst.HeartNum > 0;
 			int startIndex = PrefsManager.Inst.HeartNum;
 			PrefsManager.Inst.GoldNum -= requestGold;
 			PrefsManager.Inst.RefillLives();
-			if (oldNum == 0 && PrefsManager.Inst.HeartNum > 0) {
-				OnLifeAvailable.Invoke();
-			}
+			timeInfo.text = $"00:00";
+			goldCostText.text = "0";
 			var seq = DOTween.Sequence();
 			for (int i = startIndex; i < hearts.Length; i++) {
 				var heart = hearts[i].GetComponent<Image>();
@@ -79,8 +79,12 @@ namespace SpringMatch.UI {
 					effect.Play();
 					EffectManager.Inst.PlaySoundRefillHeart();
 				})
+					.OnComplete(() => {
+						if (!heartAvailable && PrefsManager.Inst.HeartNum > 0) {
+							OnLifeAvailable.Invoke();
+						}
+					})
 					.AppendInterval(refillEffectInterval)
-					.OnComplete(() => updateSeq.Play())
 					.SetTarget(this);
 			}
 		}
@@ -95,14 +99,15 @@ namespace SpringMatch.UI {
 		// This function is called when the object becomes enabled and active.
 		protected void OnEnable()
 		{
+			bool heartAvailable = false;
 			updateSeq = DOTween.Sequence().AppendCallback(() => {
-				var oldNum = PrefsManager.Inst.HeartNum;
 				PrefsManager.Inst.UpdateHeartNum();
 				SetHeartNum(PrefsManager.Inst.HeartNum);
 				var remain = GetRemainRefillTime();
 				timeInfo.text = $"{remain.Minutes:D2}:{remain.Seconds:D2}";
 				goldCostText.text = $"{UIVariable.Inst.heartGoldCost.Value * (5 - PrefsManager.Inst.HeartNum)}";
-				if (oldNum == 0 && PrefsManager.Inst.HeartNum > 0) {
+				if (!heartAvailable && PrefsManager.Inst.HeartNum > 0) {
+					heartAvailable = true;
 					OnLifeAvailable.Invoke();
 				}
 			}).AppendInterval(0.5f).SetLoops(-1, LoopType.Restart).SetTarget(this);

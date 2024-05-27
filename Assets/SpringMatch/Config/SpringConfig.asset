@@ -31,6 +31,7 @@ MonoBehaviour:
   extraSlotAutoHeightFactor: 1
   slotSlotAutoHeightFactor: 1.5
   maxAutoHeight: 3
+  extraHeight: 2
   springPoolKeys:
   - springModel0
   - springModel1

@@ -13,7 +13,7 @@ namespace SpringMatch {
 		public static Action<Spring> onInvalidPick;
 		public static Action<Spring> onToSlot;
 		public static Action<Spring> onRevoke;
-		public static Action onShift3;
+		public static Action<int> onShift;
 	}
 }
 

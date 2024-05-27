@@ -291,17 +291,27 @@ namespace SpringMatch {
 		
 		[Button]
 		public void Shift3ToExtra() {
+			ShiftToExtra(3);
+		}
+		
+		[Button]
+		public void Shift1ToExtra() {
+			ShiftToExtra(1);
+		}
+		
+		public void ShiftToExtra(int num) {
 			if (SlotManager.Inst.UsedSlotsNum == 0 || !ExtraSlotManager.Inst.Available()) {
 				return;
 			}
 			lastPickupSpring = null;
-			var springs = SlotManager.Inst.ShiftOutString(3);
+			var springs = SlotManager.Inst.ShiftOutString(num);
 			foreach (var s in springs) {
 				s.HoleSpring = null;
 			}
 			ExtraSlotManager.Inst.AddSprings(springs);
-			MsgBus.onShift3?.Invoke();
+			MsgBus.onShift?.Invoke(num);
 		}
+		
 		
 		public void RemoveSpring(Spring spring) {
 			

@@ -23,7 +23,7 @@ namespace SpringMatch {
 		[SerializeField]
 		private Level levelPrefab;
 		[SerializeField]
-		private UI.LevelProgress levelProgress;
+		private UI.LevelProgress levelProgress2, levelProgress3;
 		[SerializeField]
 		private IntVariable refillLiveInterval;
 		[SerializeField]
@@ -31,10 +31,15 @@ namespace SpringMatch {
 		
 		private int levelIndex = 0;
 		
+		private UI.LevelProgress levelProgress;
+		
 		private int goldNum;
 		private int heartNum;
 		
 		private Level currLevel = null;
+		
+		[SerializeField]
+		private int subLevelNum = 2;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
@@ -42,6 +47,42 @@ namespace SpringMatch {
 			Inst = this;
 			Global.PendInteract = true;
 			Global.GameOver = true;
+			SetupLevelProgress();
+			#if UNITY_EDITOR
+			YooAssets.Initialize();
+			
+			if (!YooAssets.ContainsPackage("DefaultPackage")) {
+				Debug.Log("init default package");
+				var defaultPkg = YooAssets.CreatePackage("DefaultPackage");
+				YooAssets.SetDefaultPackage(defaultPkg);
+				var initParameters = new EditorSimulateModeParameters();
+				var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
+				initParameters.SimulateManifestFilePath = simulateManifestFilePath;
+				defaultPkg.InitializeAsync(initParameters);
+			} else {
+				Debug.Log("set default package");
+				var defaultPkg = YooAssets.GetPackage("DefaultPackage");
+				YooAssets.SetDefaultPackage(defaultPkg);
+			}
+			#endif
+		}
+		
+		void SetupLevelProgress() {
+			levelProgress2.gameObject.SetActive(subLevelNum == 2);
+			levelProgress3.gameObject.SetActive(subLevelNum == 3);
+			levelProgress = subLevelNum == 2 ? levelProgress2 : levelProgress3;
+		}
+		
+		[Button]
+		public void Replay() {
+			Destroy(currLevel.gameObject);
+			var level = Instantiate(levelPrefab);
+			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
+			level.LoadJson(text);
+			currLevel = level;
+			levelIndex = 0;
+			levelProgress.ToLevel0();
+			PrefsManager.Inst.DecHeartNum();
 		}
 	
 		public void StartPlay() {
@@ -65,7 +106,7 @@ namespace SpringMatch {
 			MsgBus.onInvalidPick += onInvalidPick;
 			MsgBus.onToSlot += OnToSlot;
 			MsgBus.onRevoke += onRevoke;
-			MsgBus.onShift3 += onShift3;
+			MsgBus.onShift += onShift;
 		}
 		
 		// This function is called when the behaviour becomes disabled () or inactive.
@@ -77,7 +118,7 @@ namespace SpringMatch {
 			MsgBus.onInvalidPick -= onInvalidPick;
 			MsgBus.onToSlot -= OnToSlot;
 			MsgBus.onRevoke -= onRevoke;
-			MsgBus.onShift3 -= onShift3;
+			MsgBus.onShift -= onShift;
 		}
 		
 		public void OnLevelFailed() {
@@ -105,12 +146,30 @@ namespace SpringMatch {
 			Debug.Log($"On Revoke {spring.Type}");
 		}
 		
-		public void onShift3() {
-			Debug.Log($"On Shift3");
+		public void onShift(int num) {
+			Debug.Log($"On Shift {num}");
 		}
 		
 		public void BackHome() {
 			YooAssets.LoadSceneAsync("HotScene_Play");
+		}
+		
+		public void PlayOnByGold() {
+			if (PrefsManager.Inst.GoldNum < UI.UIVariable.Inst.playOnGoldCost.Value) {
+				UI.UIVariable.Inst.shopDialog.SetActive(true);
+			}
+			else {
+				PrefsManager.Inst.GoldNum -= UI.UIVariable.Inst.playOnGoldCost.Value;
+				Level.Inst.Shift3ToExtra();
+				UI.UIVariable.Inst.outOfSpaceDialog.SetActive(false);
+			}
+		}
+		
+		public void PlayOnByAd() {
+			AdManager.Inst.ShowRewardedAd(() => {
+				UI.UIVariable.Inst.outOfSpaceDialog.SetActive(false);
+				Level.Inst.Shift1ToExtra();
+			});
 		}
 		
 		public void OnLoseLife() {
@@ -136,26 +195,38 @@ namespace SpringMatch {
 			currLevel = Level.Inst;
 		}
 		
+		public void NextLevel() {
+			Replay();
+		}
+		
+		public void DoubleGold() {
+			AdManager.Inst.ShowRewardedAd(() => {
+				RewardGold(UI.UIVariable.Inst.levelPassGoldReward.Value);
+			});
+		}
+		
 		[Button]
-		public void Replay() {
-			Destroy(currLevel.gameObject);
-			var level = Instantiate(levelPrefab);
-			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
-			level.LoadJson(text);
-			currLevel = level;
-			levelProgress.ToLevel0();
-			PrefsManager.Inst.DecHeartNum();
+		void RewardGold(int num) {
+			PrefsManager.Inst.GoldNum += num;
+			UI.UIVariable.Inst.rewardGoldEffect.GetComponent<VisualTweenSequence.TweenSequence>().Play();
 		}
 		
 		[Button]
 		public async UniTaskVoid SwitchLevel() {
 			await UniTask.Delay(3000);
-			if (levelIndex == 0) {
+			if (subLevelNum == 3 && levelIndex == 0) {
 				levelProgress.ToLevel2();
-			} else if (levelIndex == 1) {
+			} else if (subLevelNum == 2 && levelIndex == 0 || subLevelNum == 3 && levelIndex == 1) {
 				levelProgress.ToLevel3();
 			}
+			
 			levelIndex++;
+			
+			if (levelIndex == subLevelNum) {
+				RewardGold(UI.UIVariable.Inst.levelPassGoldReward.Value);
+				UI.UIVariable.Inst.levelPass.SetActive(true);
+				return;
+			}
 			
 			currLevel.transform.Translate(left.localPosition, Space.Self);
 			Camera.main.transform.Translate(left.localPosition, Space.Self);

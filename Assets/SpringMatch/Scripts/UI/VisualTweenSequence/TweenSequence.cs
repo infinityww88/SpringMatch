@@ -19,7 +19,7 @@ namespace VisualTweenSequence {
 		public class EventItem {
 			public float delay;
 			public int repeat = 1;
-			public float duration = 1f;
+			public float duration = 0f;
 			public UltEvent evt;
 		}
 		

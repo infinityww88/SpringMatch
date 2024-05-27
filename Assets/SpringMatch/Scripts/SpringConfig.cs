@@ -52,6 +52,8 @@ namespace SpringMatch {
 		public float slotSlotAutoHeightFactor = 1.5f;
 		[BoxGroup("Tween Height")]
 		public float maxAutoHeight = 5f;
+		[BoxGroup("Tween Height")]
+		public float extraHeight = 3f;
 		
 		[BoxGroup("Spring LOD")]
 		public List<string> springPoolKeys;

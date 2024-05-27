@@ -259,7 +259,8 @@ namespace SpringMatch {
 		public void ToExtra(int extraIndex, Vector3 foot0Pos, Vector3 foot1Pos) {
 			Foot0Pos = foot0Pos;
 			Foot1Pos = foot1Pos;
-			Height = (foot0Pos - foot1Pos).magnitude/2;
+			//Height = (foot0Pos - foot1Pos).magnitude/2;
+			Height = _springConfig.extraHeight;
 		
 			ExtraSlotIndex = extraIndex;
 			LastExtraSlotIndex = extraIndex;

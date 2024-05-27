@@ -14,10 +14,9 @@ namespace SpringMatch {
 		[SerializeField]
 		private SimpleAnimator revokeRewardAnimator, shiftRewardAnimator, randomRewardAnimator;
 		
-		[SerializeField]
-		private GameObject _getItemDialog;
-		
 		private ItemConfig currentItemConfig;
+		
+		public ItemConfig CurrentItemConfig => currentItemConfig;
 		
 		void Awake()
 		{
@@ -45,7 +44,7 @@ namespace SpringMatch {
 		public void BuyGold() {
 			Debug.Log($"{PrefsManager.Inst.GoldNum} {currentItemConfig.goldCost}");
 			if (PrefsManager.Inst.GoldNum < currentItemConfig.goldCost) {
-				UI.UIVariable.Inst.shopDialog.gameObject.SetActive(true);
+				UI.UIVariable.Inst.shopDialog.SetActive(true);
 				return;
 			}
 			PrefsManager.Inst.GoldNum -= currentItemConfig.goldCost;
@@ -70,19 +69,24 @@ namespace SpringMatch {
 		
 		public void GetItem(ItemConfig itemConfig) {
 			currentItemConfig = itemConfig;
-			_getItemDialog.SetActive(true);
+			UI.UIVariable.Inst.getItemDialog.SetActive(true);
+		}
+		
+		void AddItemByShare() {
+			UI.UIVariable.Inst.shareDialog.SetActive(false);
+			AddItem();
 		}
 		
 		public void ShareByFacebook() {
-			//ShareManager.Inst.
+			ShareManager.Inst.ShareFacebook(AddItemByShare, null);
 		}
 		
 		public void ShareByTwitter() {
-			ShareManager.Inst.ShareTwitter(AddItem, null);
+			ShareManager.Inst.ShareTwitter(AddItemByShare, null);
 		}
 		
 		public void ShareByWhatsApp() {
-			
+			ShareManager.Inst.ShareWhatsApp(AddItemByShare, null);
 		}
 	}
 

@@ -17,8 +17,8 @@ namespace SpringMatch.UI {
 		[Button]
 		public void ToLevel0() {
 			_fill.fillAmount = 0;
-			_level2Desc.gameObject.SetActive(false);
-			_level3Desc.gameObject.SetActive(false);
+			_level2Desc?.gameObject.SetActive(false);
+			_level3Desc?.gameObject.SetActive(false);
 		}
 		
 		[Button]

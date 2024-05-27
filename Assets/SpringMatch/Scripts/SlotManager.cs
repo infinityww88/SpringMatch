@@ -61,7 +61,8 @@ namespace SpringMatch {
 		}
 		
 		public Spring[] ShiftOutString(int n) {
-			n = Mathf.Min(3, usedSlotsNum);
+			n = Mathf.Min(n, usedSlotsNum);
+			Debug.Log($"shift out {n}");
 			Spring[] ret = new	Spring[n];
 			for (int i = 0; i < n; i++) {
 				var s = slots[i].Spring;
