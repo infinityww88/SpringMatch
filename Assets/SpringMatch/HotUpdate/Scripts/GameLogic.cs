@@ -31,7 +31,7 @@ namespace SpringMatch {
 		[SerializeField]
 		private LevelPrefabConfig levelPrefabs;
 		
-		private int levelIndex = 0;
+		private int subLevelIndex = 0;
 		
 		private UI.LevelProgress levelProgress;
 		
@@ -40,8 +40,16 @@ namespace SpringMatch {
 		
 		private Level currLevel = null;
 		
-		[SerializeField]
-		private int subLevelNum = 2;
+		private int SubLevelNum {
+			get {
+				var levelIndex = PrefsManager.Inst.LevelIndex;
+				levelIndex %= levelConfig.levels.Count;
+				var levelMeta = levelConfig.levels[levelIndex];
+				return levelMeta.subLevels.Count;
+			}
+		}
+		
+		private LevelConfig levelConfig;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
@@ -49,7 +57,6 @@ namespace SpringMatch {
 			Inst = this;
 			Global.PendInteract = true;
 			Global.GameOver = true;
-			SetupLevelProgress();
 			#if UNITY_EDITOR
 			YooAssets.Initialize();
 			
@@ -70,16 +77,17 @@ namespace SpringMatch {
 		}
 		
 		void SetupLevelProgress() {
-			levelProgress2.gameObject.SetActive(subLevelNum == 2);
-			levelProgress3.gameObject.SetActive(subLevelNum == 3);
-			levelProgress = subLevelNum == 2 ? levelProgress2 : levelProgress3;
+			Debug.Log($"{SubLevelNum}");
+			levelProgress2.gameObject.SetActive(SubLevelNum == 2);
+			levelProgress3.gameObject.SetActive(SubLevelNum == 3);
+			levelProgress = SubLevelNum == 2 ? levelProgress2 : levelProgress3;
 		}
 		
 		[Button]
 		public void Replay() {
 			Destroy(currLevel.gameObject);
-			currLevel = LoadLevel();
-			levelIndex = 0;
+			subLevelIndex = 0;
+			currLevel = LoadSubLevel();
 			levelProgress.ToLevel0();
 			PrefsManager.Inst.DecHeartNum();
 			Camera.main.transform.position = Level.Inst.CameraPlayPos;
@@ -197,8 +205,16 @@ namespace SpringMatch {
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			currLevel = LoadLevel();
+			LoadLevelConfig();
+			subLevelIndex = 0;
+			SetupLevelProgress();
+			currLevel = LoadSubLevel();
 			SetCamera();
+		}
+		
+		void LoadLevelConfig() {
+			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "levelConfig.json"));
+			levelConfig = JsonConvert.DeserializeObject<LevelConfig>(text);
 		}
 		
 		public void SetCamera() {
@@ -206,6 +222,7 @@ namespace SpringMatch {
 		}
 		
 		public void NextLevel() {
+			SetupLevelProgress();
 			Replay();
 		}
 		
@@ -221,8 +238,12 @@ namespace SpringMatch {
 			UI.UIVariable.Inst.rewardGoldEffect.GetComponent<VisualTweenSequence.TweenSequence>().Play();
 		}
 		
-		private Level LoadLevel() {
-			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
+		private Level LoadSubLevel() {
+			var levelIndex = PrefsManager.Inst.LevelIndex;
+			levelIndex %= levelConfig.levels.Count;
+			var levelMeta = levelConfig.levels[levelIndex];
+			var subLevelMeta = levelMeta.subLevels[subLevelIndex];
+			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", $"{subLevelMeta.fileName}.json"));
 			var levelData = JsonConvert.DeserializeObject<LevelData>(text);
 			var level = LoadLevelAsset(levelData.row, levelData.col);
 			level.LoadData(levelData);
@@ -232,15 +253,16 @@ namespace SpringMatch {
 		[Button]
 		public async UniTaskVoid SwitchLevel() {
 			await UniTask.Delay(3000);
-			if (subLevelNum == 3 && levelIndex == 0) {
+			if (SubLevelNum == 3 && subLevelIndex == 0) {
 				levelProgress.ToLevel2();
-			} else if (subLevelNum == 2 && levelIndex == 0 || subLevelNum == 3 && levelIndex == 1) {
+			} else if (SubLevelNum == 2 && subLevelIndex == 0 || SubLevelNum == 3 && subLevelIndex == 1) {
 				levelProgress.ToLevel3();
 			}
 			
-			levelIndex++;
+			subLevelIndex++;
 			
-			if (levelIndex == subLevelNum) {
+			if (subLevelIndex == SubLevelNum) {
+				PrefsManager.Inst.LevelIndex += 1;
 				RewardGold(UI.UIVariable.Inst.levelPassGoldReward.Value);
 				UI.UIVariable.Inst.levelPass.SetActive(true);
 				return;
@@ -249,7 +271,7 @@ namespace SpringMatch {
 			currLevel.transform.Translate(left.localPosition, Space.Self);
 			Camera.main.transform.Translate(left.localPosition, Space.Self);
 			
-			var nextLevel = LoadLevel();
+			var nextLevel = LoadSubLevel();
 			
 			var token = gameObject.GetCancellationTokenOnDestroy();
 			
@@ -257,6 +279,26 @@ namespace SpringMatch {
 				.WithCancellation(token);
 			Destroy(currLevel.gameObject);
 			currLevel = nextLevel;
+		}
+		
+		[Button]
+		void TestConfig() {
+			SubLevelMetaData subLevelMeta0 = new SubLevelMetaData();
+			subLevelMeta0.fileName = "level";
+			
+			SubLevelMetaData subLevelMeta1 = new SubLevelMetaData();
+			subLevelMeta1.fileName = "level";
+			
+			LevelMetaData levelMeta = new	LevelMetaData();
+			levelMeta.subLevels = new	List<SubLevelMetaData>();
+			levelMeta.subLevels.Add(subLevelMeta0);
+			levelMeta.subLevels.Add(subLevelMeta1);
+			
+			LevelConfig config = new	LevelConfig();
+			config.levels = new List<LevelMetaData>();
+			config.levels.Add(levelMeta);
+			
+			Debug.Log(JsonConvert.SerializeObject(config));
 		}
 	}
 }

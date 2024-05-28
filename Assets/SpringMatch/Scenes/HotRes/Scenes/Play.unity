@@ -2020,7 +2020,6 @@ MonoBehaviour:
   refillLiveInterval: {fileID: 11400000, guid: d506c17d45b6a644f970646a1a9d106c, type: 2}
   startPlayEffect: {fileID: 1738470420}
   levelPrefabs: {fileID: 11400000, guid: 934ee10e17a4e7e4fba1ca6fb86cf7c9, type: 2}
-  subLevelNum: 2
 --- !u!4 &120140747
 Transform:
   m_ObjectHideFlags: 0

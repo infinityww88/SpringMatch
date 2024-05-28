@@ -17,6 +17,7 @@ namespace SpringMatch {
 		public const string LAST_HEART_REFILL_TIME = "last_heart_refill_time";
 		public const string VERSION = "version";
 		public const string RES_VERSION = "resVersion";
+		public const string LEVEL_INDEX = "level_index";
 		
 		private static Dictionary<string, int> intCache = new Dictionary<string, int>();
 		private static Dictionary<string, float> floatCache = new Dictionary<string, float>();
@@ -153,6 +154,16 @@ namespace SpringMatch {
 			private set {
 				SetInt(HEART, value);
 				heartUpdate.Raise(value);
+			}
+		}
+		
+		[Button]
+		public int LevelIndex {
+			get {
+				return GetInt(LEVEL_INDEX, 0);
+			}
+			set {
+				SetInt(LEVEL_INDEX, value);
 			}
 		}
 		

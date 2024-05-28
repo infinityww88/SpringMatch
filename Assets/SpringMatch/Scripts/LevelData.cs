@@ -42,4 +42,16 @@ namespace SpringMatch {
 		public List<ColorNums> colorNums;
 		public List<SpringData> springs = new List<SpringData>();
 	}
+	
+	public class SubLevelMetaData {
+		public string fileName;
+	}
+	
+	public class LevelMetaData {
+		public List<SubLevelMetaData> subLevels;
+	}
+	
+	public class LevelConfig {
+		public List<LevelMetaData> levels;
+	}
 }
