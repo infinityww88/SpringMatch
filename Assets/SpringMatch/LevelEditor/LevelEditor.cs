@@ -416,9 +416,7 @@ namespace SpringMatchEditor {
 				editorSpring.heightStep * scrollHeightFactor,
 				_editedSpring.Type,
 				_editedSpring.HideWhenCovered);
-			Utils.RunNextFrame(() => {
-				_editedSpring.GeneratePickupColliders(config.colliderRadius);
-			}, 2).Forget();
+			_editedSpring.GeneratePickupColliders(config.colliderRadius);
 			CalcOverlay().Forget();
 		}
 		

@@ -18,7 +18,7 @@ MonoBehaviour:
   slotExtraMoveDuration: 0.2
   slotExtraShrinkDuration: 0.3
   holeGridDuration: 0.3
-  colliderRadius: 0.55
+  colliderRadius: 0.5
   headHeightFactor: 0.1
   headHeightOffset: 0
   footHeightFactor: 0.1

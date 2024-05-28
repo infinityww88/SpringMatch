@@ -18,11 +18,31 @@ namespace SpringMatch {
 		public GameObject holeSpringPrefab;
 		
 		[SerializeField]
+		private Vector3 cameraStartPos, cameraPlayPos;
+		
+		public Vector3  CameraStartPos => cameraStartPos;
+		public Vector3  CameraPlayPos => cameraPlayPos;
+		
+		#region Editor
+		#if UNITY_EDITOR
+		
+		[HorizontalGroup("Split", 0.5f)]
+		[Button, GUIColor(1f, 0.66f, 0.66f)]
+		public void CopyCameraStartPos() {
+			cameraStartPos = Camera.main.transform.position;
+		}
+		[HorizontalGroup("Split", 0.5f)]
+		[Button, GUIColor(0.66f, 0.66f, 1)]
+		public void CopyCameraEndPos() {
+			cameraPlayPos = Camera.main.transform.position;
+		}
+		#endif
+		#endregion
+		
+		[SerializeField]
 		private Transform _springsRoot;
 		
 		public Grid grid;
-		//public TextAsset colorJson;
-		//public TextAsset levelJson;
 		
 		public static Level Inst { get; private set; }
 		public float stepHeight = 0.2f;
@@ -58,9 +78,11 @@ namespace SpringMatch {
 		}
 		
 		public void LoadJson(string levelJson) {
+			var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
+		}
+		
+		public void LoadData(LevelData levelData) {
 			try {
-				var levelData = JsonConvert.DeserializeObject<LevelData>(levelJson);
-				
 				grid.GenerateGrid(levelData.row, levelData.col);
 				var colorTypeEnumerator = CreateColorTypeGenerator(levelData.colorNums);
 				int i = 0;

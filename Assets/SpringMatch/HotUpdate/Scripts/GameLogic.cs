@@ -10,6 +10,7 @@ using SpringMatch;
 using System.IO;
 using ScriptableObjectArchitecture;
 using YooAsset;
+using Newtonsoft.Json;
 
 namespace SpringMatch {
 	
@@ -21,13 +22,14 @@ namespace SpringMatch {
 		[SerializeField]
 		private float moveDuration;
 		[SerializeField]
-		private Level levelPrefab;
-		[SerializeField]
 		private UI.LevelProgress levelProgress2, levelProgress3;
 		[SerializeField]
 		private IntVariable refillLiveInterval;
 		[SerializeField]
 		private VisualTweenSequence.TweenSequence startPlayEffect;
+		
+		[SerializeField]
+		private LevelPrefabConfig levelPrefabs;
 		
 		private int levelIndex = 0;
 		
@@ -76,13 +78,11 @@ namespace SpringMatch {
 		[Button]
 		public void Replay() {
 			Destroy(currLevel.gameObject);
-			var level = Instantiate(levelPrefab);
-			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
-			level.LoadJson(text);
-			currLevel = level;
+			currLevel = LoadLevel();
 			levelIndex = 0;
 			levelProgress.ToLevel0();
 			PrefsManager.Inst.DecHeartNum();
+			Camera.main.transform.position = Level.Inst.CameraPlayPos;
 		}
 	
 		public void StartPlay() {
@@ -95,6 +95,7 @@ namespace SpringMatch {
 			Global.PendInteract = false;
 			Global.GameOver = false;
 			startPlayEffect.Play();
+			Camera.main.transform.DOMove(Level.Inst.CameraPlayPos, 0.5f);
 		}
 		
 		// This function is called when the object becomes enabled and active.
@@ -185,14 +186,23 @@ namespace SpringMatch {
 			Level.Inst.Shift3ToExtra();
 		}
 		
+		private Level LoadLevelAsset(int row, int col) {
+			string key = $"{row}x{col}";
+			if (levelPrefabs.prefabs.ContainsKey(key)) {
+				return Instantiate(levelPrefabs.prefabs[key]).GetComponent<Level>();
+			}
+			return null;
+		}
+		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			var path = Path.Join(Application.persistentDataPath, "levels", "level.json");
-			Debug.Log($"Load level {path}");
-			var text = File.ReadAllText(path);
-			Level.Inst.LoadJson(text);
-			currLevel = Level.Inst;
+			currLevel = LoadLevel();
+			SetCamera();
+		}
+		
+		public void SetCamera() {
+			Camera.main.transform.position = Level.Inst.CameraStartPos;
 		}
 		
 		public void NextLevel() {
@@ -209,6 +219,14 @@ namespace SpringMatch {
 		void RewardGold(int num) {
 			PrefsManager.Inst.GoldNum += num;
 			UI.UIVariable.Inst.rewardGoldEffect.GetComponent<VisualTweenSequence.TweenSequence>().Play();
+		}
+		
+		private Level LoadLevel() {
+			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
+			var levelData = JsonConvert.DeserializeObject<LevelData>(text);
+			var level = LoadLevelAsset(levelData.row, levelData.col);
+			level.LoadData(levelData);
+			return level;
 		}
 		
 		[Button]
@@ -230,13 +248,12 @@ namespace SpringMatch {
 			
 			currLevel.transform.Translate(left.localPosition, Space.Self);
 			Camera.main.transform.Translate(left.localPosition, Space.Self);
-			var nextLevel = Instantiate(levelPrefab);
-			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "level.json"));
-			nextLevel.LoadJson(text);
+			
+			var nextLevel = LoadLevel();
 			
 			var token = gameObject.GetCancellationTokenOnDestroy();
 			
-			await Camera.main.transform.DOLocalMoveX(0, moveDuration)
+			await Camera.main.transform.DOMove(nextLevel.CameraPlayPos, moveDuration)
 				.WithCancellation(token);
 			Destroy(currLevel.gameObject);
 			currLevel = nextLevel;

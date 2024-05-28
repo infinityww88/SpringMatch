@@ -238,9 +238,8 @@ namespace SpringMatch {
 		}
 	
 		[Button]
-		public void GeneratePickupColliders(float radius) {
-			_spline.Refresh();
-		
+		public async UniTaskVoid GeneratePickupColliders(float radius) {
+			await UniTask.DelayFrame(_springConfig.colliderGenerateDelayFrame);
 			ReleasePickupCollider();
 		
 			var len = _spline.Length;

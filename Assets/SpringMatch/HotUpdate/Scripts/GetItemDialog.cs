@@ -12,7 +12,7 @@ namespace SpringMatch.UI {
 		// This function is called when the object becomes enabled and active.
 		protected void OnEnable()
 		{
-			shareButton.interactable = RewardManager.Inst.CurrentItemConfig.itemType == SpringMatch.ItemConfig.Type.Shift;
+			shareButton.interactable = RewardManager.Inst.CurrentItemConfig.itemType != SpringMatch.ItemConfig.Type.Shift;
 		}
 	}
 
