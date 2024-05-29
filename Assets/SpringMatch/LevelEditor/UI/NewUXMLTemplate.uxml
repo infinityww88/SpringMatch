@@ -13,11 +13,17 @@
         <ui:TextField picking-mode="Ignore" label="Hole Num" value="0" text="0" name="HoleNumInputField" class="label-input-field" />
         <ui:VisualElement name="InspectorOpArea" class="inspector-op-area">
             <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
-                <ui:Button text="Open" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OpenButton" style="flex-grow: 1;" />
-                <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="flex-grow: 1;" />
+                <ui:Button text="Open" parse-escape-sequences="true" display-tooltip-when-elided="true" name="OpenButton" style="flex-grow: 1; padding-right: 7px;" />
+                <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveButton" style="flex-grow: 1; margin-left: 4px;" />
             </ui:VisualElement>
-            <ui:Button text="New" display-tooltip-when-elided="true" name="NewLevelButton" />
-            <ui:Button text="Play" display-tooltip-when-elided="true" name="PlayButton" />
+            <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
+                <ui:Button text="Load" display-tooltip-when-elided="true" name="LoadLevelButton" style="flex-grow: 0; width: 141px;" />
+                <ui:TextField picking-mode="Ignore" label="Text Field" name="FileNameInput" class="text-input" style="margin-right: 4px; margin-left: 1px; flex-grow: 0; width: 147px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
+                <ui:Button text="Play" display-tooltip-when-elided="true" name="PlayButton" style="flex-grow: 1;" />
+                <ui:Button text="New" parse-escape-sequences="true" display-tooltip-when-elided="true" name="NewLevelButton" style="flex-grow: 1;" />
+            </ui:VisualElement>
             <ui:VisualElement style="flex-direction: row;">
                 <ui:TextField picking-mode="Ignore" label="Text Field" value="6" text="6" name="RowInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;" />
                 <ui:TextField picking-mode="Ignore" label="Text Field" value="6" text="6" name="ColInput" class="text-input" style="width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;" />

@@ -199,8 +199,8 @@ MonoBehaviour:
     maximumCount: 50
     countAdjustmentInterval: 1
     initializeCountConstrained: 1
-  m_Identifier: FluffyUnderware.Curvy.CurvySplineSegment, Assembly-CSharp-firstpass,
-    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Identifier: FluffyUnderware.Curvy.CurvySplineSegment, ToolBuddy.Curvy, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null
 --- !u!114 &243943595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,50 +265,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &261632258
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 261632260}
-  - component: {fileID: 261632259}
-  m_Layer: 0
-  m_Name: GlobalManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &261632259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 261632258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a121007e2f14c747a293f424fdac0bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &261632260
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 261632258}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.315043, y: 1.2208967, z: 2.5809524}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -621,7 +577,6 @@ MonoBehaviour:
   cellColor: {r: 0.77254903, g: 0.7254902, b: 0.7254902, a: 1}
   springPrefab: {fileID: 1635948112449690181, guid: 73d2bd16773b78842a958116b15c702f, type: 3}
   config: {fileID: 11400000, guid: c02af6184b70afb4e8f84b7cfbd3ed07, type: 2}
-  _editorState: 0
   _editedSpring: {fileID: 0}
   scrollHeightFactor: 0.2
   drawSpringHeightFactor: 0.7
@@ -1058,7 +1013,6 @@ SceneRoots:
   - {fileID: 1173507376}
   - {fileID: 584593227}
   - {fileID: 1324048124}
-  - {fileID: 261632260}
   - {fileID: 1719313889}
   - {fileID: 700189546}
   - {fileID: 699565661}

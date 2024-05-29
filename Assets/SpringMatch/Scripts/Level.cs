@@ -156,9 +156,8 @@ namespace SpringMatch {
 				}
 		}
 
-		public void LoadFile() {
-			string levelJson = File.ReadAllText(Path.GetFullPath("level.json"));
-			Debug.Log($"LoadFile\n{levelJson}");
+		public void LoadFile(string path) {
+			string levelJson = File.ReadAllText(path);
 			LoadJson(levelJson);
 		}
 		

@@ -8,6 +8,7 @@ using System.Reflection;
 using UnityEngine.UIElements;
 using UnityEngine.Assertions;
 using System.IO;
+using System.Security.Cryptography;
 
 public static class Utils
 {
@@ -97,5 +98,44 @@ public static class Utils
 	public static Vector2 SetY(this Vector2 self, float v) {
 		self.y = v;
 		return self;
+	}
+	
+	public static System.ValueTuple<byte[], byte[]> GenerateAesKeyIV() {
+		using (AesManaged myAes = new AesManaged()) {
+			myAes.GenerateIV();
+			myAes.GenerateKey();
+			return System.ValueTuple.Create(myAes.Key, myAes.IV);
+		}
+	}
+	
+	public static byte[] Encrypt(string text, byte[] key, byte[] iv) {
+		MemoryStream input = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(text));
+		MemoryStream output = new MemoryStream();
+		using (AesManaged myAes = new AesManaged()) {
+			myAes.Key = key;
+			myAes.IV = iv;
+			ICryptoTransform encryptor = myAes.CreateEncryptor();
+			using (CryptoStream cs = new CryptoStream(output, encryptor, CryptoStreamMode.Write)) {
+				input.CopyTo(cs);
+			}
+		}
+		return output.ToArray();
+	}
+	
+	public static string Decrypt(byte[] data, byte[] key, byte[] iv) {
+		MemoryStream input = new MemoryStream(data);
+		MemoryStream output = new MemoryStream();
+		using (AesManaged myAes = new AesManaged()) {
+			myAes.Mode =	CipherMode.CBC;
+			myAes.BlockSize = 128;
+			myAes.Padding = PaddingMode.Zeros;
+			myAes.Key = key;
+			myAes.IV = iv;
+			ICryptoTransform decryptor = myAes.CreateDecryptor();
+			using (CryptoStream cs = new CryptoStream(input, decryptor, CryptoStreamMode.Read)) {
+				cs.CopyTo(output);
+			}
+		}
+		return System.Text.Encoding.UTF8.GetString(output.ToArray());
 	}
 }

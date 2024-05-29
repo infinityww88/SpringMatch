@@ -49,6 +49,9 @@ namespace SpringMatchEditor {
 		[MyUTKElementAttr("SaveButton")]
 		private Button saveButton;
 		
+		[MyUTKElementAttr("LoadLevelButton")]
+		private Button loadLevelButton;
+		
 		[MyUTKElementAttr("RandomColorButton")]
 		private Button randomColorButton;
 		
@@ -60,6 +63,9 @@ namespace SpringMatchEditor {
 		
 		[MyUTKElementAttr("ColInput")]
 		private TextField colInputField;
+		
+		[MyUTKElementAttr("FileNameInput")]
+		private TextField fileNameField;
 		
 		[SerializeField]
 		private LevelEditor levelEditor;
@@ -91,6 +97,8 @@ namespace SpringMatchEditor {
 				System.Diagnostics.Process.Start("explorer.exe", Application.persistentDataPath.Replace("/", "\\"));
 			});
 			saveButton.RegisterCallback<ClickEvent>(SaveLevel);
+			Debug.Log($"-- {loadLevelButton}");
+			loadLevelButton.RegisterCallback<ClickEvent>(LoadLevel);
 			randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
 			playButton.RegisterCallback<ClickEvent>(OnPlay);
 		}
@@ -98,6 +106,20 @@ namespace SpringMatchEditor {
 		
 		public void UpdateNumInfo() {
 			numInfo.text = $"{levelEditor.TotalSpringNum()} / {levelEditor.TotalColorNum()}";
+		}
+		
+		void LoadLevel(ClickEvent evt) {
+			Debug.Log("LoadLevel");
+			var fileName = fileNameField.text.Trim();
+			if (fileName == "") {
+				_dialog.Show($"File Name is Empty.", null, null);
+				return;
+			}
+			if (!File.Exists($"{fileName}.json")) {
+				_dialog.Show($"File {fileName}.json is not exists.", null, null);
+				return;
+			}
+			levelEditor.LoadLevel(Path.GetFullPath($"{fileName}.json"));
 		}
 		
 		void SaveLevel(ClickEvent evt) {
@@ -108,7 +130,12 @@ namespace SpringMatchEditor {
 				);
 			}
 			else {
-				var path = Path.GetFullPath("level.json");
+				var fileName = fileNameField.text.Trim();
+				if (fileName == "") {
+					_dialog.Show($"File Name Is Empty.", null, null);
+					return;
+				}
+				var path = Path.GetFullPath($"{fileName}.json");
 				File.WriteAllText(path,
 					levelEditor.ExportLevel());
 				_dialog.Show("<color=green>Level saved.</color>",
@@ -198,6 +225,7 @@ namespace SpringMatchEditor {
 			int row = int.Parse(rowInputField.value);
 			int col = int.Parse(colInputField.value);
 			levelEditor.NewLevel(row, col);
+			fileNameField.SetValueWithoutNotify("");
 		}
 		
 		void OnHoleNumChange(ChangeEvent<string> evt) {
