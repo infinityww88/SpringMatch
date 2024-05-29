@@ -53,6 +53,9 @@ namespace SpringMatchEditor {
 		[FoldoutGroup("RoateView")]
 		private float _cameraRotateVFactor;
 		
+		[SerializeField]
+		private float zoomFactor = 0.5f;
+		
 		public bool InteractPending { get; set; }
 		
 		private List<Color> _colors;
@@ -62,6 +65,10 @@ namespace SpringMatchEditor {
 		public List<ColorNums> ColorNums => _colorNums;
 		
 		private EditorState _editorState;
+		
+		public static string lastLevelFile;
+		
+		public static LevelEditor Inst;
 		
 		public Spring SelectedSpring {
 			get {
@@ -106,6 +113,7 @@ namespace SpringMatchEditor {
 		
 		public void NewLevel(int row, int col) {
 			ClearLevel();
+			lastLevelFile = "";
 			grid.GenerateGrid(row, col);
 			LoadColors();
 		}
@@ -138,25 +146,22 @@ namespace SpringMatchEditor {
 		// Start is called before the first frame update
 		void Awake()
 		{
-			string json = "";
+			Inst = this;
 			string path = Path.GetFullPath("color.json");
-			try {
-				json = File.ReadAllText(path);
-				_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
-			}
-			catch (Exception) {
-				json = "[\"#AA0000\",\"#00AA00\",\"#004BAA\",\"#A40B88\"]";
-				File.WriteAllText(path, json);
-				_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
-			}
-	
+			string json = File.ReadAllText(path);
+			_colors = JsonConvert.DeserializeObject<List<Color>>(json, new ColorConvert());
 			Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
 		}
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			LoadLevel("level.json");
+			if (string.IsNullOrEmpty(lastLevelFile)) {
+				NewLevel(6, 6);
+			}
+			else {
+				LoadLevel(lastLevelFile);
+			}
 		}
 		
 		public void RandomColor() {
@@ -185,6 +190,7 @@ namespace SpringMatchEditor {
 			if (string.IsNullOrEmpty(fn)) {
 				return;
 			}
+			lastLevelFile = fn;
 			var path = Path.GetFullPath($"{fn}");
 			if (!File.Exists(path)) {
 				Debug.Log("New Leve 6x6");
@@ -202,7 +208,6 @@ namespace SpringMatchEditor {
 			var levelData = JsonConvert.DeserializeObject<LevelData>(json);
 			
 			_colorNums = levelData.colorNums;
-			Debug.Log(JsonConvert.SerializeObject(_colorNums, new ColorConvert()));
 			editorUI.UpdateColorNum();
 			
 			grid.GenerateGrid(levelData.row, levelData.col);
@@ -441,6 +446,22 @@ namespace SpringMatchEditor {
 				_cameraVPivot.localRotation *= Quaternion.Euler(-diff.y * _cameraRotateVFactor, 0, 0);
 			}
 		}
+		
+		async UniTaskVoid ZoomCamera() {
+			Vector3 startPos = Input.mousePosition;
+			Vector3 vpos = Camera.main.ScreenToViewportPoint(startPos);
+			if (vpos.x < 0 || vpos.x > 1 || vpos.y < 0 || vpos.y > 1) {
+				return;
+			}
+			while (!Input.GetMouseButtonUp(1)) {
+				await UniTask.NextFrame();
+				Vector2 diff = Input.mousePosition - startPos;
+				startPos = Input.mousePosition;
+				Camera.main.transform.Translate(Vector3.back * zoomFactor * diff.y, Space.Self);
+			}
+		}
+		
+		private bool InEditViewPort = true;
 
 		// Update is called once per frame
 		void Update()
@@ -450,6 +471,15 @@ namespace SpringMatchEditor {
 			}
 			
 			if (Input.GetMouseButtonDown(0)) {
+				Vector3 startPos = Input.mousePosition;
+				Vector3 vpos = Camera.main.ScreenToViewportPoint(startPos);
+				if (vpos.x < 0 || vpos.x > 1 || vpos.y < 0 || vpos.y > 1) {
+					InEditViewPort = false;
+				}
+				else {
+					InEditViewPort = true;
+				}
+				
 				var spring = PickupSpring(Input.mousePosition);
 				if (spring != null) {
 					OnPickupSpring(spring);
@@ -467,7 +497,11 @@ namespace SpringMatchEditor {
 				editorUI.UpdateHeight();
 			}
 			
-			if (Input.GetKeyDown(KeyCode.Backspace)) {
+			if (Input.GetMouseButtonDown(1)) {
+				ZoomCamera();
+			}
+			
+			if (Input.GetKeyDown(KeyCode.Backspace) && InEditViewPort) {
 				if (_editedSpring != null) {
 					Destroy(_editedSpring.gameObject);
 					_springs.Remove(_editedSpring);

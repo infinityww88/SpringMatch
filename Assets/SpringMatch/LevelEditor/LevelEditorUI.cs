@@ -97,10 +97,12 @@ namespace SpringMatchEditor {
 				System.Diagnostics.Process.Start("explorer.exe", Application.persistentDataPath.Replace("/", "\\"));
 			});
 			saveButton.RegisterCallback<ClickEvent>(SaveLevel);
-			Debug.Log($"-- {loadLevelButton}");
 			loadLevelButton.RegisterCallback<ClickEvent>(LoadLevel);
 			randomColorButton.RegisterCallback<ClickEvent>(OnRandomColorClick);
 			playButton.RegisterCallback<ClickEvent>(OnPlay);
+			if (!string.IsNullOrWhiteSpace(LevelEditor.lastLevelFile)) {
+				fileNameField.SetValueWithoutNotify(Path.GetFileNameWithoutExtension(LevelEditor.lastLevelFile));
+			}
 		}
 		#endregion
 		
@@ -135,7 +137,8 @@ namespace SpringMatchEditor {
 					_dialog.Show($"File Name Is Empty.", null, null);
 					return;
 				}
-				var path = Path.GetFullPath($"{fileName}.json");
+				LevelEditor.lastLevelFile = $"{fileName}.json";
+				var path = Path.GetFullPath(LevelEditor.lastLevelFile);
 				File.WriteAllText(path,
 					levelEditor.ExportLevel());
 				_dialog.Show("<color=green>Level saved.</color>",
@@ -217,13 +220,17 @@ namespace SpringMatchEditor {
 			int v = 0;
 			int.TryParse(evt.newValue, out v);
 			var e = (TextField)evt.target;
-			v = Mathf.Max(6, Mathf.Min(15, v));
+			//v = Mathf.Max(6, Mathf.Min(15, v));
 			e.SetValueWithoutNotify($"{v}");
 		}
 		
 		void OnNewLevelButtonClick(ClickEvent evt) {
 			int row = int.Parse(rowInputField.value);
 			int col = int.Parse(colInputField.value);
+			row = Mathf.Clamp(row, 3, 15);
+			col = Mathf.Clamp(col, 3, 15);
+			rowInputField.SetValueWithoutNotify(row.ToString());
+			colInputField.SetValueWithoutNotify(col.ToString());
 			levelEditor.NewLevel(row, col);
 			fileNameField.SetValueWithoutNotify("");
 		}

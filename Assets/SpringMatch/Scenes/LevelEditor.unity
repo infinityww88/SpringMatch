@@ -585,6 +585,7 @@ MonoBehaviour:
   _cameraVPivot: {fileID: 911866143}
   _cameraRotateHFactor: 0.1
   _cameraRotateVFactor: 0.1
+  zoomFactor: 0.01
   InvalidColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &835166085
 GameObject:

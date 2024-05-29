@@ -342,10 +342,6 @@ namespace SpringMatch {
 			
 			_springs.Remove(spring);
 		}
-	
-		public void ReloadScene() {
-			SceneManager.LoadScene(1, LoadSceneMode.Single);
-		}
 		
 		// This function is called when the MonoBehaviour will be destroyed.
 		protected void OnDestroy()
