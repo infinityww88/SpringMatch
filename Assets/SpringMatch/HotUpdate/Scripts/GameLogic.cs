@@ -55,8 +55,8 @@ namespace SpringMatch {
 		protected void Awake()
 		{
 			Inst = this;
-			Global.PendInteract = true;
-			Global.GameOver = true;
+			Global.PendInteract = false;
+			Global.GameState = Global.EGameState.Ready;
 			#if UNITY_EDITOR
 			YooAssets.Initialize();
 			
@@ -101,8 +101,9 @@ namespace SpringMatch {
 			}
 			PrefsManager.Inst.DecHeartNum();
 			Global.PendInteract = false;
-			Global.GameOver = false;
+			Global.GameState =	Global.EGameState.Play;
 			startPlayEffect.Play();
+			EffectManager.Inst.PlayStartPlay();
 			Camera.main.transform.DOMove(Level.Inst.CameraPlayPos, 0.5f);
 		}
 		
@@ -114,8 +115,15 @@ namespace SpringMatch {
 			MsgBus.onElimiteString += onElimiteString;
 			MsgBus.onInvalidPick += onInvalidPick;
 			MsgBus.onToSlot += OnToSlot;
-			MsgBus.onRevoke += onRevoke;
-			MsgBus.onShift += onShift;
+			MsgBus.onRevoke += OnRevoke;
+			MsgBus.onShift += OnShift;
+			MsgBus.onPickup += OnPickup;
+		}
+		
+		void OnPickup(Spring spring) {
+			if (Global.GameState == Global.EGameState.Ready && Global.PendInteract == false) {
+				StartPlay();
+			}
 		}
 		
 		// This function is called when the behaviour becomes disabled () or inactive.
@@ -126,8 +134,9 @@ namespace SpringMatch {
 			MsgBus.onElimiteString -= onElimiteString;
 			MsgBus.onInvalidPick -= onInvalidPick;
 			MsgBus.onToSlot -= OnToSlot;
-			MsgBus.onRevoke -= onRevoke;
-			MsgBus.onShift -= onShift;
+			MsgBus.onRevoke -= OnRevoke;
+			MsgBus.onShift -= OnShift;
+			MsgBus.onPickup -= OnPickup;
 		}
 		
 		public void OnLevelFailed() {
@@ -151,11 +160,11 @@ namespace SpringMatch {
 			Debug.Log("To Slot");
 		}
 		
-		public void onRevoke(Spring spring) {
+		public void OnRevoke(Spring spring) {
 			Debug.Log($"On Revoke {spring.Type}");
 		}
 		
-		public void onShift(int num) {
+		public void OnShift(int num) {
 			Debug.Log($"On Shift {num}");
 		}
 		
@@ -178,6 +187,9 @@ namespace SpringMatch {
 			AdManager.Inst.ShowRewardedAd(() => {
 				UI.UIVariable.Inst.outOfSpaceDialog.SetActive(false);
 				Level.Inst.Shift1ToExtra();
+			},
+			() => {
+				UI.UIVariable.Inst.ShowToast("AD is not available now. Try again later.");
 			});
 		}
 		
@@ -229,6 +241,9 @@ namespace SpringMatch {
 		public void DoubleGold() {
 			AdManager.Inst.ShowRewardedAd(() => {
 				RewardGold(UI.UIVariable.Inst.levelPassGoldReward.Value);
+			},
+			() => {
+				UI.UIVariable.Inst.ShowToast("AD is not available now. Try again later.");
 			});
 		}
 		

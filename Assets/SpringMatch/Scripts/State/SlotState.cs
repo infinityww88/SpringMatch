@@ -10,7 +10,7 @@ namespace SpringMatch {
 		protected override async UniTaskVoid _Update() {
 			var slotPos = SlotManager.Inst.GetSlotPos(spring.SlotIndex);
 			spring.Deformer.Shrink(slotPos);
-			
+						
 			await UniTask.WaitUntil(() => {
 				return spring.TargetSlotIndex < 0
 					|| spring.ExtraSlotIndex >= 0

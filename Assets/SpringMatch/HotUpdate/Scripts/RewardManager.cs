@@ -52,7 +52,9 @@ namespace SpringMatch {
 		}
 		
 		public void GetFreeByAd() {
-			AdManager.Inst.ShowRewardedAd(AddItem);
+			AdManager.Inst.ShowRewardedAd(AddItem, () => {
+				UI.UIVariable.Inst.ShowToast("AD is not available now. Try again later.");
+			});
 		}
 		
 		public void GetRevokeItem() {

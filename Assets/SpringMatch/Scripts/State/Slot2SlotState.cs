@@ -25,10 +25,11 @@ namespace SpringMatch {
 			}
 			
 			int index = spring.TargetSlotIndex;
-			
+			await UniTask.WaitForSeconds(spring.Config.jumpDelay, cancellationToken:_cts.Token);
+			EffectManager.Inst.PlayJump();
 			await spring.Deformer.Shrink2Shrink(
 				SlotManager.Inst.GetSlotPos(spring.SlotIndex),
-				SlotManager.Inst.GetSlotPos(spring.TargetSlotIndex),
+				SlotManager.Inst.GetSlotPos(index),
 				spring.Config.slotSlotAutoHeightFactor,
 				spring.Config.slotSlotDuration,
 				_cts.Token);

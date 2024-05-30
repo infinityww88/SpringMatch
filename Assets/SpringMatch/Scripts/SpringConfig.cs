@@ -30,6 +30,9 @@ namespace SpringMatch {
 		[BoxGroup("Tween Duration")]
 		public int colliderGenerateDelayFrame = 3;
 		
+		[BoxGroup("Tween Duration")]
+		public float jumpDelay = 0.1f;
+		
 		[BoxGroup("Move Curve Factor")]
 		public float headHeightFactor = 0.2f;
 		[BoxGroup("Move Curve Factor")]

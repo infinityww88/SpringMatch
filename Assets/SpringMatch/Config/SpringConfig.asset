@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSlotMoveDuration: 0.3
   girdSlotShrinkDuration: 0.3
-  slotSlotDuration: 0.14
+  slotSlotDuration: 0.12
   slotExtraMoveDuration: 0.2
   slotExtraShrinkDuration: 0.3
   holeGridDuration: 0.3
   colliderRadius: 0.5
+  colliderGenerateDelayFrame: 3
+  jumpDelay: 0.25
   headHeightFactor: 0.1
   headHeightOffset: 0
   footHeightFactor: 0.1

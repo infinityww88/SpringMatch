@@ -3431,7 +3431,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 8
-      minScalar: 6
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4569,7 +4569,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
   UVModule:
     serializedVersion: 2
-    enabled: 1
+    enabled: 0
     mode: 0
     timeMode: 0
     fps: 30
@@ -8690,15 +8690,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 12
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
-  m_sharedMaterial: {fileID: 2517202264660172603, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
+  m_sharedMaterial: {fileID: 7374927986402738804, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4290665786
-  m_fontColor: {r: 0.2285066, g: 0.36631352, b: 0.745283, a: 1}
+    rgba: 4288963611
+  m_fontColor: {r: 0.105909556, g: 0.3927335, b: 0.6415094, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -13073,15 +13073,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 12
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
-  m_sharedMaterial: {fileID: 2517202264660172603, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
+  m_sharedMaterial: {fileID: 7374927986402738804, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4290665786
-  m_fontColor: {r: 0.2285066, g: 0.36631352, b: 0.745283, a: 1}
+    rgba: 4288963611
+  m_fontColor: {r: 0.105909556, g: 0.3927335, b: 0.6415094, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -29629,6 +29629,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01f769f928f70b947abdbb91c22e9a1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _adUnitId: ca-app-pub-3940256099942544/5224354917
+  reloadInterval: 1
 --- !u!1 &1414163672 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3475925173182080212, guid: 5c2029b7924c902448ddd5108d931d9b, type: 3}
@@ -30246,7 +30248,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 8
-      minScalar: 6
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -31384,7 +31386,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
   UVModule:
     serializedVersion: 2
-    enabled: 1
+    enabled: 0
     mode: 0
     timeMode: 0
     fps: 30
@@ -43660,15 +43662,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 12
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
-  m_sharedMaterial: {fileID: 2517202264660172603, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
+  m_sharedMaterial: {fileID: 7374927986402738804, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4290665786
-  m_fontColor: {r: 0.2285066, g: 0.36631352, b: 0.745283, a: 1}
+    rgba: 4288963611
+  m_fontColor: {r: 0.105909556, g: 0.3927335, b: 0.6415094, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -48950,8 +48952,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4ed9c92139c354d90c2055f6c86f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  refillHeart: {fileID: 8300000, guid: f9df8f7d2af3e2945994f7687de9446d, type: 3}
-  dialogOpen: {fileID: 0}
+  acRefillHeart: {fileID: 8300000, guid: f9df8f7d2af3e2945994f7687de9446d, type: 3}
+  acDialogOpen: {fileID: 8300000, guid: 3512a93304602f243afcdcc123519045, type: 3}
+  acStartPlay: {fileID: 8300000, guid: 8322c91b9a51ea34284703d22256ccb0, type: 3}
+  acEliminate: {fileID: 8300000, guid: d199ab2fa0c5ebd43b357fac115bd569, type: 3}
+  acFailed: {fileID: 8300000, guid: 7ba33879542afcd4dbb853ccfd72466a, type: 3}
+  acInvalid: {fileID: 8300000, guid: 272582fc18cc820418927e491934e98b, type: 3}
+  acJump: {fileID: 8300000, guid: fe0725671f40f094d81d6a1b5ec83bf3, type: 3}
+  acPickup: {fileID: 8300000, guid: c67011281312fa5418bb9ea473d09086, type: 3}
   repeatNum: 35
   delayMSecs: 35
   eliminateEffect: {fileID: 5773682613967927853, guid: 1513cf1f637f5994b811270c61fc6586, type: 3}
@@ -50107,6 +50115,10 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 8106884272968984320, guid: 5a61020c3b23ca04295f9a7d23e7f5a3, type: 3}
+      propertyPath: m_Name
+      value: Dialogs
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -50142,10 +50154,10 @@ PrefabInstance:
       addedObject: {fileID: 1052583233}
     - targetCorrespondingSourceObject: {fileID: 4061110227725511537, guid: 5a61020c3b23ca04295f9a7d23e7f5a3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 936047986}
+      addedObject: {fileID: 2052557422}
     - targetCorrespondingSourceObject: {fileID: 4061110227725511537, guid: 5a61020c3b23ca04295f9a7d23e7f5a3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2052557422}
+      addedObject: {fileID: 936047986}
     - targetCorrespondingSourceObject: {fileID: 2759932665841239735, guid: 5a61020c3b23ca04295f9a7d23e7f5a3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 355720130}

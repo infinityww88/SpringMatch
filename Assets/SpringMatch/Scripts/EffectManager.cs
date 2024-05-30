@@ -13,7 +13,8 @@ namespace SpringMatch {
 		
 		[TabGroup("Audio")]
 		[SerializeField]
-		private AudioClip refillHeart, dialogOpen;
+		private AudioClip acRefillHeart, acDialogOpen,
+			acStartPlay, acEliminate, acFailed, acInvalid, acJump, acPickup;
 		
 		[SerializeField]
 		private int repeatNum = 25;
@@ -42,9 +43,37 @@ namespace SpringMatch {
 			
 		}
 		
-		[Button]
-		public void PlaySoundRefillHeart() {
-			audioSource.PlayOneShot(refillHeart);
+		public void PlayRefillHeart() {
+			audioSource.PlayOneShot(acRefillHeart);
+		}
+		
+		public void PlayStartPlay() {
+			audioSource.PlayOneShot(acStartPlay);
+		}
+		
+		public void PlayEliminate() {
+			audioSource.PlayOneShot(acEliminate);
+		}
+		
+		public void PlayFailed() {
+			audioSource.PlayOneShot(acFailed);
+		}
+		
+		public void PlayInvalid() {
+			audioSource.PlayOneShot(acInvalid);
+		}
+		
+		private float lastJumpTime = 0;
+		
+		public void PlayJump() {
+			if (Time.time - lastJumpTime > acJump.length) {
+				audioSource.PlayOneShot(acJump);
+				lastJumpTime = Time.time;
+			}
+		}
+		
+		public void PlayPickup() {
+			audioSource.PlayOneShot(acPickup);
 		}
 		
 		public async UniTaskVoid VibrateMerge() {
@@ -54,6 +83,7 @@ namespace SpringMatch {
 		}
 		
 		public void VibrateLevelPass() {
+			
 		}
 		
 		public void PlayEliminateEffect(Vector3 pos) {

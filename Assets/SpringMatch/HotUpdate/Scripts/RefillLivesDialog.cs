@@ -77,7 +77,7 @@ namespace SpringMatch.UI {
 					Debug.Log($"{effect}");
 					effect.Stop();
 					effect.Play();
-					EffectManager.Inst.PlaySoundRefillHeart();
+					EffectManager.Inst.PlayRefillHeart();
 				})
 					.OnComplete(() => {
 						if (!heartAvailable && PrefsManager.Inst.HeartNum > 0) {

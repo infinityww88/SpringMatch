@@ -5,12 +5,16 @@ using GoogleMobileAds;
 using GoogleMobileAds.Api;
 using QFSW.QC;
 using UnityEngine.Events;
+using DG.Tweening;
 
 namespace SpringMatch {
 	
 	public class AdManager : MonoBehaviour
 	{
+		[SerializeField]
 		private string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+		[SerializeField]
+		private float reloadInterval = 1f;
     
 		private RewardedAd _rewardedAd = null;
 		
@@ -26,6 +30,7 @@ namespace SpringMatch {
 		protected void OnDestroy()
 		{
 			Inst = null;
+			DOTween.Kill(this);
 		}
 	
 		void Start()
@@ -33,7 +38,6 @@ namespace SpringMatch {
 			Debug.Log("Start Init Ads");
 			MobileAds.Initialize((InitializationStatus initStatue) => {
 				Debug.Log($"Init Admob {initStatue}");
-	    	
 				LoadRewardedAd();
 			});
 		}
@@ -53,7 +57,10 @@ namespace SpringMatch {
 				if (error != null || ad == null)
 				{
 					Debug.LogError("Rewarded ad failed to load an ad " +
-						"with error : " + error);
+						"with error : " + error + ". Try Again");
+					DOTween.Sequence().AppendInterval(reloadInterval)
+						.AppendCallback(LoadRewardedAd)
+						.SetId(this);
 					return;
 				}
 
@@ -66,7 +73,7 @@ namespace SpringMatch {
 			});
 		}
 		[Command]
-		public void ShowRewardedAd(System.Action onReward) {
+		public void ShowRewardedAd(System.Action onReward, System.Action notReady) {
 			const string rewardMsg =
 				"Rewarded ad rewarded the user. Type: {0}, amount: {1}.";
 
@@ -80,6 +87,7 @@ namespace SpringMatch {
 				});
 			} else {
 				LoadRewardedAd();
+				notReady?.Invoke();
 			}
 		}
 	

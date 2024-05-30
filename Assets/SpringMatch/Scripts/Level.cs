@@ -58,6 +58,18 @@ namespace SpringMatch {
 			}
 		}
 		
+		// This function is called when the object becomes enabled and active.
+		protected void OnEnable()
+		{
+			MsgBus.onPickup += OnPickupSpring;
+		}
+		
+		// This function is called when the behaviour becomes disabled () or inactive.
+		protected void OnDisable()
+		{
+			MsgBus.onPickup -= OnPickupSpring;
+		}
+		
 		public void RandomType(List<Spring> spring) {
 			for (int i = 1; i < spring.Count; i++) {
 				int j = UnityEngine.Random.Range(i, spring.Count);
@@ -218,17 +230,24 @@ namespace SpringMatch {
 		}
 		
 		public void OnPickupSpring(Spring spring) {
+			if (Global.GameState != Global.EGameState.Play || Global.PendInteract == true) {
+				return;
+			}
+			
 			if (!_springs.Contains(spring) && !ExtraSlotManager.Inst.Contains(spring)) {
 				return;
 			}
 			EffectManager.Inst.VibratePickup();
+			
 			if (SlotManager.Inst.IsFull() || !spring.IsTop) {
 				if (!SlotManager.Inst.IsFull() && !spring.IsTop) {
 					MsgBus.onInvalidPick?.Invoke(spring);
 				}
 				spring.Shake();
+				EffectManager.Inst.PlayInvalid();
 				return;
 			}
+			EffectManager.Inst.PlayPickup();
 			spring.EnablePickupCollider(false);
 			spring.EnableDetectCollider(false);
 

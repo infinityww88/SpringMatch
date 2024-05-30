@@ -24,16 +24,13 @@ namespace SpringMatch {
 		
 		private Tween loadingTextTween;
 		
-		[SerializeField]
-		private VisualTweenSequence.RectTransformFloatTween slideTween;
-		
 		private string resVersion;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
 			TweenLoadingText();
-			Load().Forget();
+			//Load().Forget();
 		}
 		
 		void TweenLoadingText() {

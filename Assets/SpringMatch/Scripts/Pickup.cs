@@ -6,16 +6,7 @@ using UnityEngine.Events;
 namespace SpringMatch {
 	
 	public class Pickup : MonoBehaviour
-	{
-		[SerializeField]
-		private UnityEvent<Spring> _onPickupSpring;
-		
-	    // Start is called before the first frame update
-	    void Start()
-	    {
-	        
-	    }
-	    
+	{   
 		void UpdateTouch() {
 			if (Input.touchCount > 0) {
 				var touch = Input.GetTouch(0);
@@ -24,7 +15,7 @@ namespace SpringMatch {
 					if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask("Pickup"))) {
 						var spring = hitInfo.collider.GetComponentInParent<Spring>();
 						if (spring != null) {
-							_onPickupSpring.Invoke(spring);
+							MsgBus.onPickup?.Invoke(spring);
 						}
 		    		
 					}
@@ -38,7 +29,7 @@ namespace SpringMatch {
 				if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask("Pickup"))) {
 					var spring = hitInfo.collider.GetComponentInParent<Spring>();
 					if (spring != null) {
-						_onPickupSpring.Invoke(spring);
+						MsgBus.onPickup?.Invoke(spring);
 					}
 				}
 			}
@@ -47,9 +38,9 @@ namespace SpringMatch {
 	    // Update is called once per frame
 	    void Update()
 		{
-			if (!Global.PendInteract && !Global.GameOver) {
-				UpdateMouse();
-			}
+			//if (Global.GameState == Global.EGameState.Play && !Global.PendInteract) {
+			UpdateMouse();
+			//}
 	    }
 	}
 	
