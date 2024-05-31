@@ -36,6 +36,10 @@ namespace SpringMatch.UI {
 		public GameObject getItemDialog;
 		[FoldoutGroup("Dialog")]
 		public GameObject shareDialog;
+		[FoldoutGroup("Dialog")]
+		public PurchaseResult shopBundleGet;
+		[FoldoutGroup("Dialog")]
+		public PurchaseResult shopGoldGet;
 		
 		[FoldoutGroup("Effect")]
 		public GameObject toast;
@@ -51,8 +55,11 @@ namespace SpringMatch.UI {
 		[FoldoutGroup("Variable")]
 		public IntVariable levelPassGoldReward;
 		
+		[Button]
 		public void ShowToast(string msg) {
 			toast.SetActive(true);
+			toast.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = msg;
+			UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(toast.GetComponent<RectTransform>());
 			toast.GetComponent<VisualTweenSequence.TweenSequence>().Play();
 		}
 	}

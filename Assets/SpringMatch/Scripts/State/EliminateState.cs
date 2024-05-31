@@ -17,7 +17,7 @@ namespace SpringMatch {
 			var slotMgr = SlotManager.Inst;
 			if (spring.EliminateIndex == 0) {
 				EffectManager.Inst.PlayEliminate();
-				EffectManager.Inst.VibrateMerge().Forget();
+				MsgBus.onElimiteStringStart?.Invoke(spring);
 				await spring.Deformer.Shrink2Shrink(slotMgr.GetSlotPos(spring.SlotIndex),
 					slotMgr.GetSlotPos(spring.EliminateTargetSlotIndex),
 					spring.Config.slotSlotAutoHeightFactor,
@@ -40,7 +40,7 @@ namespace SpringMatch {
 					return;
 				}
 				Vector3 pos = slotMgr.GetSlotPos(spring.SlotIndex);
-				MsgBus.onElimiteString?.Invoke(spring);
+				MsgBus.onElimiteStringEnd?.Invoke(spring);
 				EffectManager.Inst.PlayEliminateEffect(pos);
 				slotMgr.UnlockTweenSlot(spring.EliminateTargetSlotIndex);
 				Destroy(spring.gameObject);

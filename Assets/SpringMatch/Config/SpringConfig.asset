@@ -20,7 +20,7 @@ MonoBehaviour:
   holeGridDuration: 0.3
   colliderRadius: 0.5
   colliderGenerateDelayFrame: 3
-  jumpDelay: 0.25
+  jumpDelay: 0.15
   headHeightFactor: 0.1
   headHeightOffset: 0
   footHeightFactor: 0.1

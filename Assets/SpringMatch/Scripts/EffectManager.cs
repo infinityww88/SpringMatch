@@ -14,7 +14,10 @@ namespace SpringMatch {
 		[TabGroup("Audio")]
 		[SerializeField]
 		private AudioClip acRefillHeart, acDialogOpen,
-			acStartPlay, acEliminate, acFailed, acInvalid, acJump, acPickup;
+			acStartPlay, acEliminate, acFailed, acSubLevelPass, acSuccess, acInvalid, acJump, acPickup;
+		
+		[SerializeField]
+		private float volume = 0.7f;
 		
 		[SerializeField]
 		private int repeatNum = 25;
@@ -32,40 +35,78 @@ namespace SpringMatch {
 		
 		private AudioSource audioSource;
 		
+		bool SoundOn => PrefsManager.GetBool(PrefsManager.SOUND_ON, true);
+		
 		// Start is called before the first frame update
 		void Awake()
 		{
 			Inst = this;
 			audioSource = GetComponent<AudioSource>();
 		}
-
-		public void VibratePickup() {
-			
-		}
 		
 		public void PlayRefillHeart() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = volume;
 			audioSource.PlayOneShot(acRefillHeart);
 		}
 		
 		public void PlayStartPlay() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = volume;
 			audioSource.PlayOneShot(acStartPlay);
 		}
 		
 		public void PlayEliminate() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = 1;
 			audioSource.PlayOneShot(acEliminate);
 		}
 		
 		public void PlayFailed() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = volume;
 			audioSource.PlayOneShot(acFailed);
 		}
 		
 		public void PlayInvalid() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = 1;
 			audioSource.PlayOneShot(acInvalid);
+		}
+		
+		public void PlaySubLevelPass() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = volume;
+			audioSource.PlayOneShot(acSubLevelPass);
+		}
+		
+		public void PlaySuccess() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = volume;
+			audioSource.PlayOneShot(acSuccess);
 		}
 		
 		private float lastJumpTime = 0;
 		
 		public void PlayJump() {
+			if (!SoundOn) {
+				return;
+			}
+			audioSource.volume = 1;
 			if (Time.time - lastJumpTime > acJump.length) {
 				audioSource.PlayOneShot(acJump);
 				lastJumpTime = Time.time;
@@ -73,17 +114,11 @@ namespace SpringMatch {
 		}
 		
 		public void PlayPickup() {
-			audioSource.PlayOneShot(acPickup);
-		}
-		
-		public async UniTaskVoid VibrateMerge() {
-			for (int i = 0; i < repeatNum; i++) {
-				await UniTask.WaitForSeconds(delayMSecs / 1000f);
+			if (!SoundOn) {
+				return;
 			}
-		}
-		
-		public void VibrateLevelPass() {
-			
+			audioSource.volume = 1;
+			audioSource.PlayOneShot(acPickup);
 		}
 		
 		public void PlayEliminateEffect(Vector3 pos) {
@@ -96,8 +131,15 @@ namespace SpringMatch {
 			effect.GetComponent<RectTransform>().anchoredPosition = localPosition;
 		}
 		
-		public void PlayLevelPassEffect() {
-			Utils.CallDelay(levelPassEffect.GetComponent<UIParticle>().Play, levelPassEffectDelay).Forget();
+		public void PlayLevelPassEffect(bool subLevelPass) {
+			Utils.CallDelay(() => {
+				levelPassEffect.GetComponent<UIParticle>().Play();
+				if (subLevelPass) {
+					PlaySubLevelPass();
+				} else {
+					PlaySuccess();
+				}
+			}, levelPassEffectDelay).Forget();
 		}
 	}
 

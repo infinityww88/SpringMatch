@@ -19,6 +19,10 @@ namespace SpringMatch.UI {
 			gameObject.SetActive(true);
 		}
 		
+		public void Purchase() {
+			IAPManager.Inst.Purchase(BundleConfig.productId);
+		}
+		
 		public void AddBundle() {
 			PrefsManager.Inst.GoldNum += shopConfig.goldNum;
 			PrefsManager.Inst.RevokeItemNum += shopConfig.revokeNum;
@@ -42,7 +46,13 @@ namespace SpringMatch.UI {
 				randomText.text = $"{shopConfig.randomNum}";
 			}
 			if (priceText != null) {
-				priceText.text = $"US ${shopConfig.price:F2}";
+				if (IAPManager.Inst.Inited && IAPManager.Inst.GetProduct(shopConfig.productId) != null) {
+					var product = IAPManager.Inst.GetProduct(shopConfig.productId);
+					priceText.text = $"US ${product.Price:F2}";
+				}
+				else {
+					priceText.text = $"";
+				}
 			}
 		}
 	}

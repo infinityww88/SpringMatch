@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 341916593e75c4e4da7ffe5da24456a9, type: 3}
   m_Name: ShopBundle1
   m_EditorClassIdentifier: 
+  productId: test_item_1
   goldNum: 200
   revokeNum: 6
   shiftNum: 6
   randomNum: 6
-  price: 2.34

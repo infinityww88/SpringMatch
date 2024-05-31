@@ -112,12 +112,15 @@ namespace SpringMatch {
 		{
 			MsgBus.onLevelPass += OnLevelPass;
 			MsgBus.onLevelFailed += OnLevelFailed;
-			MsgBus.onElimiteString += onElimiteString;
+			MsgBus.onElimiteStringStart += onElimiteString;
 			MsgBus.onInvalidPick += onInvalidPick;
+			MsgBus.onValidPick += onValidPick;
 			MsgBus.onToSlot += OnToSlot;
 			MsgBus.onRevoke += OnRevoke;
 			MsgBus.onShift += OnShift;
 			MsgBus.onPickup += OnPickup;
+			MsgBus.onPurchaseSuccess += OnPurchaseSuccess;
+			MsgBus.onPurchaseFailed += OnPurchaseFailed;
 		}
 		
 		void OnPickup(Spring spring) {
@@ -131,12 +134,14 @@ namespace SpringMatch {
 		{
 			MsgBus.onLevelPass -= OnLevelPass;
 			MsgBus.onLevelFailed -= OnLevelFailed;
-			MsgBus.onElimiteString -= onElimiteString;
+			MsgBus.onElimiteStringStart -= onElimiteString;
 			MsgBus.onInvalidPick -= onInvalidPick;
 			MsgBus.onToSlot -= OnToSlot;
 			MsgBus.onRevoke -= OnRevoke;
 			MsgBus.onShift -= OnShift;
 			MsgBus.onPickup -= OnPickup;
+			MsgBus.onPurchaseSuccess -= OnPurchaseSuccess;
+			MsgBus.onPurchaseFailed -= OnPurchaseFailed;
 		}
 		
 		public void OnLevelFailed() {
@@ -144,16 +149,28 @@ namespace SpringMatch {
 		}
 		
 		public void OnLevelPass() {
-			EffectManager.Inst.PlayLevelPassEffect();
 			SwitchLevel().Forget();
 		}
 		
+		bool VibrateOn => PrefsManager.GetBool(PrefsManager.VIBRATE_ON, true);
+		
 		public void onElimiteString(Spring spring) {
+			if (VibrateOn) {
+				Handheld.Vibrate();
+			}
 			Debug.Log($"Eliminate {spring.Type}");
+			
 		}
 		
 		public void onInvalidPick(Spring spring) {
 			Debug.Log("Invalid Pick");
+		}
+		
+		public void onValidPick(Spring spring) {
+			Debug.Log("-- Valid Pick-- ");
+			if (VibrateOn) {
+				Handheld.Vibrate();
+			}
 		}
 		
 		public void OnToSlot(Spring spring) {
@@ -267,6 +284,14 @@ namespace SpringMatch {
 		
 		[Button]
 		public async UniTaskVoid SwitchLevel() {
+			bool subPass = true;
+			
+			if (subLevelIndex + 1 == SubLevelNum) {
+				subPass = false;
+			}
+			
+			EffectManager.Inst.PlayLevelPassEffect(subPass);
+			
 			await UniTask.Delay(3000);
 			if (SubLevelNum == 3 && subLevelIndex == 0) {
 				levelProgress.ToLevel2();
@@ -294,6 +319,18 @@ namespace SpringMatch {
 				.WithCancellation(token);
 			Destroy(currLevel.gameObject);
 			currLevel = nextLevel;
+		}
+		
+		public void OnPurchaseSuccess(string productId) {
+			UI.UIVariable.Inst.shopBundleGet.OnPurchaseSuccess(productId);
+			UI.UIVariable.Inst.shopGoldGet.OnPurchaseSuccess(productId);
+			UI.UIVariable.Inst.shopDialog.SetActive(false);
+		}
+		
+		public void OnPurchaseFailed(string productId, int errorCode) {
+			if (errorCode != 0) {
+				UI.UIVariable.Inst.ShowToast("Purchase Failed. Please try again.");
+			}
 		}
 		
 		[Button]

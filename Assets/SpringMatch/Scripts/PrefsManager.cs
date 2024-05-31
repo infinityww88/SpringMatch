@@ -18,6 +18,8 @@ namespace SpringMatch {
 		public const string VERSION = "version";
 		public const string RES_VERSION = "resVersion";
 		public const string LEVEL_INDEX = "level_index";
+		public const string SOUND_ON = "setting_sound";
+		public const string VIBRATE_ON = "setting_vibrate";
 		
 		private static Dictionary<string, int> intCache = new Dictionary<string, int>();
 		private static Dictionary<string, float> floatCache = new Dictionary<string, float>();
@@ -180,6 +182,20 @@ namespace SpringMatch {
 			set {
 				SetString(LAST_HEART_REFILL_TIME, value.ToString());
 			}
+		}
+		
+		public static bool GetBool(string key, bool defaultValue) {
+			int df = defaultValue ? 1 : 0;
+			if (!intCache.ContainsKey(key)) {
+				intCache[key] = PlayerPrefs.GetInt(key, df);
+			}
+			return intCache[key] != 0;
+		}
+	
+		public static void SetBool(string key, bool value) {
+			int v = value ? 1 : 0;
+			intCache[key] = v;
+			PlayerPrefs.SetInt(key, v);
 		}
 	
 		public static int GetInt(string key, int dafaultValue) {

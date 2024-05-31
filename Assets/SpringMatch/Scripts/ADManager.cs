@@ -6,15 +6,16 @@ using GoogleMobileAds.Api;
 using QFSW.QC;
 using UnityEngine.Events;
 using DG.Tweening;
+using ScriptableObjectArchitecture;
 
 namespace SpringMatch {
 	
 	public class AdManager : MonoBehaviour
 	{
 		[SerializeField]
-		private string _adUnitId = "ca-app-pub-3940256099942544/5224354917";
+		private StringVariable _adUnitId;
 		[SerializeField]
-		private float reloadInterval = 1f;
+		private FloatVariable _reloadInterval;
     
 		private RewardedAd _rewardedAd = null;
 		
@@ -24,6 +25,7 @@ namespace SpringMatch {
 		protected void Awake()
 		{
 			Inst = this;
+			DontDestroyOnLoad(gameObject);
 		}
 		
 		// This function is called when the MonoBehaviour will be destroyed.
@@ -52,13 +54,13 @@ namespace SpringMatch {
 			Debug.Log("Loading the rewarded ad.");
 		
 			var adRequest = new AdRequest();
-			RewardedAd.Load(_adUnitId, adRequest, (RewardedAd ad, LoadAdError error) => {
+			RewardedAd.Load(_adUnitId.Value, adRequest, (RewardedAd ad, LoadAdError error) => {
 				// if error is not null, the load request failed.
 				if (error != null || ad == null)
 				{
 					Debug.LogError("Rewarded ad failed to load an ad " +
 						"with error : " + error + ". Try Again");
-					DOTween.Sequence().AppendInterval(reloadInterval)
+					DOTween.Sequence().AppendInterval(_reloadInterval.Value)
 						.AppendCallback(LoadRewardedAd)
 						.SetId(this);
 					return;

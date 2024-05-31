@@ -12,15 +12,19 @@ namespace SpringMatch {
 	{
 		public static IAPManager Inst;
 		
+		public bool Inited { get; set; } = false;
+		
 		private Dictionary<string, IBillingProduct> _products = new	Dictionary<string, IBillingProduct>();
 		
-		[SerializeField]
-		private UnityEngine.Events.UnityEvent<string> onPurchaseSuccess, onPurchaseFailed;
+		public IBillingProduct GetProduct(string productId) {
+			return _products.GetValueOrDefault(productId, null);
+		}
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
 			Inst = this;
+			DontDestroyOnLoad(gameObject);
 		}
 	
 		// Start is called before the first frame update
@@ -76,6 +80,8 @@ namespace SpringMatch {
 					Debug.Log(string.Format("[{0}]: {1}", iter, product));
 					_products[product.Id] = product;
 				}
+				
+				MsgBus.onIAPInit?.Invoke(_products);
 			}
 			else
 			{
@@ -92,6 +98,7 @@ namespace SpringMatch {
 					Debug.Log(string.Format("[{0}]: {1}", iter, invalidIds[iter]));
 				}
 			}
+			Inited = true;
 		}
 	
 		private void OnTransactionStateChange(BillingServicesTransactionStateChangeResult result)
@@ -103,12 +110,12 @@ namespace SpringMatch {
 				switch (transaction.TransactionState)
 				{
 				case BillingTransactionState.Purchased:
-					onPurchaseSuccess?.Invoke(transaction.Payment.ProductId);
+					MsgBus.onPurchaseSuccess?.Invoke(transaction.Payment.ProductId);
 					Debug.Log(string.Format("Buy product with id:{0} finished successfully.", transaction.Payment.ProductId));
 					break;
 
 				case BillingTransactionState.Failed:
-					onPurchaseFailed?.Invoke(transaction.Payment.ProductId);
+					MsgBus.onPurchaseFailed?.Invoke(transaction.Payment.ProductId, transaction.Error.Code);
 					Debug.Log(string.Format("Buy product with id:{0} failed with error. Error: {1}", transaction.Payment.ProductId, transaction.Error));
 					break;
 				}

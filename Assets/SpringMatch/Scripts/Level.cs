@@ -237,7 +237,6 @@ namespace SpringMatch {
 			if (!_springs.Contains(spring) && !ExtraSlotManager.Inst.Contains(spring)) {
 				return;
 			}
-			EffectManager.Inst.VibratePickup();
 			
 			if (SlotManager.Inst.IsFull() || !spring.IsTop) {
 				if (!SlotManager.Inst.IsFull() && !spring.IsTop) {
@@ -247,6 +246,8 @@ namespace SpringMatch {
 				EffectManager.Inst.PlayInvalid();
 				return;
 			}
+			MsgBus.onValidPick?.Invoke(spring);
+			
 			EffectManager.Inst.PlayPickup();
 			spring.EnablePickupCollider(false);
 			spring.EnableDetectCollider(false);
