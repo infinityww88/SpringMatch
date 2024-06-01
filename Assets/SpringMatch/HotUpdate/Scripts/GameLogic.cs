@@ -22,6 +22,10 @@ namespace SpringMatch {
 		[SerializeField]
 		private float moveDuration;
 		[SerializeField]
+		private float randomSpringInterval = 0.5f;
+		[SerializeField]
+		private int randomSpringTimes = 5;
+		[SerializeField]
 		private UI.LevelProgress levelProgress2, levelProgress3;
 		[SerializeField]
 		private IntVariable refillLiveInterval;
@@ -30,6 +34,9 @@ namespace SpringMatch {
 		
 		[SerializeField]
 		private LevelPrefabConfig levelPrefabs;
+		
+		[SerializeField]
+		private UI.ItemButton revokeButton, shiftButton, randomButton;
 		
 		private int subLevelIndex = 0;
 		
@@ -156,7 +163,7 @@ namespace SpringMatch {
 		
 		public void onElimiteString(Spring spring) {
 			if (VibrateOn) {
-				Handheld.Vibrate();
+				Vibration.VibrateAndroid(1000);
 			}
 			Debug.Log($"Eliminate {spring.Type}");
 			
@@ -169,7 +176,7 @@ namespace SpringMatch {
 		public void onValidPick(Spring spring) {
 			Debug.Log("-- Valid Pick-- ");
 			if (VibrateOn) {
-				Handheld.Vibrate();
+				Vibration.VibrateAndroid(1000);
 			}
 		}
 		
@@ -330,6 +337,52 @@ namespace SpringMatch {
 		public void OnPurchaseFailed(string productId, int errorCode) {
 			if (errorCode != 0) {
 				UI.UIVariable.Inst.ShowToast("Purchase Failed. Please try again.");
+			}
+		}
+		
+		// This function is called when the MonoBehaviour will be destroyed.
+		protected void OnDestroy()
+		{
+			DOTween.Kill(this);
+		}
+		
+		public void RandomSprings() {
+			if (Level.Inst.RemainSpring() == 0) {
+				return;
+			}
+			var springs = Level.Inst.GetAllSprings();
+			Level.Inst.RandomType(springs);
+			var oldState = Global.GameState;
+			Global.GameState =	Global.EGameState.Pause;
+			DOTween.Sequence()
+				.AppendCallback(() => Level.Inst.RandomType(springs))
+				.AppendInterval(randomSpringInterval)
+				.SetLoops(randomSpringTimes, LoopType.Restart)
+				.SetId(this)
+				.OnComplete(() => Global.GameState = oldState);
+		}
+		
+		public void RevokeSpring() {
+			if (!Level.Inst.HasLastPickSpring) {
+				return;
+			}
+			Level.Inst.RestoreLastPickupSpring();
+		}
+		
+		public void Shift3Spring() {
+			if (SlotManager.Inst.UsedSlotsNum == 0) {
+				return;
+			}
+			Level.Inst.Shift3ToExtra();
+		}
+		
+		// Update is called every frame, if the MonoBehaviour is enabled.
+		protected void Update()
+		{
+			if (Global.GameState == Global.EGameState.Play) {
+				revokeButton.Valid = Level.Inst.HasLastPickSpring;
+				shiftButton.Valid = SlotManager.Inst.UsedSlotsNum > 0;
+				randomButton.Valid = Level.Inst.RemainSpring() > 0;
 			}
 		}
 		

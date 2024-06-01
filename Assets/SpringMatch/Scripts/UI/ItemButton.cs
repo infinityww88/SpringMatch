@@ -28,7 +28,7 @@ namespace SpringMatch.UI {
 		private ItemConfig itemConfig;
 		
 		[SerializeField]
-		private UnityEngine.Events.UnityEvent onRequestItem;
+		private UnityEngine.Events.UnityEvent onRequestItem, onUseItem;
 		
 		[Button]
 		public int ItemNum {
@@ -55,8 +55,11 @@ namespace SpringMatch.UI {
 		
 		public void OnClick() {
 			if (ItemNum > 0) {
-				Debug.Log($"Use a item");
-				ItemNum--;
+				if (Valid) {
+					ItemNum--;
+					onUseItem.Invoke();
+				}
+				
 			} else {
 				onRequestItem.Invoke();
 			}

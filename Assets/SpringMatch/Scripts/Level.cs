@@ -78,6 +78,16 @@ namespace SpringMatch {
 			}
 		}
 		
+		public List<Spring> GetAllSprings() {
+			List<Spring> t = new List<Spring>();
+			t.AddRange(_springs);
+			foreach (var e in _holes) {
+				SpringHole hole = e.Value;
+				hole.ForeachSpring(s => t.Add(s));
+			}
+			return t;
+		}
+		
 		[Button]
 		public void RandomAllSpringTypes() {
 			List<Spring> t = new List<Spring>();
@@ -224,6 +234,8 @@ namespace SpringMatch {
 		}
 		
 		private Spring lastPickupSpring = null;
+		
+		public bool HasLastPickSpring => lastPickupSpring != null;
 		
 		public void ClearLastPickupSpring() {
 			lastPickupSpring = null;

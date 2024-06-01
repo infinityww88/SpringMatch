@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314b65076f34a8048beae1e9377028ba, type: 3}
   m_Name: ShiftItemConfig
   m_EditorClassIdentifier: 
-  goldCost: 30
+  goldCost: 50
   itemType: 1

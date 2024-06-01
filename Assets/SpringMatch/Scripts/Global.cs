@@ -9,6 +9,7 @@ namespace SpringMatch {
 		public enum EGameState {
 			Ready,
 			Play,
+			Pause,
 			Over
 		}
 		//public static string CDN = "https://d18ajfcy3fib2i.cloudfront.net";

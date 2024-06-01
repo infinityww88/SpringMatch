@@ -5,12 +5,16 @@ using VoxelBusters.EssentialKit;
 using VoxelBusters.CoreLibrary;
 using Sirenix.OdinInspector;
 using ScriptableObjectArchitecture;
+using DG.Tweening;
 
 namespace SpringMatch {
 	
 	public class IAPManager : MonoBehaviour
 	{
 		public static IAPManager Inst;
+		
+		[SerializeField]
+		private FloatVariable IAPReloadInterval;
 		
 		public bool Inited { get; set; } = false;
 		
@@ -63,6 +67,12 @@ namespace SpringMatch {
 			BillingServices.OnTransactionStateChange    -= OnTransactionStateChange;
 			BillingServices.OnRestorePurchasesComplete  -= OnRestorePurchasesComplete;
 		}
+		
+		// This function is called when the MonoBehaviour will be destroyed.
+		protected void OnDestroy()
+		{
+			DOTween.Kill(this);
+		}
 	
 		private void OnInitializeStoreComplete(BillingServicesInitializeStoreResult result, Error error)
 		{
@@ -86,6 +96,11 @@ namespace SpringMatch {
 			else
 			{
 				Debug.Log("Store initialization failed with error. Error: " + error);
+				DOTween.Sequence()
+					.AppendInterval(IAPReloadInterval.Value)
+					.AppendCallback(BillingServices.InitializeStore)
+					.SetId(this);
+				return;
 			}
 
 			var     invalidIds  = result.InvalidProductIds;

@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: ShopBundle0
   m_EditorClassIdentifier: 
   productId: test_item_0
+  title: ORIDINARY
+  desc: 
   goldNum: 100
-  revokeNum: 4
-  shiftNum: 4
-  randomNum: 4
+  revokeNum: 3
+  shiftNum: 1
+  randomNum: 3

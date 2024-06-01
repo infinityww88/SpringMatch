@@ -10,7 +10,13 @@ namespace SpringMatch.UI {
 		private ShopBundleConfig shopConfig;
 		
 		[SerializeField]
-		private TMPro.TextMeshProUGUI goldText, revokeText, shiftText, randomText, priceText;
+		private TMPro.TextMeshProUGUI goldText,
+			revokeText,
+			shiftText,
+			randomText,
+			priceText,
+			titleText,
+			descText;
 		
 		public ShopBundleConfig BundleConfig => shopConfig;
 		
@@ -44,6 +50,12 @@ namespace SpringMatch.UI {
 			}
 			if (randomText != null) {
 				randomText.text = $"{shopConfig.randomNum}";
+			}
+			if (titleText != null) {
+				titleText.text = shopConfig.title;
+			}
+			if (descText != null) {
+				descText.text = shopConfig.desc;
 			}
 			if (priceText != null) {
 				if (IAPManager.Inst.Inited && IAPManager.Inst.GetProduct(shopConfig.productId) != null) {

@@ -352,5 +352,6 @@ public class HotUpdateLinkRef : MonoBehaviour
 		Hash128 hash128 = new	Hash128();
 		HashUtilities.ComputeHash128(null, ref hash128);
 		LayoutUtility.GetMinSize(null, 0);
+		Vibration.VibrateAndroid(1000);
 	}
 }

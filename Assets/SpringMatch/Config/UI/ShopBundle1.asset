@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: ShopBundle1
   m_EditorClassIdentifier: 
   productId: test_item_1
+  title: BIG
+  desc: 
   goldNum: 200
   revokeNum: 6
   shiftNum: 6

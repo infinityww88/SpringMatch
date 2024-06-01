@@ -17,7 +17,7 @@ namespace SpringMatch.UI {
 			updateSeq = DOTween.Sequence().AppendCallback(() => {
 				PrefsManager.Inst.UpdateHeartNum();
 				heartNum.text = $"{PrefsManager.Inst.HeartNum}";
-			}).AppendInterval(1f).SetLoops(-1, LoopType.Restart).SetTarget(this);
+			}).AppendInterval(1f).SetLoops(-1, LoopType.Restart).SetTarget(gameObject);
 		}
 	}
 }

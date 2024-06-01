@@ -4,6 +4,7 @@ using UnityEngine;
 using ScriptableObjectArchitecture;
 using Sirenix.OdinInspector;
 using ScriptableObjectArchitecture;
+using QFSW.QC;
 
 namespace SpringMatch {
 
@@ -190,6 +191,16 @@ namespace SpringMatch {
 				intCache[key] = PlayerPrefs.GetInt(key, df);
 			}
 			return intCache[key] != 0;
+		}
+		
+		[Command]
+		public static void SetDevMode(bool on) {
+			SetBool("dev_mode", on);
+		}
+		
+		[Command]
+		public static bool GetDevMode() {
+			return GetBool("dev_mode", true);
 		}
 	
 		public static void SetBool(string key, bool value) {

@@ -24,13 +24,20 @@ namespace SpringMatch {
 		
 		private Tween loadingTextTween;
 		
+		[SerializeField]
+		private Button playButton, consoleButton;
+		
 		private string resVersion;
 		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
+			bool devMode = PrefsManager.GetDevMode();
+			playButton.gameObject.SetActive(devMode);
+			consoleButton.gameObject.SetActive(devMode);
+			
 			TweenLoadingText();
-			//Load().Forget();
+			Load().Forget();
 		}
 		
 		void TweenLoadingText() {
@@ -105,11 +112,11 @@ namespace SpringMatch {
 			
 			Debug.Log("Loaded assembly");
 			
-			/*
-			var sceneHandle = YooAssets.LoadSceneAsync("HotScene_Play");
-			await sceneHandle;
-			Debug.Log("Loaded Play Scene");
-			*/
+			if (!PrefsManager.GetDevMode()) {
+				var sceneHandle = YooAssets.LoadSceneAsync("HotScene_Play");
+				await sceneHandle;
+				Debug.Log("Loaded Play Scene");
+			}
 		}
 		
 		public void Play() {
