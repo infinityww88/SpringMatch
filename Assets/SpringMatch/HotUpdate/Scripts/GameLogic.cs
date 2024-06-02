@@ -163,7 +163,7 @@ namespace SpringMatch {
 		
 		public void onElimiteString(Spring spring) {
 			if (VibrateOn) {
-				Vibration.VibrateAndroid(1000);
+				VibrationManager.Inst.VibrateEliminate();
 			}
 			Debug.Log($"Eliminate {spring.Type}");
 			
@@ -176,7 +176,7 @@ namespace SpringMatch {
 		public void onValidPick(Spring spring) {
 			Debug.Log("-- Valid Pick-- ");
 			if (VibrateOn) {
-				Vibration.VibrateAndroid(1000);
+				VibrationManager.Inst.VibratePop();
 			}
 		}
 		

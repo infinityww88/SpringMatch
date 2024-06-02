@@ -24,15 +24,12 @@ namespace SpringMatch {
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
+			if (Inst != null) {
+				Destroy(gameObject);
+				return;
+			}
 			Inst = this;
 			DontDestroyOnLoad(gameObject);
-		}
-		
-		// This function is called when the MonoBehaviour will be destroyed.
-		protected void OnDestroy()
-		{
-			Inst = null;
-			DOTween.Kill(this);
 		}
 	
 		void Start()
