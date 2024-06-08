@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7444948561532240725}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.079662, y: -0.29490602, z: -38.684105}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7444948561532240727
 MonoBehaviour:
@@ -60,7 +60,7 @@ MonoBehaviour:
     - Name: _items
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[SpringMatch.PoolItem,
-        Assembly-CSharp]], mscorlib
+        Main]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
@@ -79,7 +79,7 @@ MonoBehaviour:
       Data: springModel1
     - Name: $v
       Entry: 7
-      Data: 2|SpringMatch.PoolItem, Assembly-CSharp
+      Data: 2|SpringMatch.PoolItem, Main
     - Name: prefab
       Entry: 10
       Data: 0
@@ -103,7 +103,7 @@ MonoBehaviour:
       Data: springModel0
     - Name: $v
       Entry: 7
-      Data: 3|SpringMatch.PoolItem, Assembly-CSharp
+      Data: 3|SpringMatch.PoolItem, Main
     - Name: prefab
       Entry: 10
       Data: 1
@@ -127,7 +127,7 @@ MonoBehaviour:
       Data: springModel2
     - Name: $v
       Entry: 7
-      Data: 4|SpringMatch.PoolItem, Assembly-CSharp
+      Data: 4|SpringMatch.PoolItem, Main
     - Name: prefab
       Entry: 10
       Data: 2
@@ -151,7 +151,7 @@ MonoBehaviour:
       Data: sphereCollider
     - Name: $v
       Entry: 7
-      Data: 5|SpringMatch.PoolItem, Assembly-CSharp
+      Data: 5|SpringMatch.PoolItem, Main
     - Name: prefab
       Entry: 10
       Data: 3

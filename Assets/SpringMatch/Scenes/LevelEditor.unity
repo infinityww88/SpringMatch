@@ -401,10 +401,6 @@ PrefabInstance:
       value: GameObjectPools
       objectReference: {fileID: 0}
     - target: {fileID: 7444948561532240726, guid: 7719c76bfaf453741bcb749b4abe4f74, type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444948561532240726, guid: 7719c76bfaf453741bcb749b4abe4f74, type: 3}
       propertyPath: m_LocalPosition.x
       value: 19.079662
       objectReference: {fileID: 0}

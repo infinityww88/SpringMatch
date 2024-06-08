@@ -242,6 +242,7 @@ namespace SpringMatch {
 		}
 		
 		public void OnPickupSpring(Spring spring) {
+			Debug.Log($"pick {spring} {Global.GameState} {Global.PendInteract}");
 			if (Global.GameState != Global.EGameState.Play || Global.PendInteract == true) {
 				return;
 			}
@@ -249,6 +250,7 @@ namespace SpringMatch {
 			if (!_springs.Contains(spring) && !ExtraSlotManager.Inst.Contains(spring)) {
 				return;
 			}
+			
 			
 			if (SlotManager.Inst.IsFull() || !spring.IsTop) {
 				if (!SlotManager.Inst.IsFull() && !spring.IsTop) {

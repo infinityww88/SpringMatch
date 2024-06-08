@@ -19,6 +19,10 @@ namespace SpringMatchEditor {
 		// Start is called before the first frame update
 		void Start()
 		{
+			PrefsManager.SetBool(PrefsManager.SOUND_ON, false);
+			PrefsManager.SetBool(PrefsManager.VIBRATE_ON, false);
+			Global.GameState = Global.EGameState.Play;
+			Global.PendInteract = false;
 			LoadLevel();
 		}
 		

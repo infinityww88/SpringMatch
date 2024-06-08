@@ -46,6 +46,13 @@ namespace SpringMatch.HotRes {
 		
 		#region Init
 		
+		private IEnumerator InitializeYooAsset(string pkgName)
+		{
+			var pkg = YooAssets.GetPackage(pkgName);
+			var initParameters = new OfflinePlayModeParameters();
+			yield return pkg.InitializeAsync(initParameters);
+		}
+		
 		private void Init() {
 			YooAssets.Initialize();
 			DefaultPkg = YooAssets.CreatePackage("DefaultPackage");
