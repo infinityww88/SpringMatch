@@ -31,6 +31,8 @@ namespace SpringMatch {
 		private IntVariable refillLiveInterval;
 		[SerializeField]
 		private VisualTweenSequence.TweenSequence startPlayEffect;
+		[SerializeField]
+		private TextAsset ase_key, ase_iv;
 		
 		[SerializeField]
 		private LevelPrefabConfig levelPrefabs;
@@ -248,8 +250,14 @@ namespace SpringMatch {
 			SetCamera();
 		}
 		
+		string ReadLevelsFile(string path) {
+			var fullPath = Path.Join(Application.persistentDataPath, "levels", path);
+			var data = File.ReadAllBytes(fullPath);
+			return Utils.Decrypt(data, ase_key.bytes, ase_iv.bytes);
+		}
+		
 		void LoadLevelConfig() {
-			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", "levelConfig.json"));
+			var text = ReadLevelsFile("levelConfig.json");
 			levelConfig = JsonConvert.DeserializeObject<LevelConfig>(text);
 		}
 		
@@ -282,7 +290,7 @@ namespace SpringMatch {
 			levelIndex %= levelConfig.levels.Count;
 			var levelMeta = levelConfig.levels[levelIndex];
 			var subLevelMeta = levelMeta.subLevels[subLevelIndex];
-			var text = File.ReadAllText(Path.Join(Application.persistentDataPath, "levels", $"{subLevelMeta.fileName}.json"));
+			var text = ReadLevelsFile($"{subLevelMeta.fileName}.json");
 			var levelData = JsonConvert.DeserializeObject<LevelData>(text);
 			var level = LoadLevelAsset(levelData.row, levelData.col);
 			level.LoadData(levelData);

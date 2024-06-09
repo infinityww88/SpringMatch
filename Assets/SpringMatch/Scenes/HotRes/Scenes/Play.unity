@@ -1746,6 +1746,8 @@ MonoBehaviour:
   levelProgress3: {fileID: 801506348}
   refillLiveInterval: {fileID: 11400000, guid: d506c17d45b6a644f970646a1a9d106c, type: 2}
   startPlayEffect: {fileID: 1738470420}
+  ase_key: {fileID: 4900000, guid: fa9af534be9849248a171fcaf565102a, type: 3}
+  ase_iv: {fileID: 4900000, guid: 43551e0c828d4ba43985781481dd0443, type: 3}
   levelPrefabs: {fileID: 11400000, guid: 934ee10e17a4e7e4fba1ca6fb86cf7c9, type: 2}
   revokeButton: {fileID: 2073493682}
   shiftButton: {fileID: 1229816719}

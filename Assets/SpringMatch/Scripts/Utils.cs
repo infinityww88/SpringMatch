@@ -126,9 +126,6 @@ public static class Utils
 		MemoryStream input = new MemoryStream(data);
 		MemoryStream output = new MemoryStream();
 		using (AesManaged myAes = new AesManaged()) {
-			myAes.Mode =	CipherMode.CBC;
-			myAes.BlockSize = 128;
-			myAes.Padding = PaddingMode.Zeros;
 			myAes.Key = key;
 			myAes.IV = iv;
 			ICryptoTransform decryptor = myAes.CreateDecryptor();

@@ -63,9 +63,10 @@ namespace SpringMatch {
 			RandomItemNum += num;
 		}
 		
+		[Button]
 		public void DeleteAll() {
 			Debug.Log("Delete All Prefs");
-			PlayerPrefs.DeleteAll();
+			ES3.DeleteFile();
 		}
 		
 		[Button]
@@ -127,7 +128,6 @@ namespace SpringMatch {
 		[Button]
 		public void DecHeartNum(int n=1) {
 			n = Mathf.Min(Mathf.Clamp(n, 0, 5), PrefsManager.Inst.HeartNum);
-			//UpdateHeartNum();
 			if (HeartNum == 0) {
 				return;
 			}
@@ -188,7 +188,7 @@ namespace SpringMatch {
 		public static bool GetBool(string key, bool defaultValue) {
 			int df = defaultValue ? 1 : 0;
 			if (!intCache.ContainsKey(key)) {
-				intCache[key] = PlayerPrefs.GetInt(key, df);
+				intCache[key] = ES3.Load<int>(key, df);
 			}
 			return intCache[key] != 0;
 		}
@@ -206,43 +206,43 @@ namespace SpringMatch {
 		public static void SetBool(string key, bool value) {
 			int v = value ? 1 : 0;
 			intCache[key] = v;
-			PlayerPrefs.SetInt(key, v);
+			ES3.Save<int>(key, v);
 		}
-	
-		public static int GetInt(string key, int dafaultValue) {
+		
+		public static int GetInt(string key, int defaultValue) {
 			if (!intCache.ContainsKey(key)) {
-				intCache[key] = PlayerPrefs.GetInt(key, dafaultValue);
+				intCache[key] = ES3.Load<int>(key, defaultValue);
 			}
 			return intCache[key];
 		}
 	
 		public static void SetInt(string key, int value) {
 			intCache[key] = value;
-			PlayerPrefs.SetInt(key, value);
+			ES3.Save<int>(key, value);
 		}
 		
-		public static float GetFloat(string key, float dafaultValue) {
+		public static float GetFloat(string key, float defaultValue) {
 			if (!floatCache.ContainsKey(key)) {
-				floatCache[key] = PlayerPrefs.GetFloat(key, dafaultValue);
+				floatCache[key] = ES3.Load<float>(key, defaultValue);
 			}
 			return floatCache[key];
 		}
 	
 		public static void SetFloat(string key, float value) {
 			floatCache[key] = value;
-			PlayerPrefs.SetFloat(key, value);
+			ES3.Save<float>(key, value);
 		}
 		
-		public static string GetString(string key, string dafaultValue) {
+		public static string GetString(string key, string defaultValue) {
 			if (!stringCache.ContainsKey(key)) {
-				stringCache[key] = PlayerPrefs.GetString(key, dafaultValue);
+				stringCache[key] = ES3.Load<string>(key, defaultValue: defaultValue);
 			}
 			return stringCache[key];
 		}
 	
 		public static void SetString(string key, string value) {
 			stringCache[key] = value;
-			PlayerPrefs.SetString(key, value);
+			ES3.Save<string>(key, value);
 		}
 	}
 
