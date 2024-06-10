@@ -20,6 +20,14 @@ public static class Utils
 		collider.transform.rotation = Quaternion.FromToRotation(Vector3.right, pos0 - pos1);
 	}
 	
+	public static void ClearChildren(Transform parent) {
+		while (parent.childCount > 0) {
+			var c = parent.GetChild(0);
+			c.SetParent(null);
+			GameObject.Destroy(c.gameObject);
+		}
+	}
+	
 	public static async UniTaskVoid RunNextFrame(Action action, int frameCount = 1) {
 		await UniTask.DelayFrame(frameCount);
 		action?.Invoke();

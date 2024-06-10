@@ -242,7 +242,6 @@ namespace SpringMatch {
 		}
 		
 		public void OnPickupSpring(Spring spring) {
-			Debug.Log($"pick {spring} {Global.GameState} {Global.PendInteract}");
 			if (Global.GameState != Global.EGameState.Play || Global.PendInteract == true) {
 				return;
 			}

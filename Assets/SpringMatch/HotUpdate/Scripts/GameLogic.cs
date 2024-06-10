@@ -33,6 +33,12 @@ namespace SpringMatch {
 		private VisualTweenSequence.TweenSequence startPlayEffect;
 		[SerializeField]
 		private TextAsset ase_key, ase_iv;
+		[SerializeField]
+		private Collection<Object> groundMats;
+		[SerializeField]
+		private GameObject ground;
+		[SerializeField]
+		private Transform numInfoRoot;
 		
 		[SerializeField]
 		private LevelPrefabConfig levelPrefabs;
@@ -86,7 +92,6 @@ namespace SpringMatch {
 		}
 		
 		void SetupLevelProgress() {
-			Debug.Log($"{SubLevelNum}");
 			levelProgress2.gameObject.SetActive(SubLevelNum == 2);
 			levelProgress3.gameObject.SetActive(SubLevelNum == 3);
 			levelProgress = SubLevelNum == 2 ? levelProgress2 : levelProgress3;
@@ -167,31 +172,25 @@ namespace SpringMatch {
 			if (VibrateOn) {
 				VibrationManager.Inst.VibrateEliminate();
 			}
-			Debug.Log($"Eliminate {spring.Type}");
-			
 		}
 		
 		public void onInvalidPick(Spring spring) {
-			Debug.Log("Invalid Pick");
+			
 		}
 		
 		public void onValidPick(Spring spring) {
-			Debug.Log("-- Valid Pick-- ");
 			if (VibrateOn) {
 				VibrationManager.Inst.VibratePop();
 			}
 		}
 		
 		public void OnToSlot(Spring spring) {
-			Debug.Log("To Slot");
 		}
 		
 		public void OnRevoke(Spring spring) {
-			Debug.Log($"On Revoke {spring.Type}");
 		}
 		
 		public void OnShift(int num) {
-			Debug.Log($"On Shift {num}");
 		}
 		
 		public void BackHome() {
@@ -266,7 +265,6 @@ namespace SpringMatch {
 		}
 		
 		public void NextLevel() {
-			SetupLevelProgress();
 			Replay();
 		}
 		
@@ -286,6 +284,7 @@ namespace SpringMatch {
 		}
 		
 		private Level LoadSubLevel() {
+			Utils.ClearChildren(numInfoRoot);
 			var levelIndex = PrefsManager.Inst.LevelIndex;
 			levelIndex %= levelConfig.levels.Count;
 			var levelMeta = levelConfig.levels[levelIndex];
@@ -294,6 +293,12 @@ namespace SpringMatch {
 			var levelData = JsonConvert.DeserializeObject<LevelData>(text);
 			var level = LoadLevelAsset(levelData.row, levelData.col);
 			level.LoadData(levelData);
+			
+			levelIndex = PrefsManager.Inst.LevelIndex;
+			int matIndex = levelIndex % groundMats.Count;
+			Material mat = (Material)groundMats[matIndex];
+			ground.GetComponent<Renderer>().material = mat;
+			
 			return level;
 		}
 		
@@ -325,14 +330,15 @@ namespace SpringMatch {
 			
 			currLevel.transform.Translate(left.localPosition, Space.Self);
 			Camera.main.transform.Translate(left.localPosition, Space.Self);
-			
 			var nextLevel = LoadSubLevel();
+			numInfoRoot.gameObject.SetActive(false);
 			
 			var token = gameObject.GetCancellationTokenOnDestroy();
 			
 			await Camera.main.transform.DOMove(nextLevel.CameraPlayPos, moveDuration)
 				.WithCancellation(token);
 			Destroy(currLevel.gameObject);
+			numInfoRoot.gameObject.SetActive(true);
 			currLevel = nextLevel;
 		}
 		
@@ -392,26 +398,6 @@ namespace SpringMatch {
 				shiftButton.Valid = SlotManager.Inst.UsedSlotsNum > 0;
 				randomButton.Valid = Level.Inst.RemainSpring() > 0;
 			}
-		}
-		
-		[Button]
-		void TestConfig() {
-			SubLevelMetaData subLevelMeta0 = new SubLevelMetaData();
-			subLevelMeta0.fileName = "level";
-			
-			SubLevelMetaData subLevelMeta1 = new SubLevelMetaData();
-			subLevelMeta1.fileName = "level";
-			
-			LevelMetaData levelMeta = new	LevelMetaData();
-			levelMeta.subLevels = new	List<SubLevelMetaData>();
-			levelMeta.subLevels.Add(subLevelMeta0);
-			levelMeta.subLevels.Add(subLevelMeta1);
-			
-			LevelConfig config = new	LevelConfig();
-			config.levels = new List<LevelMetaData>();
-			config.levels.Add(levelMeta);
-			
-			Debug.Log(JsonConvert.SerializeObject(config));
 		}
 	}
 }
