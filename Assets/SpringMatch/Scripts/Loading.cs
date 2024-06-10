@@ -83,7 +83,7 @@ namespace SpringMatch {
 					PrefsManager.SetInt(PrefsManager.VERSION, meta.version);
 				}
 			} catch (Exception e) {
-				Debug.Log(e);
+				Debug.LogWarning($"Download Content error {e}");
 			}
 		}
 		
@@ -102,7 +102,11 @@ namespace SpringMatch {
 			await DownloadContent();
 			Debug.Log("Loaded Content");
 			
-			await HotResManager.Inst.UpdateResource(resVersion, OnDownloadProgress);
+			try {
+				await HotResManager.Inst.UpdateResource(resVersion, OnDownloadProgress);
+			} catch (Exception e) {
+				Debug.LogWarning($"UpdateResource error {e}");
+			}
 			
 			var handle = YooAssets.LoadAssetAsync("HotUpdate_HotUpdateAssembly.dll");
 			await handle;
