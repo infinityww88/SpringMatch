@@ -27,6 +27,9 @@ namespace SpringMatch {
 		[SerializeField]
 		private Button playButton, consoleButton;
 		
+		[SerializeField]
+		private TextAsset aseKey, aseIV;
+		
 		private string resVersion;
 		
 		// Awake is called when the script instance is being loaded.
@@ -56,14 +59,20 @@ namespace SpringMatch {
 		}
 		
 		async UniTask DownloadRes(string path) {
-			var uri = new Uri(new Uri(Global.CDN), path);
+			string cdn = PrefsManager.GetString(PrefsManager.CDN, Global.DEFAULT_CDN);
+			var uri = new Uri(new Uri(cdn), path);
 			Debug.Log(uri);
-			var request = UnityWebRequest.Get(uri);
-			request.downloadHandler = new DownloadHandlerFile(Path.Join(Application.persistentDataPath, path));
-			await request.SendWebRequest();
-			if (request.result != UnityWebRequest.Result.Success) {
-				throw new Exception($"DownloadRes {path} failed {request.error}");
+			UnityWebRequest request = null;
+			for (int i = 0; i < 3; i++) {
+				request = UnityWebRequest.Get(uri);
+				request.downloadHandler = new DownloadHandlerFile(Path.Join(Application.persistentDataPath, path));
+				request.timeout = 15;
+				await request.SendWebRequest();
+				if (request.result == UnityWebRequest.Result.Success) {
+					return;
+				}
 			}
+			throw new Exception($"DownloadRes {path} failed {request.error}");
 		}
 		
 		[Button]
@@ -71,11 +80,11 @@ namespace SpringMatch {
 			try {
 				var path = Path.Join(Application.persistentDataPath, "meta.json");
 				await DownloadRes("meta.json");
-				var text = File.ReadAllText(path);
+				var data = File.ReadAllBytes(path);
+				var text = Utils.Decrypt(data, aseKey.bytes, aseIV.bytes);
 				Debug.Log(text);
 				MetaInfo meta = JsonUtility.FromJson<MetaInfo>(text);
-				Debug.Log($"resVersion {meta.resVersion}");
-				resVersion = meta.resVersion;
+				PrefsManager.SetString(PrefsManager.CDN, meta.cdn);
 				int localVersion = PrefsManager.GetInt(PrefsManager.VERSION, 0);
 				Debug.Log($"online version {meta.version}, local version {localVersion}");
 				if (meta.version > localVersion) {

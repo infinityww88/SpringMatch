@@ -119,9 +119,10 @@ public static class Utils
 	public static byte[] Encrypt(string text, byte[] key, byte[] iv) {
 		MemoryStream input = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(text));
 		MemoryStream output = new MemoryStream();
-		using (AesManaged myAes = new AesManaged()) {
+		using (Aes myAes = Aes.Create()) {
 			myAes.Key = key;
 			myAes.IV = iv;
+			Debug.Log($"{myAes.Mode} {myAes.BlockSize} {myAes.KeySize} {myAes.Padding}");
 			ICryptoTransform encryptor = myAes.CreateEncryptor();
 			using (CryptoStream cs = new CryptoStream(output, encryptor, CryptoStreamMode.Write)) {
 				input.CopyTo(cs);
@@ -133,7 +134,7 @@ public static class Utils
 	public static string Decrypt(byte[] data, byte[] key, byte[] iv) {
 		MemoryStream input = new MemoryStream(data);
 		MemoryStream output = new MemoryStream();
-		using (AesManaged myAes = new AesManaged()) {
+		using (Aes myAes = Aes.Create()) {
 			myAes.Key = key;
 			myAes.IV = iv;
 			ICryptoTransform decryptor = myAes.CreateDecryptor();
@@ -142,5 +143,29 @@ public static class Utils
 			}
 		}
 		return System.Text.Encoding.UTF8.GetString(output.ToArray());
+	}
+	
+	public static void RunCmd(string cmd) {
+		System.Diagnostics.Process process = new System.Diagnostics.Process();
+		process.StartInfo.FileName = "cmd.exe";
+		process.StartInfo.Arguments = $"/c {cmd}";
+		process.StartInfo.CreateNoWindow = true;
+		process.StartInfo.RedirectStandardError = true;
+		process.StartInfo.RedirectStandardOutput = true;
+		process.StartInfo.UseShellExecute = false;
+		Debug.Log($"Run Command: {cmd}");
+		process.Start();
+		process.WaitForExit();
+		string output = process.StandardOutput.ReadToEnd();
+		if (!string.IsNullOrEmpty(output)) {
+			Debug.Log(output);
+		}
+		var error = process.StandardError.ReadToEnd();
+		if (!string.IsNullOrEmpty(error)) {
+			Debug.LogError(error);
+		}
+		if (process.ExitCode != 0) {
+			throw new Exception($"Run Command Failed with exit code: {process.ExitCode}");
+		}
 	}
 }

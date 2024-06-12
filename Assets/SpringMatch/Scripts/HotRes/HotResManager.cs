@@ -75,9 +75,10 @@ namespace SpringMatch.HotRes {
 		
 		private async UniTask InitRemote(string resVersion, string pkgName) {
 			var pkg = YooAssets.GetPackage(pkgName);
+			string cdn = PrefsManager.GetString(PrefsManager.CDN, Global.DEFAULT_CDN);;
 			var initParameters = new HostPlayModeParameters();
 			initParameters.BuildinQueryServices = new BuildinQueryServices();
-			initParameters.RemoteServices = new RemoteServices(new Uri(new Uri(Global.CDN), resVersion).ToString());
+			initParameters.RemoteServices = new RemoteServices(new Uri(new Uri(cdn), resVersion).ToString());
 			var initOperation = pkg.InitializeAsync(initParameters);
 			await initOperation;
 			if (initOperation.Status == EOperationStatus.Succeed) {

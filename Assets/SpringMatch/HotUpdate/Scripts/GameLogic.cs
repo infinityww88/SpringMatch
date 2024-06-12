@@ -399,5 +399,13 @@ namespace SpringMatch {
 				randomButton.Valid = Level.Inst.RemainSpring() > 0;
 			}
 		}
+		
+		[Button]
+		void TestEncrypt() {
+			var t = "create a byte of give integer size";
+			var data = File.ReadAllBytes("Assets/Test/data.bytes");
+			var text = Utils.Decrypt(data, ase_key.bytes, ase_iv.bytes);
+			Debug.Log($"{text.Length}: {text}, {t == text}");
+		}
 	}
 }

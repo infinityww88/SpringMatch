@@ -21,6 +21,7 @@ namespace SpringMatch {
 		public const string LEVEL_INDEX = "level_index";
 		public const string SOUND_ON = "setting_sound";
 		public const string VIBRATE_ON = "setting_vibrate";
+		public const string CDN = "cdn";
 		
 		private static Dictionary<string, int> intCache = new Dictionary<string, int>();
 		private static Dictionary<string, float> floatCache = new Dictionary<string, float>();

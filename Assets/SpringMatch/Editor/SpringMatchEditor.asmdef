@@ -2,7 +2,9 @@
     "name": "SpringMatchEditor",
     "rootNamespace": "",
     "references": [
-        "GUID:9c3ae29eadb60064bb55568bc2d3e973"
+        "GUID:9c3ae29eadb60064bb55568bc2d3e973",
+        "GUID:63ebd60d5c68886498ecfee04b5d6a12",
+        "GUID:4d1926c9df5b052469a1c63448b7609a"
     ],
     "includePlatforms": [
         "Editor"

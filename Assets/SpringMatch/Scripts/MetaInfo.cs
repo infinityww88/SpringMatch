@@ -7,7 +7,7 @@ namespace SpringMatch {
 	public class MetaInfo
 	{
 		public int version;
-		public string resVersion;
+		public string cdn;
 	}
 }
 
