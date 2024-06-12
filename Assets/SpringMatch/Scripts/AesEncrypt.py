@@ -2,20 +2,30 @@
 
 from Crypto.Cipher import AES
 
-with open("aes_key.bytes", "rb") as f:
-    key = f.read()
+def read_file_bytes(fn):
+    with open(fn, "rb") as f:
+        return f.read()
 
-with open("aes_iv.bytes", "rb") as f:
-    iv = f.read()
+def write_file_bytes(fn, data):
+    with open(fn, "wb") as f:
+        return f.write(data)
 
-aes = AES.new(key, AES.MODE_CBC, iv)
+def pad(s):
+    BS = AES.block_size
+    return s + (BS - len(s) % BS) * bytes([BS - len(s) % BS])
 
-data = b"create a byte of give integer size"
-size = (len(data) + 15)//16 * 16
-data = data.ljust(size, b'\x00')
+key = read_file_bytes("aes_key.bytes")
+iv = read_file_bytes("aes_iv.bytes")
 
-data = aes.encrypt(data)
+def EncryptFile(srcFn, destFn):
+    data = read_file_bytes(srcFn)
+    data = pad(data)
+    aes = AES.new(key, AES.MODE_CBC, iv)
+    data = aes.encrypt(data)
+    write_file_bytes(destFn, data)
 
-with open("data.bytes", "wb") as f:
-    f.write(data)
-
+def DecryptFile(srcFn, destFn):
+    data = read_file_bytes(srcFn)
+    aes = AES.new(key, AES.MODE_CBC, iv)
+    data = aes.decrypt(data)
+    write_file_bytes(destFn, data)
