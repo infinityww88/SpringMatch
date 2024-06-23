@@ -101,4 +101,28 @@ public class MenuTools
 			Debug.Log("Publish Complete.");
 		}
 	}
+	
+	[MenuItem("Tools/UpdateLevelColors")]
+	public static void UpdateLevelColors() {
+		var colors = AssetDatabase.LoadAssetAtPath<Collection<Color>>("Assets/SpringMatch/Config/EditorColors.asset");
+		var files = Directory.GetFiles("C:/Users/13687/Documents/Unity/Mobile/SpringMatchMobile/Build/LevelEditor", "*.json");
+		
+		files.Foreach(fn => {
+			var f = Path.GetFileName(fn);
+			if (System.Text.RegularExpressions.Regex.IsMatch(f, @"\d+-\d+\.json")) {
+				SpringMatch.LevelData levelData = JsonConvert.DeserializeObject<SpringMatch.LevelData>(File.ReadAllText(fn),
+					new SpringMatch.ColorConvert());
+				int n = Mathf.Min(levelData.colorNums.Count, colors.Count);
+				for (int i = 0; i < n; i++) {
+					levelData.colorNums[i].color = colors[i];
+				}
+				
+				var text = JsonConvert.SerializeObject(levelData, new SpringMatch.ColorConvert());
+				File.WriteAllText(fn, text);
+				Debug.Log("update " + fn);
+			}
+		});
+		Debug.Log("complete.");
+	}
+	
 }
