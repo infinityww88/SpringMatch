@@ -30,15 +30,13 @@ namespace SpringMatch {
 		[SerializeField]
 		private TextAsset aseKey, aseIV;
 		
-		private string resVersion;
-		
 		// Awake is called when the script instance is being loaded.
 		protected void Awake()
 		{
 			bool devMode = PrefsManager.GetDevMode();
 			playButton.gameObject.SetActive(devMode);
 			consoleButton.gameObject.SetActive(devMode);
-			
+			QualitySettings.skinWeights =   SkinWeights.FourBones;
 			TweenLoadingText();
 			Load().Forget();
 		}
@@ -112,7 +110,7 @@ namespace SpringMatch {
 			Debug.Log("Loaded Content");
 			
 			try {
-				await HotResManager.Inst.UpdateResource(resVersion, OnDownloadProgress);
+				await HotResManager.Inst.UpdateResource(OnDownloadProgress);
 			} catch (Exception e) {
 				Debug.LogWarning($"UpdateResource error {e}");
 			}

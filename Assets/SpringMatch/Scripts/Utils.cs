@@ -155,7 +155,6 @@ public static class Utils
 		process.StartInfo.UseShellExecute = false;
 		Debug.Log($"Run Command: {cmd}");
 		process.Start();
-		process.WaitForExit();
 		string output = process.StandardOutput.ReadToEnd();
 		if (!string.IsNullOrEmpty(output)) {
 			Debug.Log(output);
@@ -164,6 +163,7 @@ public static class Utils
 		if (!string.IsNullOrEmpty(error)) {
 			Debug.LogError(error);
 		}
+		process.WaitForExit();
 		if (process.ExitCode != 0) {
 			throw new Exception($"Run Command Failed with exit code: {process.ExitCode}");
 		}

@@ -29,11 +29,11 @@ namespace SpringMatch.HotRes {
 			Init();
 		}
 		
-		public async UniTask UpdateResource(string resVersion, DownloaderOperation.OnDownloadProgress onProgress) {
+		public async UniTask UpdateResource(DownloaderOperation.OnDownloadProgress onProgress) {
 			#if UNITY_EDITOR
 			await InitPkgEditor(DEFAULT_PKG);
 			#else
-			await InitRemote(resVersion, DEFAULT_PKG);
+			await InitRemote(DEFAULT_PKG);
 			#endif
 			string version = await UpdatePackageVersion(DEFAULT_PKG);
 			await UpdatePackageManifest(DEFAULT_PKG, version);
@@ -73,12 +73,12 @@ namespace SpringMatch.HotRes {
 			await pkg.InitializeAsync(initParameters);
 		}
 		
-		private async UniTask InitRemote(string resVersion, string pkgName) {
+		private async UniTask InitRemote(string pkgName) {
 			var pkg = YooAssets.GetPackage(pkgName);
 			string cdn = PrefsManager.GetString(PrefsManager.CDN, Global.DEFAULT_CDN);;
 			var initParameters = new HostPlayModeParameters();
 			initParameters.BuildinQueryServices = new BuildinQueryServices();
-			initParameters.RemoteServices = new RemoteServices(new Uri(new Uri(cdn), resVersion).ToString());
+			initParameters.RemoteServices = new RemoteServices(new Uri(new Uri(cdn), "Resource").ToString());
 			var initOperation = pkg.InitializeAsync(initParameters);
 			await initOperation;
 			if (initOperation.Status == EOperationStatus.Succeed) {

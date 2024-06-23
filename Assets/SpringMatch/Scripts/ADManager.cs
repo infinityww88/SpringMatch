@@ -71,7 +71,7 @@ namespace SpringMatch {
 				RegisterReloadHandler(_rewardedAd);
 			});
 		}
-		[Command]
+
 		public void ShowRewardedAd(System.Action onReward, System.Action notReady) {
 			const string rewardMsg =
 				"Rewarded ad rewarded the user. Type: {0}, amount: {1}.";

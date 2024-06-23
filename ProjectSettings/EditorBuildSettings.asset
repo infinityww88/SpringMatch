@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/SpringMatch/Scenes/LevelEditor.unity
-    guid: 4b1280cd325e1c1458fa5dc54207a78a
-  - enabled: 1
-    path: Assets/SpringMatch/Scenes/EditorPlay.unity
-    guid: 61e79a509e46b6344a6674c43c173256
+    path: Assets/SpringMatch/Scenes/Loading.unity
+    guid: 795b2f31d4551d24586dd86bbcaa79c3
   m_configObjects: {}

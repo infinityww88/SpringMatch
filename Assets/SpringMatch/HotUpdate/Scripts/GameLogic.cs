@@ -11,6 +11,7 @@ using System.IO;
 using ScriptableObjectArchitecture;
 using YooAsset;
 using Newtonsoft.Json;
+using QFSW.QC;
 
 namespace SpringMatch {
 	
@@ -89,6 +90,16 @@ namespace SpringMatch {
 				YooAssets.SetDefaultPackage(defaultPkg);
 			}
 			#endif
+		}
+		
+		[Command]
+		public SkinWeights SkinWeight {
+			get {
+				return QualitySettings.skinWeights;
+			}
+			set {
+				QualitySettings.skinWeights = value;
+			}
 		}
 		
 		void SetupLevelProgress() {

@@ -38,10 +38,14 @@ MonoBehaviour:
   - springModel0
   - springModel1
   - springModel2
+  - springModel3
+  - springModel4
   springInitLength:
+  - 3
   - 6
-  - 12
-  - 18
+  - 15
+  - 24
+  - 32
   lodRange: {x: 0, y: 10}
   footLerpFactorCurve:
     serializedVersion: 2
