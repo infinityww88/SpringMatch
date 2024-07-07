@@ -12,6 +12,8 @@ using ScriptableObjectArchitecture;
 using YooAsset;
 using Newtonsoft.Json;
 using QFSW.QC;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace SpringMatch {
 	
@@ -417,6 +419,11 @@ namespace SpringMatch {
 			var data = File.ReadAllBytes("Assets/Test/data.bytes");
 			var text = Utils.Decrypt(data, ase_key.bytes, ase_iv.bytes);
 			Debug.Log($"{text.Length}: {text}, {t == text}");
+		}
+		
+		[Command]
+		void TestNewScene() {
+			YooAssets.LoadSceneAsync("HotScene_Room");
 		}
 	}
 }

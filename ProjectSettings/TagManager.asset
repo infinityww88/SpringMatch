@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - NumInfoRoot
+  - Wall
+  - Furniture
+  - Sensor
   layers:
   - Default
   - TransparentFX
@@ -16,8 +19,8 @@ TagManager:
   - Pickup
   - Cell
   - CameraCapture
-  - 
-  - 
+  - Furniture
+  - Ground
   - 
   - 
   - 
