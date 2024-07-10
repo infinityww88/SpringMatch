@@ -17,15 +17,29 @@ namespace CustomRoom {
 		[SerializeField]
 		private float snapDistance;
 		
+		private System.Action<Collider> onSnapCollider, onNoSnapCollider;
+		private Collider lastSnapCollider = null;
+		
 		public bool IsSnap { get; private set; } = false;
 		
 		public Vector3 Dir => dir;
 		
-		public SnapHandler(Vector3 dir, Collider collider, LayerMask castLayer, float snapDistance) {
-			this.dir = dir;
+		public SnapHandler(Vector3 dir,
+			Collider collider,
+			LayerMask castLayer,
+			float snapDistance,
+			System.Action<Collider> onSnapCollider,
+			System.Action<Collider> onNoSnapCollider) {
+				this.dir = dir;
+				this.collider = collider;
+				this.castLayer = castLayer;
+				this.snapDistance = snapDistance;
+				this.onSnapCollider = onSnapCollider;
+				this.onNoSnapCollider = onNoSnapCollider;
+		}
+		
+		public void SetCollider(Collider collider) {
 			this.collider = collider;
-			this.castLayer = castLayer;
-			this.snapDistance = snapDistance;
 		}
 		
 		public void OnDrawGizmos() {
@@ -82,6 +96,10 @@ namespace CustomRoom {
 		}
 			
 		public void SnapCollider(Vector3 dir) {
+			if (collider == null) {
+				return;
+			}
+			
 			var bound = collider.bounds;
 			
 			Outline outline = collider.GetComponent<Outline>();
@@ -100,7 +118,9 @@ namespace CustomRoom {
 				collider.transform.Translate(dir * distance, Space.World);
 				hasLastSnapPoint = true;
 				lastSnapPoint = hitInfo.point;
+				lastSnapCollider = hitInfo.collider;
 				IsSnap = true;
+				onSnapCollider(lastSnapCollider);
 			}
 			else {
 				if (hasLastSnapPoint) {
@@ -108,9 +128,15 @@ namespace CustomRoom {
 					if (Mathf.Abs(distance) <= snapDistance) {
 						collider.transform.Translate(dir * distance, Space.World);
 						IsSnap = true;
+						onSnapCollider(lastSnapCollider);
 					}
 					else {
 						IsSnap = false;
+						hasLastSnapPoint = false;
+						if (lastSnapCollider != null) {
+							onNoSnapCollider(lastSnapCollider);
+							lastSnapCollider = null;
+						}
 					}
 				}
 			}

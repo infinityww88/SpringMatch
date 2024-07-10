@@ -7,6 +7,7 @@ using System.Linq;
 using System.IO;
 using ScriptableObjectArchitecture;
 using Newtonsoft.Json;
+using Unity.Linq;
 
 public class MenuTools
 {
@@ -123,5 +124,27 @@ public class MenuTools
 			}
 		});
 		Debug.Log("complete.");
+	}
+	
+	[MenuItem("Tools/MergeFurniture")]
+	public static void MergeRoomProps() {
+		GameObject.FindGameObjectsWithTag("Furniture").Foreach(go => {
+			go.Children().Where(c => c.transform.childCount > 0).Foreach(c => {
+				EditorUtils.CombineMesh(c);
+			});
+		});
+	}
+	
+	[MenuItem("Tools/MergeSelectMesh")]
+	public static void MergeSelectMesh() {
+		if (Selection.gameObjects.Length < 2) {
+			return;
+		}
+		GameObject ret = new GameObject(Selection.gameObjects[0].name);
+		ret.transform.SetParent(Selection.gameObjects[0].transform.parent);
+		Selection.gameObjects.Foreach(go => {
+			go.transform.SetParent(ret.transform, true);
+		});
+		EditorUtils.CombineMesh(ret);
 	}
 }

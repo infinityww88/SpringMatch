@@ -16,16 +16,32 @@ namespace CustomRoom {
 		[SerializeField]
 		private Color pickupColor;
 		[SerializeField]
-		private LayerMask castLayer;
+		private LayerMask pickupLayer, snapLayer;
 		[SerializeField]
 		private FloatVariable rotateFactor, moveFactor, heightFactor;
+		[SerializeField]
+		private float snapDistance = 0.1f;
+		[SerializeField]
+		private Color snapHintColor = Color.white;
 		
 		private CancellationTokenSource cancelTokenSource = null;
+		
+		private List<SnapHandler> snapHandlers = new List<SnapHandler>();
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			
+			snapHandlers.Add(new SnapHandler(Vector3.back, null, snapLayer, snapDistance, OnSnapCollider, OnNoSnapCollider));
+			snapHandlers.Add(new SnapHandler(Vector3.down, null, snapLayer, snapDistance, OnSnapCollider, OnNoSnapCollider));
+			snapHandlers.Add(new SnapHandler(Vector3.left, null, snapLayer, snapDistance, OnSnapCollider, OnNoSnapCollider));
+		}
+		
+		public void OnSnapCollider(Collider collider) {
+			collider.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", snapHintColor);
+		}
+		
+		public void OnNoSnapCollider(Collider collider) {
+			collider.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.white);
 		}
 		
 		public void StartHorzEdit() {
@@ -53,11 +69,6 @@ namespace CustomRoom {
 			}
 			cancelTokenSource = new CancellationTokenSource();
 			EditHandler(cancelTokenSource.Token, HeightHandler).Forget();
-		}
-		
-		[Button]
-		private void Test(float angle) {
-			Debug.Log($"{Mathf.Repeat(angle, 360)}");
 		}
 		
 		public void Rotate90Clockwise() {
@@ -103,13 +114,17 @@ namespace CustomRoom {
 			if (Input.GetMouseButtonDown(0)) {
 				Pickup(Input.mousePosition);
 			}
+			
+			snapHandlers.ForEach(sh => {
+				sh.SnapCollider();
+			});
 		}
 		
 		private GameObject lastPickupObj;
 		
 		private void Pickup(Vector2 pos) {
 			Ray ray = Camera.main.ScreenPointToRay(pos);
-			var ret = Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, castLayer);
+			var ret = Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, pickupLayer);
 			if (ret) {
 				GameObject o = hitInfo.collider.gameObject;
 				Outline outline = o.GetComponentInParent<Outline>();
@@ -119,6 +134,9 @@ namespace CustomRoom {
 					lastPickupObj.GetComponent<Outline>().enabled = false;
 				}
 				lastPickupObj = outline.gameObject;
+				snapHandlers.ForEach(sh => {
+					sh.SetCollider(lastPickupObj.GetComponent<Collider>());
+				});
 			}
 		}
 		
