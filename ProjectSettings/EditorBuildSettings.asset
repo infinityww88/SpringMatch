@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/SpringMatch/Scenes/Loading.unity
-    guid: 795b2f31d4551d24586dd86bbcaa79c3
+    path: Assets/Rooms/RoomImageCapture.unity
+    guid: 46bd1e70ec43caa4b8c240ff248c3bb7
   m_configObjects: {}

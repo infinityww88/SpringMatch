@@ -9,6 +9,11 @@ namespace CustomRoom {
 	
 	public class TestRoom : MonoBehaviour
 	{
+		public float distance;
+		public Collider collider;
+		private bool hasLastPoint = false;
+		private Vector3 lastPoint;
+		
 		// Start is called before the first frame update
 		void Start()
 		{
@@ -18,32 +23,34 @@ namespace CustomRoom {
 		// Implement OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn.
 		protected void OnDrawGizmos()
 		{
-			var mesh = GetComponent<MeshFilter>();
-			if(mesh == null) {
-				return; 
+			if (hasLastPoint) {
+				Gizmos.color = Color.green;
+				Gizmos.DrawSphere(lastPoint, 0.1f);
 			}
-			Gizmos.color = Color.red;
-			var bound = mesh.sharedMesh.bounds;
-			var oldMat = Gizmos.matrix;
-			Gizmos.matrix = transform.localToWorldMatrix;
-			Gizmos.DrawWireCube(bound.center, bound.size);
-			Gizmos.matrix = oldMat;
 		}
 		
-		/*
-		void GeneratePivot() {
-			var bound = meshCollider.bounds;
-			Vector3 a = bound.min, b = new Vector3(bound.max.x, bound.min.y, bound.max.z);
-			var c = (a + b) / 2;
-			GameObject o = new	GameObject("hello");
-			o.transform.position = c;
-			transform.SetParent(o.transform, true);
+		// Update is called every frame, if the MonoBehaviour is enabled.
+		protected void Update()
+		{
+			TestCast();
 		}
-		*/
-
-		[Button]
-		void CombineMesh() {
-			EditorUtils.CombineMesh(gameObject);
+		
+		void TestCast() {
+			var bound = collider.bounds;
+			var ret = Physics.BoxCast(bound.center,
+				bound.size / 2,
+				Vector3.down,
+				out RaycastHit hitInfo,
+				Quaternion.identity,
+				distance
+			);
+			if (ret) {
+				hasLastPoint = true;
+				lastPoint = hitInfo.point;
+			}
+			else {
+				hasLastPoint = false;
+			}
 		}
 	}
 }

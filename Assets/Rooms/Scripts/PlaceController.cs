@@ -36,6 +36,12 @@ namespace CustomRoom {
 			snapHandlers.Add(new SnapHandler(Vector3.left, null, snapLayer, snapDistance, OnSnapCollider, OnNoSnapCollider));
 		}
 		
+		// Implement OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn.
+		protected void OnDrawGizmos()
+		{
+			snapHandlers.ForEach(h => h.OnDrawGizmos());
+		}
+		
 		public void OnSnapCollider(Collider collider) {
 			collider.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", snapHintColor);
 		}
@@ -50,7 +56,7 @@ namespace CustomRoom {
 				cancelTokenSource = null;
 			}
 			cancelTokenSource = new CancellationTokenSource();
-			EditHandler(cancelTokenSource.Token, HorzHandler).Forget();
+			EditHandler(cancelTokenSource.Token, HorzHandler);
 		}
 		
 		public void StartRotateEdit() {
@@ -114,7 +120,12 @@ namespace CustomRoom {
 			if (Input.GetMouseButtonDown(0)) {
 				Pickup(Input.mousePosition);
 			}
-			
+		}
+		
+		// LateUpdate is called every frame, if the Behaviour is enabled.
+		// LateUpdate is called every frame, if the Behaviour is enabled.
+		protected void LateUpdate()
+		{
 			snapHandlers.ForEach(sh => {
 				sh.SnapCollider();
 			});
@@ -149,13 +160,15 @@ namespace CustomRoom {
 					}
 				}
 				Vector3 lastPos = Input.mousePosition;
-				while (!Input.GetMouseButtonUp(0)) {
-					await UniTask.NextFrame();
+				while (Input.GetMouseButton(0)) {
 					if (token.IsCancellationRequested) {
 						return;
 					}
-					func(Input.mousePosition, lastPos);
-					lastPos = Input.mousePosition;
+					if (Input.mousePosition != lastPos) {
+						func(Input.mousePosition, lastPos);
+						lastPos = Input.mousePosition;
+					}
+					await UniTask.NextFrame();
 				}
 			}
 		}

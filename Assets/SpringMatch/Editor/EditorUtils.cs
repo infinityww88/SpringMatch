@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEditor;
+using System.Text.RegularExpressions;
+using Unity.Linq;
 
 public class EditorUtils
 {
@@ -37,9 +39,20 @@ public class EditorUtils
 		MeshCollider mc = null;
 			
 		string path = null;
+		
+		var folderName = gameObject.Ancestors()
+			.Where(o => Regex.IsMatch(o.name, @"Room_\d+"))
+			.First()
+			.name;
+		
+		var folderPath = $"Assets/Rooms/CombineMesh/{folderName}";
+		
+		if (!System.IO.Directory.Exists(folderPath)) {
+			System.IO.Directory.CreateDirectory(folderPath);
+		}
 			
 		if (mf == null) {
-			path = $"Assets/Rooms/CombineMesh/{System.Guid.NewGuid().ToString()}.mesh";
+			path = $"{folderPath}/{System.Guid.NewGuid().ToString()}.mesh";
 			gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
 			mc = gameObject.AddComponent<MeshCollider>();
 			mc.convex = true;
