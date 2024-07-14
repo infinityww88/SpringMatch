@@ -208,7 +208,9 @@ namespace CustomRoom {
 				return;
 			}
 			
-			RecordUndo();
+			if (EditMode != EEditMode.NONE) {
+				RecordUndo();
+			}
 			
 			switch (EditMode) {
 			case EEditMode.HORZ:
