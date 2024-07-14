@@ -130,6 +130,7 @@ public class MenuTools
 	public static void MergeRoomProps() {
 		GameObject.FindGameObjectsWithTag("Furniture").Foreach(go => {
 			go.Children().Where(c => c.transform.childCount > 0).Foreach(c => {
+				Debug.Log(c.name);
 				EditorUtils.CombineMesh(c);
 			});
 		});

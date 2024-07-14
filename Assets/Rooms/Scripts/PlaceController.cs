@@ -24,7 +24,19 @@ namespace CustomRoom {
 		[SerializeField]
 		private Color snapHintColor = Color.white;
 		
+		[SerializeField]
+		private RectTransform undoButton;
+		
 		private CancellationTokenSource cancelTokenSource = null;
+		
+		public enum EEditMode {
+			NONE,
+			HORZ,
+			HEIGHT,
+			ROTATE
+		}
+		
+		public EEditMode EditMode = EEditMode.NONE;
 		
 		private List<SnapHandler> snapHandlers = new List<SnapHandler>();
 		
@@ -50,37 +62,11 @@ namespace CustomRoom {
 			collider.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.white);
 		}
 		
-		public void StartHorzEdit() {
-			if (cancelTokenSource != null) {
-				cancelTokenSource.Cancel();
-				cancelTokenSource = null;
-			}
-			cancelTokenSource = new CancellationTokenSource();
-			EditHandler(cancelTokenSource.Token, HorzHandler);
-		}
-		
-		public void StartRotateEdit() {
-			if (cancelTokenSource != null) {
-				cancelTokenSource.Cancel();
-				cancelTokenSource = null;
-			}
-			cancelTokenSource = new CancellationTokenSource();
-			EditHandler(cancelTokenSource.Token, RotateHandler).Forget();
-		}
-		
-		public void StartHeightEdit() {
-			if (cancelTokenSource != null) {
-				cancelTokenSource.Cancel();
-				cancelTokenSource = null;
-			}
-			cancelTokenSource = new CancellationTokenSource();
-			EditHandler(cancelTokenSource.Token, HeightHandler).Forget();
-		}
-		
 		public void Rotate90Clockwise() {
 			if (lastPickupObj == null) {
 				return;
 			}
+			RecordUndo();
 			Snap90Degree(lastPickupObj.transform);
 			lastPickupObj.transform.eulerAngles -= Vector3.up * 90;
 		}
@@ -89,6 +75,7 @@ namespace CustomRoom {
 			if (lastPickupObj == null) {
 				return;
 			}
+			RecordUndo();
 			Snap90Degree(lastPickupObj.transform);
 			lastPickupObj.transform.eulerAngles += Vector3.up * 90;
 		}
@@ -105,73 +92,72 @@ namespace CustomRoom {
 			}
 		}
 		
-		// This function is called when the MonoBehaviour will be destroyed.
-		protected void OnDestroy()
-		{
-			if (cancelTokenSource != null) {
-				cancelTokenSource.Cancel();
-			}
-			cancelTokenSource = null;
+		public bool IsSnapWall { get; set; } = true;
+		
+		public void FlipSnapWall() {
+			IsSnapWall = !IsSnapWall;
 		}
 		
-		// Update is called every frame, if the MonoBehaviour is enabled.
-		protected void Update()
-		{
-			if (Input.GetMouseButtonDown(0)) {
-				Pickup(Input.mousePosition);
-			}
-		}
-		
-		// LateUpdate is called every frame, if the Behaviour is enabled.
 		// LateUpdate is called every frame, if the Behaviour is enabled.
 		protected void LateUpdate()
 		{
-			snapHandlers.ForEach(sh => {
-				sh.SnapCollider();
-			});
+			if (IsSnapWall) {
+				snapHandlers.ForEach(sh => {
+					sh.SnapCollider();
+				});
+			}
 		}
 		
 		private GameObject lastPickupObj;
+		
+		private void HintPickupObj(GameObject o) {
+			Outline outline = o.GetComponentInParent<Outline>();
+			outline.enabled = true;
+			outline.OutlineColor = pickupColor;
+		}
+		
+		private void UnhintPickupObj(GameObject o) {
+			Outline outline = o.GetComponentInParent<Outline>();
+			outline.enabled = false;
+		}
 		
 		private void Pickup(Vector2 pos) {
 			Ray ray = Camera.main.ScreenPointToRay(pos);
 			var ret = Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, pickupLayer);
 			if (ret) {
-				GameObject o = hitInfo.collider.gameObject;
-				Outline outline = o.GetComponentInParent<Outline>();
-				outline.enabled = true;
-				outline.OutlineColor = pickupColor;
-				if (lastPickupObj != null && lastPickupObj != outline.gameObject) {
-					lastPickupObj.GetComponent<Outline>().enabled = false;
+				var o = hitInfo.collider.gameObject;
+				HintPickupObj(o);
+				
+				if (lastPickupObj != null && lastPickupObj != o) {
+					UnhintPickupObj(lastPickupObj);
 				}
-				lastPickupObj = outline.gameObject;
+				lastPickupObj = o;
 				snapHandlers.ForEach(sh => {
 					sh.SetCollider(lastPickupObj.GetComponent<Collider>());
 				});
 			}
 		}
 		
-		private async UniTaskVoid EditHandler(CancellationToken token, System.Action<Vector2, Vector2> func) {
-			while (!token.IsCancellationRequested) {
-				while (!Input.GetMouseButtonDown(0)) {
-					await UniTask.NextFrame();
-					if (token.IsCancellationRequested) {
-						return;
-					}
+		public void Undo() {
+			if (undoGameObject != null) {
+				//Debug.Log($"{undoGameObject.name} {undoPosition} {undoRotation}");
+				undoGameObject.transform.position = undoPosition;
+				undoGameObject.transform.rotation = undoRotation;
+				if (lastPickupObj != null) {
+					UnhintPickupObj(lastPickupObj);
 				}
-				Vector3 lastPos = Input.mousePosition;
-				while (Input.GetMouseButton(0)) {
-					if (token.IsCancellationRequested) {
-						return;
-					}
-					if (Input.mousePosition != lastPos) {
-						func(Input.mousePosition, lastPos);
-						lastPos = Input.mousePosition;
-					}
-					await UniTask.NextFrame();
+				HintPickupObj(undoGameObject);
+				lastPickupObj = undoGameObject;
+				undoGameObject = null;
+				if (undoButton != null) {
+					undoButton.gameObject.SetActive(false);
 				}
 			}
 		}
+		
+		private GameObject undoGameObject;
+		private Vector3 undoPosition;
+		private Quaternion undoRotation;
 		
 		private void HorzHandler(Vector2 currentMousePos, Vector2 lastMousePos) {
 			Ray r0 = Camera.main.ScreenPointToRay(lastMousePos);
@@ -199,6 +185,42 @@ namespace CustomRoom {
 			Vector2 diff = currentMousePos - lastMousePos;
 			lastPickupObj.transform.Translate(new Vector3(0, diff.y * heightFactor.Value, 0), Space.Self);
 		}
+		
+		void RecordUndo() {
+			if (undoGameObject != lastPickupObj) {
+				undoGameObject = lastPickupObj;
+				if (lastPickupObj != null) {
+					undoPosition = lastPickupObj.transform.position;
+					undoRotation = lastPickupObj.transform.rotation;
+					if (undoButton != null) {
+						undoButton.gameObject.SetActive(true);
+					}
+				}
+			}
+		}
+		
+		public void Drag(Lean.Touch.LeanFinger finger) {
+			if (finger.Down) {
+				Pickup(finger.ScreenPosition);
+			}
+			
+			if (finger.ScreenDelta == Vector2.zero) {
+				return;
+			}
+			
+			RecordUndo();
+			
+			switch (EditMode) {
+			case EEditMode.HORZ:
+				HorzHandler(finger.ScreenPosition, finger.LastScreenPosition);
+				break;
+			case EEditMode.HEIGHT:
+				HeightHandler(finger.ScreenPosition, finger.LastScreenPosition);
+				break;
+			case EEditMode.ROTATE:
+				RotateHandler(finger.ScreenPosition, finger.LastScreenPosition);
+				break;
+			}
+		}
 	}
-
 }
