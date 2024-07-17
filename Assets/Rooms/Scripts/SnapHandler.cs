@@ -1,41 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CustomRoom {
 	
 	[System.Serializable]
-	public class SnapHandler {
+	public class SnapHandler : MonoBehaviour {
+		
 		[SerializeField]
 		private Vector3 dir;
-		private bool hasLastSnapPoint = false;
-		private Vector3 lastSnapPoint;
-		[SerializeField]
-		private Collider collider;
 		[SerializeField]
 		private LayerMask castLayer;
 		[SerializeField]
 		private float snapDistance;
+		[SerializeField]
+		private GameObject projectIndictorPrefab;
 		
-		private System.Action<Collider> onSnapCollider, onNoSnapCollider;
+		private ProjectIndictor projectIndictor;
+		
+		private bool hasLastSnapPoint = false;
+		private Vector3 lastSnapPoint;
+		
+		private Collider collider;
 		private Collider lastSnapCollider = null;
 		
-		public bool IsSnap { get; private set; } = false;
+		private bool inSnap = false;
 		
-		public Vector3 Dir => dir;
+		[SerializeField]
+		private UnityEvent<Collider> onSnapCollider, onNoSnapCollider;
 		
-		public SnapHandler(Vector3 dir,
-			Collider collider,
-			LayerMask castLayer,
-			float snapDistance,
-			System.Action<Collider> onSnapCollider,
-			System.Action<Collider> onNoSnapCollider) {
-				this.dir = dir;
-				this.collider = collider;
-				this.castLayer = castLayer;
-				this.snapDistance = snapDistance;
-				this.onSnapCollider = onSnapCollider;
-				this.onNoSnapCollider = onNoSnapCollider;
+		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
+		protected void Start()
+		{
+			var o = Instantiate(projectIndictorPrefab);
+			projectIndictor = o.GetComponent<ProjectIndictor>();
+			o.SetActive(false);
 		}
 		
 		public void SetCollider(Collider collider) {
@@ -78,11 +78,38 @@ namespace CustomRoom {
 		Bounds GetBound() {
 			return collider.bounds;
 		}
+		
+		public void SnapIndictor() {
+			if (collider == null) {
+				return;
+			}
+			var ret = Physics.Raycast(collider.bounds.center,
+				dir,
+				out RaycastHit hitInfo,
+				Mathf.Infinity,
+				castLayer.value);
+			if (ret && !inSnap) {
+				projectIndictor.gameObject.SetActive(true);
+				projectIndictor.SetPos(collider.bounds.center, hitInfo.point);
+			}
+			else {
+				projectIndictor.gameObject.SetActive(false);
+			}
+		}
+		
+		// LateUpdate is called every frame, if the Behaviour is enabled.
+		protected void LateUpdate()
+		{
+			SnapCollider();
+			SnapIndictor();
+		}
 			
 		public void SnapCollider(Vector3 dir) {
 			if (collider == null) {
 				return;
 			}
+			
+			projectIndictor.gameObject.SetActive(false);
 
 			var bound = GetBound();
 			
@@ -101,11 +128,11 @@ namespace CustomRoom {
 				float distance = BoundToPointDistance(bound, dir, hitInfo.point);
 				collider.transform.Translate(dir * distance, Space.World);
 				Physics.SyncTransforms();
+				inSnap = true;
 				hasLastSnapPoint = true;
 				lastSnapPoint = hitInfo.point;
 				lastSnapCollider = hitInfo.collider;
-				IsSnap = true;
-				onSnapCollider(hitInfo.collider);
+				onSnapCollider.Invoke(hitInfo.collider);
 			}
 			else {
 				if (hasLastSnapPoint) {
@@ -113,12 +140,12 @@ namespace CustomRoom {
 					if (Mathf.Abs(distance) <= snapDistance) {
 						collider.transform.Translate(dir * distance, Space.World);
 						Physics.SyncTransforms();
-						IsSnap = true;
-						onSnapCollider(lastSnapCollider);
+						inSnap = true;
+						onSnapCollider.Invoke(lastSnapCollider);
 					}
 					else {
-						IsSnap = false;
-						onNoSnapCollider(lastSnapCollider);
+						inSnap = false;
+						onNoSnapCollider.Invoke(lastSnapCollider);
 					}
 				}
 			}

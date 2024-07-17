@@ -148,4 +148,11 @@ public class MenuTools
 		});
 		EditorUtils.CombineMesh(ret);
 	}
+	
+	[MenuItem("Tools/MergeGroupMesh")]
+	public static void MergeGroupMesh() {
+		if (Selection.activeGameObject != null) {
+			EditorUtils.CombineMesh(Selection.activeGameObject);
+		}
+	}
 }

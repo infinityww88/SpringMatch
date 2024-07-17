@@ -61,8 +61,9 @@ public class EditorUtils
 		else {
 			path = AssetDatabase.GetAssetPath(mf.sharedMesh);
 			mf.sharedMesh = mesh;
-			GameObject.DestroyImmediate(gameObject.GetComponent<MeshCollider>());
-			mc = gameObject.AddComponent<MeshCollider>();
+			//GameObject.DestroyImmediate(gameObject.GetComponent<MeshCollider>());
+			mc = gameObject.GetComponent<MeshCollider>();
+			mc.sharedMesh = mesh;
 			mc.convex = true;
 		}
 		

@@ -55,7 +55,6 @@ namespace CustomRoom {
 		{
 			if (Raycast(out RaycastHit hitInfo)) {
 				var distance = hitInfo.distance;
-				ConsoleProDebug.Watch("contact", $"{distance}");
 				if (Mathf.Abs(distance) <= snapDistance) {
 					var offsetVec = transform.forward * distance;
 					

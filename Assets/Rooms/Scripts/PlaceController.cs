@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System.Linq;
+using Unity.Linq;
 using ScriptableObjectArchitecture;
 
 namespace CustomRoom {
@@ -16,11 +17,9 @@ namespace CustomRoom {
 		[SerializeField]
 		private Color pickupColor;
 		[SerializeField]
-		private LayerMask pickupLayer, snapLayer;
+		private LayerMask pickupLayer;
 		[SerializeField]
 		private FloatVariable rotateFactor, moveFactor, heightFactor;
-		[SerializeField]
-		private float snapDistance = 0.1f;
 		[SerializeField]
 		private Color snapHintColor = Color.white;
 		
@@ -40,12 +39,17 @@ namespace CustomRoom {
 		
 		private List<SnapHandler> snapHandlers = new List<SnapHandler>();
 		
+		[SerializeField]
+		private float pickupPriorityDistance = 0.4f;
+		
+		private RaycastHit[] hitInfoNonAlloc = new RaycastHit[5];
+		IComparer<RaycastHit> raycastHitCmp;
+		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
-			snapHandlers.Add(new SnapHandler(Vector3.back, null, snapLayer, snapDistance, OnSnapCollider, OnNoSnapCollider));
-			snapHandlers.Add(new SnapHandler(Vector3.down, null, snapLayer, snapDistance, OnSnapCollider, OnNoSnapCollider));
-			snapHandlers.Add(new SnapHandler(Vector3.left, null, snapLayer, snapDistance, OnSnapCollider, OnNoSnapCollider));
+			snapHandlers = new List<SnapHandler>(GetComponentsInChildren<SnapHandler>().Where(h => h.enabled == true));
+			raycastHitCmp = new RaycastHitCmp(pickupPriorityDistance);
 		}
 		
 		// Implement OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn.
@@ -55,11 +59,21 @@ namespace CustomRoom {
 		}
 		
 		public void OnSnapCollider(Collider collider) {
-			collider.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", snapHintColor);
+			var wall = collider.gameObject.AncestorsAndSelf()
+				.Where(o => o.transform.parent != null && o.transform.parent.gameObject.tag == "Wall")
+				.First();
+			wall.GetComponentsInChildren<MeshRenderer>(false).Foreach(r => {
+				r.material.SetColor("_BaseColor", snapHintColor);
+			});
 		}
 		
 		public void OnNoSnapCollider(Collider collider) {
-			collider.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", Color.white);
+			var wall = collider.gameObject.AncestorsAndSelf()
+				.Where(o => o.transform.parent != null && o.transform.parent.gameObject.tag == "Wall")
+				.First();
+			wall.GetComponentsInChildren<MeshRenderer>(false).Foreach(r => {
+				r.material.SetColor("_BaseColor", Color.white);
+			});
 		}
 		
 		public void Rotate90Clockwise() {
@@ -98,16 +112,6 @@ namespace CustomRoom {
 			IsSnapWall = !IsSnapWall;
 		}
 		
-		// LateUpdate is called every frame, if the Behaviour is enabled.
-		protected void LateUpdate()
-		{
-			if (IsSnapWall) {
-				snapHandlers.ForEach(sh => {
-					sh.SnapCollider();
-				});
-			}
-		}
-		
 		private GameObject lastPickupObj;
 		
 		private void HintPickupObj(GameObject o) {
@@ -121,11 +125,59 @@ namespace CustomRoom {
 			outline.enabled = false;
 		}
 		
+		[Button]
+		private void Test() {
+			
+		}
+		
+		class RaycastHitCmp : IComparer<RaycastHit> {
+			private float priorityDistance = 0;
+			
+			public RaycastHitCmp(float priorityDistance) {
+				this.priorityDistance = priorityDistance;
+			}
+			
+			public int Compare(RaycastHit a, RaycastHit b) {
+				float diff = a.distance - b.distance;
+				if (a.collider.gameObject.tag == "Untagged"
+					&& b.collider.gameObject.tag == "Pickup1"
+					&& Mathf.Abs(diff) < priorityDistance) {
+					return -1;
+				}
+				if (b.collider.gameObject.tag == "Untagged"
+					&& a.collider.gameObject.tag == "Pickup1"
+					&& Mathf.Abs(diff) < priorityDistance) {
+					return 1;
+				}
+				return (int)Mathf.Sign(diff);
+			}
+		}
+		
 		private void Pickup(Vector2 pos) {
 			Ray ray = Camera.main.ScreenPointToRay(pos);
+			int hitCount = Physics.RaycastNonAlloc(ray, hitInfoNonAlloc, Mathf.Infinity, pickupLayer);
+			if (hitCount == 0) {
+				return;
+			}
+			System.Array.Sort(hitInfoNonAlloc, 0, hitCount, raycastHitCmp);
+			
+			var o = hitInfoNonAlloc[0].collider.GetComponentInParent<Outline>().gameObject;
+				
+			HintPickupObj(o);
+				
+			if (lastPickupObj != null && lastPickupObj != o) {
+				UnhintPickupObj(lastPickupObj);
+			}
+			lastPickupObj = o;
+			snapHandlers.ForEach(sh => {
+				sh.SetCollider(lastPickupObj.GetComponent<Collider>());
+			});
+			
+			/*
 			var ret = Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, pickupLayer);
 			if (ret) {
-				var o = hitInfo.collider.gameObject;
+				var o = hitInfo.collider.GetComponentInParent<Outline>().gameObject;
+				
 				HintPickupObj(o);
 				
 				if (lastPickupObj != null && lastPickupObj != o) {
@@ -136,11 +188,11 @@ namespace CustomRoom {
 					sh.SetCollider(lastPickupObj.GetComponent<Collider>());
 				});
 			}
+			*/
 		}
 		
 		public void Undo() {
 			if (undoGameObject != null) {
-				//Debug.Log($"{undoGameObject.name} {undoPosition} {undoRotation}");
 				undoGameObject.transform.position = undoPosition;
 				undoGameObject.transform.rotation = undoRotation;
 				if (lastPickupObj != null) {
