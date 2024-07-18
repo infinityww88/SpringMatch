@@ -19,9 +19,6 @@ namespace CustomRoom {
 		
 		private ProjectIndictor projectIndictor;
 		
-		private bool hasLastSnapPoint = false;
-		private Vector3 lastSnapPoint;
-		
 		private Collider collider;
 		private Collider lastSnapCollider = null;
 		
@@ -43,10 +40,7 @@ namespace CustomRoom {
 		}
 		
 		public void OnDrawGizmos() {
-			if (hasLastSnapPoint) {
-				Gizmos.color = Color.blue;
-				Gizmos.DrawSphere(lastSnapPoint, 0.1f);
-			}
+
 		}
 		
 		public static float BoundToPointDistance(Bounds bound, Vector3 dir, Vector3 point) {
@@ -115,38 +109,28 @@ namespace CustomRoom {
 			
 			Outline outline = collider.GetComponent<Outline>();
 			
-			var ret = Physics.BoxCast(bound.center,
+			var ret = Physics.BoxCast(bound.center + -100 * dir,
 				bound.size / 2,
 				dir,
 				out RaycastHit hitInfo,
 				Quaternion.identity,
-				snapDistance,
+				Mathf.Infinity,
 				castLayer.value
 			);
 			
 			if (ret) {
 				float distance = BoundToPointDistance(bound, dir, hitInfo.point);
-				collider.transform.Translate(dir * distance, Space.World);
-				Physics.SyncTransforms();
-				inSnap = true;
-				hasLastSnapPoint = true;
-				lastSnapPoint = hitInfo.point;
-				lastSnapCollider = hitInfo.collider;
-				onSnapCollider.Invoke(hitInfo.collider);
-			}
-			else {
-				if (hasLastSnapPoint) {
-					float distance = BoundToPointDistance(bound, dir, lastSnapPoint);
-					if (Mathf.Abs(distance) <= snapDistance) {
-						collider.transform.Translate(dir * distance, Space.World);
-						Physics.SyncTransforms();
-						inSnap = true;
-						onSnapCollider.Invoke(lastSnapCollider);
-					}
-					else {
-						inSnap = false;
-						onNoSnapCollider.Invoke(lastSnapCollider);
-					}
+				if (Mathf.Abs(distance) <= snapDistance) {
+					collider.transform.Translate(dir * distance, Space.World);
+					Physics.SyncTransforms();
+					inSnap = true;
+					lastSnapCollider = hitInfo.collider;
+					onSnapCollider.Invoke(lastSnapCollider);
+				}
+				else {
+					inSnap = false;
+					onNoSnapCollider.Invoke(lastSnapCollider);
+					lastSnapCollider = null;
 				}
 			}
 		}

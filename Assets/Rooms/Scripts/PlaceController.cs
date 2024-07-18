@@ -68,6 +68,9 @@ namespace CustomRoom {
 		}
 		
 		public void OnNoSnapCollider(Collider collider) {
+			if (collider == null) {
+				return;
+			}
 			var wall = collider.gameObject.AncestorsAndSelf()
 				.Where(o => o.transform.parent != null && o.transform.parent.gameObject.tag == "Wall")
 				.First();

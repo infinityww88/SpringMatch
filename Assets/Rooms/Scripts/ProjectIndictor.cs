@@ -25,8 +25,13 @@ namespace CustomRoom {
 			line.SetPosition(0, start);
 			line.SetPosition(1, end);
 			arrow.transform.position = end;
-			arrow.transform.forward = (start - end).normalized;
-			line.material.SetTextureScale("_BaseMap", texScale * (end - start).magnitude);
+			Vector3 diff = end - start;
+			Vector3 up = Vector3.up;
+			if (diff.x == 0 && diff.z == 0) {
+				up = Vector3.right;
+			}
+			arrow.transform.LookAt(arrow.transform.position + diff, Vector3.up);
+			line.material.SetTextureScale("_BaseMap", texScale * diff.magnitude);
 		}
 	}
 }
