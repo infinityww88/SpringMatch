@@ -22,9 +22,17 @@ namespace CustomRoom {
 		private FloatVariable rotateFactor, moveFactor, heightFactor;
 		[SerializeField]
 		private Color snapHintColor = Color.white;
+		[SerializeField]
+		private CW.Common.CwCameraPivot cwCameraPivot;
 		
 		[SerializeField]
 		private RectTransform undoButton;
+		
+		[SerializeField]
+		private RadioButton firstEditButton;
+		
+		[SerializeField]
+		private VisualTweenSequence.RectTransformFloatTween editButtonGroupEffect;
 		
 		private CancellationTokenSource cancelTokenSource = null;
 		
@@ -45,17 +53,48 @@ namespace CustomRoom {
 		private RaycastHit[] hitInfoNonAlloc = new RaycastHit[5];
 		IComparer<RaycastHit> raycastHitCmp;
 		
+		private GameObject lastPickupObj;
+		
+		private GameObject undoGameObject;
+		private Vector3 undoPosition;
+		private Quaternion undoRotation;
+		
+		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 		protected void Start()
 		{
 			snapHandlers = new List<SnapHandler>(GetComponentsInChildren<SnapHandler>().Where(h => h.enabled == true));
 			raycastHitCmp = new RaycastHitCmp(pickupPriorityDistance);
+			StartEdit();
 		}
 		
-		// Implement OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn.
-		protected void OnDrawGizmos()
-		{
-			snapHandlers.ForEach(h => h.OnDrawGizmos());
+		[Button]
+		public void StartView() {
+			EditMode =	EEditMode.NONE;
+			cwCameraPivot.Listen = true;
+			if (lastPickupObj != null) {
+				UnhintPickupObj(lastPickupObj);
+				lastPickupObj = null;
+			}
+			editButtonGroupEffect.reverse = false;
+			editButtonGroupEffect.Tween();
+			snapHandlers.ForEach(sh => {
+				sh.enabled = false;
+			});
+			undoGameObject = null;
+			undoButton.gameObject.SetActive(false);
+		}
+		
+		[Button]
+		public void StartEdit() {
+			EditMode =	EEditMode.HORZ;
+			cwCameraPivot.Listen = false;
+			editButtonGroupEffect.reverse = true;
+			editButtonGroupEffect.Tween();
+			snapHandlers.ForEach(sh => {
+				sh.enabled = true;
+			});
+			firstEditButton.Selected = true;
 		}
 		
 		public void OnSnapCollider(Collider collider) {
@@ -115,8 +154,6 @@ namespace CustomRoom {
 			IsSnapWall = !IsSnapWall;
 		}
 		
-		private GameObject lastPickupObj;
-		
 		private void HintPickupObj(GameObject o) {
 			Outline outline = o.GetComponentInParent<Outline>();
 			outline.enabled = true;
@@ -126,11 +163,6 @@ namespace CustomRoom {
 		private void UnhintPickupObj(GameObject o) {
 			Outline outline = o.GetComponentInParent<Outline>();
 			outline.enabled = false;
-		}
-		
-		[Button]
-		private void Test() {
-			
 		}
 		
 		class RaycastHitCmp : IComparer<RaycastHit> {
@@ -210,10 +242,6 @@ namespace CustomRoom {
 			}
 		}
 		
-		private GameObject undoGameObject;
-		private Vector3 undoPosition;
-		private Quaternion undoRotation;
-		
 		private void HorzHandler(Vector2 currentMousePos, Vector2 lastMousePos) {
 			Ray r0 = Camera.main.ScreenPointToRay(lastMousePos);
 			Ray r1 = Camera.main.ScreenPointToRay(currentMousePos);
@@ -255,6 +283,10 @@ namespace CustomRoom {
 		}
 		
 		public void Drag(Lean.Touch.LeanFinger finger) {
+			if (EditMode == EEditMode.NONE) {
+				return;
+			}
+			
 			if (finger.Down) {
 				Pickup(finger.ScreenPosition);
 			}

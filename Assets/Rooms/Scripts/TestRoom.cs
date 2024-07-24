@@ -4,19 +4,24 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using System.Linq;
+using DG.Tweening;
 
 namespace CustomRoom {
 	
 	public class TestRoom : MonoBehaviour
 	{
-		private Matrix4x4 mat;
+		public Transform target;
+		
+		private Tweener tweener;
 		
 		[Button]
-		void Record() {
+		void Tween() {
+			tweener = transform.DOMove(target.position, 1).SetAutoKill(false);
 		}
 		
 		[Button]
-		void Set() {
+		void Backwards() {
+			tweener.PlayBackwards();
 		}
 	}
 }

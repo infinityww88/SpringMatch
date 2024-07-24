@@ -136,8 +136,19 @@ public class MenuTools
 		});
 	}
 	
-	[MenuItem("Tools/MergeSelectMesh")]
-	public static void MergeSelectMesh() {
+	[MenuItem("Tools/AddFurnitureOutline")]
+	public static void AddFurnitureOutline() {
+		GameObject.FindGameObjectsWithTag("Furniture").Foreach(go => {
+			go.Children().ForEach(c => {
+				if (c.GetComponent<Outline>() == null) {
+					c.AddComponent<Outline>().enabled = false;
+				}
+			});
+		});
+	}
+	
+	[MenuItem("Tools/MergeSelectMeshes")]
+	public static void MergeSelectMeshes() {
 		if (Selection.gameObjects.Length < 2) {
 			return;
 		}
@@ -147,12 +158,23 @@ public class MenuTools
 			go.transform.SetParent(ret.transform, true);
 		});
 		EditorUtils.CombineMesh(ret);
+		Selection.activeGameObject = ret;
 	}
 	
-	[MenuItem("Tools/MergeGroupMesh")]
-	public static void MergeGroupMesh() {
+	[MenuItem("Tools/MergeGroupMeshes")]
+	public static void MergeGroupMeshes() {
 		if (Selection.activeGameObject != null) {
 			EditorUtils.CombineMesh(Selection.activeGameObject);
 		}
+	}
+	
+	[MenuItem("Tools/GroupGameObjects")]
+	public static void GroupGameObjects() {
+		if (Selection.gameObjects.Length < 2) {
+			return;
+		}
+		var parent = Selection.gameObjects[0].transform.parent;
+		var newObj = EditorUtils.GroupGameObjects(Selection.gameObjects, parent);
+		Selection.activeObject = newObj;
 	}
 }

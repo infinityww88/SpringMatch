@@ -24,6 +24,7 @@ namespace VisualTweenSequence {
 		public LoopType loopType =	LoopType.Yoyo;
 		public bool autoPlay = true;
 		public bool playOnAwake = false;
+		public bool reverse = false;
 		public float delay = 0;
 		
 		public bool autoKill = true;
@@ -64,8 +65,11 @@ namespace VisualTweenSequence {
 			DOTween.Kill(this, complete);
 		}
 		
-		protected T StartValue => useRefStartValue ? GetRefStartValue() : startValue;
-		protected T EndValue => useRefEndValue ? GetRefEndValue() : endValue;
+		private T _StartValue => useRefStartValue ? GetRefStartValue() : startValue;
+		private T _EndValue => useRefEndValue ? GetRefEndValue() : endValue;
+		
+		protected T StartValue => reverse ? _EndValue : _StartValue;
+		protected T EndValue => reverse ? _StartValue : _EndValue;
 		
 		public override void Play() {
 			Tween().Play();

@@ -8,6 +8,21 @@ using Unity.Linq;
 
 public class EditorUtils
 {
+	public static GameObject GroupGameObjects(GameObject[] gameObjects, Transform parent) {
+		Vector3 pos = Vector3.zero;
+		gameObjects.Select(go => go.transform.position).Foreach(p => {
+			pos += p;
+		});
+		pos /= gameObjects.Length;
+		GameObject ret = new GameObject();
+		ret.transform.position = pos;
+		ret.transform.SetParent(parent, true);
+		gameObjects.Foreach(go => {
+			go.transform.SetParent(ret.transform, true);
+		});
+		return ret;
+	}
+	
 	public static void CombineMesh(GameObject gameObject) {
 		var mf = gameObject.GetComponent<MeshFilter>();
 			

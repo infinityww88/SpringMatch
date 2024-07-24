@@ -28,19 +28,33 @@ namespace CustomRoom {
 		private UnityEvent<Collider> onSnapCollider, onNoSnapCollider;
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
-		protected void Start()
+		protected void Awake()
 		{
 			var o = Instantiate(projectIndictorPrefab);
 			projectIndictor = o.GetComponent<ProjectIndictor>();
-			o.SetActive(false);
 		}
 		
 		public void SetCollider(Collider collider) {
 			this.collider = collider;
 		}
 		
-		public void OnDrawGizmos() {
-
+		// This function is called when the object becomes enabled and active.
+		protected void OnEnable()
+		{
+			this.collider = null;
+			projectIndictor.gameObject.SetActive(false);
+		}
+		
+		// This function is called when the behaviour becomes disabled () or inactive.
+		protected void OnDisable()
+		{
+			if (lastSnapCollider != null) {
+				onNoSnapCollider.Invoke(lastSnapCollider);
+				lastSnapCollider = null;
+			}
+			if (projectIndictor != null) {
+				projectIndictor.gameObject.SetActive(false);
+			}
 		}
 		
 		public static float BoundToPointDistance(Bounds bound, Vector3 dir, Vector3 point) {
