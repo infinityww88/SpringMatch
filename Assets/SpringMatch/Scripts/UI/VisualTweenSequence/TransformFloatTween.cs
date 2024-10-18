@@ -93,13 +93,13 @@ namespace VisualTweenSequence {
 				v = target.localPosition.z;
 				break;
 			case Attr.LocalEulerAnglesX:
-				v = target.localEulerAngles.x;
+				v = target.localRotation.x * Mathf.Rad2Deg;
 				break;
 			case Attr.LocalEulerAnglesY:
-				v = target.localEulerAngles.y;
+				v = target.localRotation.y * Mathf.Rad2Deg;
 				break;
 			case Attr.LocalEulerAnglesZ:
-				v = target.localEulerAngles.z;
+				v = target.localRotation.z * Mathf.Rad2Deg;
 				break;
 			case Attr.LocalScaleX:
 				v = target.localScale.x;
@@ -130,13 +130,13 @@ namespace VisualTweenSequence {
 				target.localPosition = transform.localPosition.SetZ(v);
 				break;
 			case Attr.LocalEulerAnglesX:
-				target.localEulerAngles = transform.localEulerAngles.SetX(v);
+				target.localRotation = Quaternion.EulerAngles(Mathf.Deg2Rad * v, target.localRotation.y, target.localRotation.z);
 				break;
 			case Attr.LocalEulerAnglesY:
-				target.localEulerAngles = transform.localEulerAngles.SetY(v);
+				target.localRotation = Quaternion.EulerAngles(target.localRotation.x, Mathf.Deg2Rad * v, target.localRotation.z);
 				break;
 			case Attr.LocalEulerAnglesZ:
-				target.localEulerAngles = transform.localEulerAngles.SetZ(v);
+				target.localRotation = Quaternion.EulerAngles(target.localRotation.x, target.localRotation.y, Mathf.Deg2Rad * v);
 				break;
 			case Attr.LocalScaleX:
 				target.localScale = transform.localScale.SetX(v);

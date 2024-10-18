@@ -12,6 +12,7 @@ using ScriptableObjectArchitecture;
 using YooAsset;
 using Newtonsoft.Json;
 using QFSW.QC;
+using System.Globalization;
 
 namespace SpringMatch {
 	
@@ -50,9 +51,6 @@ namespace SpringMatch {
 		private int subLevelIndex = 0;
 		
 		private UI.LevelProgress levelProgress;
-		
-		private int goldNum;
-		private int heartNum;
 		
 		private Level currLevel = null;
 		
@@ -108,7 +106,13 @@ namespace SpringMatch {
 			levelProgress = SubLevelNum == 2 ? levelProgress2 : levelProgress3;
 		}
 		
+		[Command]
+		public void LookAtLevel() {
+			Camera.main.transform.LookAt(Level.Inst.transform, Vector3.up);
+		}
+		
 		[Button]
+		[Command]
 		public void Replay() {
 			Destroy(currLevel.gameObject);
 			subLevelIndex = 0;
@@ -256,7 +260,9 @@ namespace SpringMatch {
 			LoadLevelConfig();
 			subLevelIndex = 0;
 			SetupLevelProgress();
+			Debug.Log("Load Sub Level Start");
 			currLevel = LoadSubLevel();
+			Debug.Log("Load Sub Level End");
 			SetCamera();
 		}
 		
@@ -269,6 +275,7 @@ namespace SpringMatch {
 		void LoadLevelConfig() {
 			var text = ReadLevelsFile("levelConfig.json");
 			levelConfig = JsonConvert.DeserializeObject<LevelConfig>(text);
+			Debug.Log($"Load Level Config\n{levelConfig}");
 		}
 		
 		public void SetCamera() {
@@ -301,6 +308,7 @@ namespace SpringMatch {
 			var levelMeta = levelConfig.levels[levelIndex];
 			var subLevelMeta = levelMeta.subLevels[subLevelIndex];
 			var text = ReadLevelsFile($"{subLevelMeta.fileName}.json");
+			Debug.Log($"Load Sub Level {text}");
 			var levelData = JsonConvert.DeserializeObject<LevelData>(text);
 			var level = LoadLevelAsset(levelData.row, levelData.col);
 			level.LoadData(levelData);

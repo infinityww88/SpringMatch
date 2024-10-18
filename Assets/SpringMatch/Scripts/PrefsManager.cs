@@ -28,6 +28,8 @@ namespace SpringMatch {
 		private static Dictionary<string, string> stringCache = new Dictionary<string, string>();
 		
 		public static PrefsManager Inst;
+		
+		public IntVariable defaultGold;
 
 		[SerializeField]
 		private IntVariable refillLifeInterval;
@@ -112,7 +114,8 @@ namespace SpringMatch {
 		[Button]
 		public int GoldNum {
 			get {
-				return GetInt(GOLD, 0);
+				int defaultNum = defaultGold == null ? 0 : defaultGold.Value;
+				return GetInt(GOLD, defaultNum);
 			}
 			set {
 				if (GoldNum != value) {
@@ -201,7 +204,7 @@ namespace SpringMatch {
 		
 		[Command]
 		public static bool GetDevMode() {
-			return GetBool("dev_mode", true);
+			return GetBool("dev_mode", false);
 		}
 	
 		public static void SetBool(string key, bool value) {

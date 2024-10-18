@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 341916593e75c4e4da7ffe5da24456a9, type: 3}
   m_Name: ShopGold1
   m_EditorClassIdentifier: 
-  productId: test_item_0
-  goldNum: 200
+  productId: shop_gold_1
+  title: 
+  desc: 
+  goldNum: 1000
   revokeNum: 0
   shiftNum: 0
   randomNum: 0

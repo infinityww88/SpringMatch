@@ -60,7 +60,7 @@ namespace SpringMatch.UI {
 			if (priceText != null) {
 				if (IAPManager.Inst.Inited && IAPManager.Inst.GetProduct(shopConfig.productId) != null) {
 					var product = IAPManager.Inst.GetProduct(shopConfig.productId);
-					priceText.text = $"US ${product.Price:F2}";
+					priceText.text = $"{product.LocalizedPrice}";
 				}
 				else {
 					priceText.text = $"";

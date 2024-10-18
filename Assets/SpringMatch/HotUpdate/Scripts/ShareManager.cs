@@ -27,10 +27,8 @@ namespace SpringMatch {
 		public bool IsWhatsAppAvailable => SocialShareComposer.IsComposerAvailable(SocialShareComposerType.WhatsApp);
 		
 		public void ShareFacebook(System.Action onSuccess, System.Action onFailed) {
-			UI.UIVariable.Inst.ShowToast("Share with facebook");
-			onSuccess?.Invoke();
-			return;
-			if (!IsFacebookAvailable) {
+			if (!IsTwitterAvailable) {
+				Debug.Log("twitter share is not available");
 				return;
 			}
 			SocialShareComposer composer = SocialShareComposer.CreateInstance(SocialShareComposerType.Facebook);
@@ -40,7 +38,7 @@ namespace SpringMatch {
     Debug.Log("Social Share Composer was closed. Result code: " + result.ResultCode);
 			});
 			composer.Show();
-		}
+		} 
 		
 		public void ShareTwitter(System.Action onSuccess, System.Action onFailed) {
 			if (!IsTwitterAvailable) {
@@ -50,7 +48,7 @@ namespace SpringMatch {
 			
 			SocialShareComposer composer = SocialShareComposer.CreateInstance(SocialShareComposerType.Twitter);
 			composer.SetText(sharedText);
-			composer.AddImage(sharedImage);
+			composer.AddImage(sharedImage,	TextureEncodingFormat.PNG);
 			composer.AddURL(URLString.URLWithPath(sharedLink));
 			composer.SetCompletionCallback((result, error) => {
 				if (result.ResultCode == SocialShareComposerResultCode.Done) {

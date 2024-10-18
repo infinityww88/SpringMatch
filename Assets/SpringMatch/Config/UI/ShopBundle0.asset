@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 341916593e75c4e4da7ffe5da24456a9, type: 3}
   m_Name: ShopBundle0
   m_EditorClassIdentifier: 
-  productId: test_item_0
+  productId: shop_bundle_0
   title: ORIDINARY
   desc: 
-  goldNum: 100
+  goldNum: 200
   revokeNum: 3
   shiftNum: 1
-  randomNum: 3
+  randomNum: 2

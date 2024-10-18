@@ -106,7 +106,7 @@ namespace SpringMatch {
 			if (!SoundOn) {
 				return;
 			}
-			audioSource.volume = 1;
+			audioSource.volume = volume;
 			if (Time.time - lastJumpTime > acJump.length) {
 				audioSource.PlayOneShot(acJump);
 				lastJumpTime = Time.time;
@@ -117,7 +117,7 @@ namespace SpringMatch {
 			if (!SoundOn) {
 				return;
 			}
-			audioSource.volume = 1;
+			audioSource.volume = volume;
 			audioSource.PlayOneShot(acPickup);
 		}
 		
