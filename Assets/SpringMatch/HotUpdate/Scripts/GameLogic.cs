@@ -9,10 +9,10 @@ using System.Threading;
 using SpringMatch;
 using System.IO;
 using ScriptableObjectArchitecture;
-using YooAsset;
 using Newtonsoft.Json;
 using QFSW.QC;
 using System.Globalization;
+using UnityEngine.Networking;
 
 namespace SpringMatch {
 	
@@ -71,23 +71,16 @@ namespace SpringMatch {
 			Inst = this;
 			Global.PendInteract = false;
 			Global.GameState = Global.EGameState.Ready;
-			#if UNITY_EDITOR
-			YooAssets.Initialize();
-			
-			if (!YooAssets.ContainsPackage("DefaultPackage")) {
-				Debug.Log("init default package");
-				var defaultPkg = YooAssets.CreatePackage("DefaultPackage");
-				YooAssets.SetDefaultPackage(defaultPkg);
-				var initParameters = new EditorSimulateModeParameters();
-				var simulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(EDefaultBuildPipeline.BuiltinBuildPipeline, "DefaultPackage");
-				initParameters.SimulateManifestFilePath = simulateManifestFilePath;
-				defaultPkg.InitializeAsync(initParameters);
-			} else {
-				Debug.Log("set default package");
-				var defaultPkg = YooAssets.GetPackage("DefaultPackage");
-				YooAssets.SetDefaultPackage(defaultPkg);
-			}
-			#endif
+		}
+		
+		async UniTask<string> ReadStreamText(string path) {
+			var path0 = Path.Join(Application.streamingAssetsPath, path);
+			var path1 = Path.Combine(Application.streamingAssetsPath, path);
+			Debug.Log(path0);
+			Debug.Log(path1);
+			UnityWebRequest req = UnityWebRequest.Get(path1);
+			await req.SendWebRequest();
+			return req.downloadHandler.text;
 		}
 		
 		[Command]
@@ -113,10 +106,10 @@ namespace SpringMatch {
 		
 		[Button]
 		[Command]
-		public void Replay() {
+		public async UniTaskVoid Replay() {
 			Destroy(currLevel.gameObject);
 			subLevelIndex = 0;
-			currLevel = LoadSubLevel();
+			currLevel = await LoadSubLevel();
 			levelProgress.ToLevel0();
 			PrefsManager.Inst.DecHeartNum();
 			Camera.main.transform.position = Level.Inst.CameraPlayPos;
@@ -209,7 +202,7 @@ namespace SpringMatch {
 		}
 		
 		public void BackHome() {
-			YooAssets.LoadSceneAsync("HotScene_Play");
+			UnityEngine.SceneManagement.SceneManager.LoadScene("Play");
 		}
 		
 		public void PlayOnByGold() {
@@ -255,27 +248,28 @@ namespace SpringMatch {
 		}
 		
 		// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
-		protected void Start()
+		protected async UniTaskVoid Start()
 		{
-			LoadLevelConfig();
+			Debug.Log("GameLogic Start");
+			await LoadLevelConfig();
+			Debug.Log("GameLogic LoadLevelConfig");
 			subLevelIndex = 0;
 			SetupLevelProgress();
-			Debug.Log("Load Sub Level Start");
-			currLevel = LoadSubLevel();
-			Debug.Log("Load Sub Level End");
+			currLevel = await LoadSubLevel();
 			SetCamera();
 		}
+		
 		
 		string ReadLevelsFile(string path) {
 			var fullPath = Path.Join(Application.persistentDataPath, "levels", path);
 			var data = File.ReadAllBytes(fullPath);
-			return Utils.Decrypt(data, ase_key.bytes, ase_iv.bytes);
+			return Utils.Decrypt(data, ase_key.bytes, ase_iv.bytes);	
 		}
 		
-		void LoadLevelConfig() {
-			var text = ReadLevelsFile("levelConfig.json");
+		async UniTask LoadLevelConfig() {
+			var text = await ReadStreamText("levels_plain/levelconfig.json");
+			Debug.Log(text);
 			levelConfig = JsonConvert.DeserializeObject<LevelConfig>(text);
-			Debug.Log($"Load Level Config\n{levelConfig}");
 		}
 		
 		public void SetCamera() {
@@ -301,13 +295,13 @@ namespace SpringMatch {
 			UI.UIVariable.Inst.rewardGoldEffect.GetComponent<VisualTweenSequence.TweenSequence>().Play();
 		}
 		
-		private Level LoadSubLevel() {
+		private async UniTask<Level> LoadSubLevel() {
 			Utils.ClearChildren(numInfoRoot);
 			var levelIndex = PrefsManager.Inst.LevelIndex;
 			levelIndex %= levelConfig.levels.Count;
 			var levelMeta = levelConfig.levels[levelIndex];
 			var subLevelMeta = levelMeta.subLevels[subLevelIndex];
-			var text = ReadLevelsFile($"{subLevelMeta.fileName}.json");
+			var text = await ReadStreamText($"levels_plain/{subLevelMeta.fileName}.json");
 			Debug.Log($"Load Sub Level {text}");
 			var levelData = JsonConvert.DeserializeObject<LevelData>(text);
 			var level = LoadLevelAsset(levelData.row, levelData.col);
@@ -349,7 +343,7 @@ namespace SpringMatch {
 			
 			currLevel.transform.Translate(left.localPosition, Space.Self);
 			Camera.main.transform.Translate(left.localPosition, Space.Self);
-			var nextLevel = LoadSubLevel();
+			var nextLevel = await LoadSubLevel();
 			numInfoRoot.gameObject.SetActive(false);
 			
 			var token = gameObject.GetCancellationTokenOnDestroy();
